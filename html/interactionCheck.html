@@ -3,61 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/interactionCheck.css">
     <title>Interaction Checker</title>
 </head>
-<header></header>
 
 
 <body>
+    <div class="general-div">
 
-      <h2>Drug Interaction Checker</h2>
+         <h2>Drug Interaction Checker</h2>
+        <div class="content-div">
+                    <div class="main-div">
 
-      <div class="main-div">
+                                <h5>Drugs, Supplements & OTC interaction</h5>
+                                
+                                    <div class="drugs-container">
+                                            <div class="drug-field">
 
-                <h5>Drugs, Supplements$ OTC interaction</h5>
+                                                    <label for="drug1">SEARCH DRUG 1</label>
+                                                    <input type="text" id="drug1" placeholder="ENTER DRUG NAME" >
+                                                        <div>
+                                                            <ul class="list-div"></ul>
+                                                        </div>
 
-                    <div class="drug1-div">
+                                            </div>
 
-                            <label>SEARCH DRUG 1</label>
-                            <input type="text" id="drug1" placeholder="ENTER DRUG NAME" >
-                                <div>
-                                    <ul class="list-div"></ul>
-                                </div>
 
+                                            <div class="drug-field">
+                                                
+                                                    <label for="drug2">SEARCH DRUG 2</label>
+                                                    <input type="text" id="drug2" placeholder="ENTER DRUG NAME">
+                                                        <div>
+                                                            <ul class="list-div"></ul>
+                                                        </div>
+
+                                            </div>
+
+                                    </div>
+
+
+                                    <div class="add-div">
+                                        <button>ADD DRUG</button>
+                                    </div>
+
+
+                                    <div class="scann-div">
+                                            <!--SOOONN-->
+                                    </div>
+
+                                    
+                                    <button id="check-but">CHECK FOR INTERACTION</button>
                     </div>
 
-                    <div class="drug2-div">
-                        
-                            <label>SEARCH DRUG 2</label>
-                            <input type="text" id="drug2" placeholder="ENTER DRUG NAME">
-                                  <div>
-                                      <ul class="list-div"></ul>
-                                  </div>
+
+                    <div class="description-div">
+
+                            <h5>-------</h5>
+                            <p>------</p>
+                            <img src="#" alt="illustration">
 
                     </div>
+        </div>
 
-
-                    <div class="add-div">
-                          <button>ADD DRUG</button>
-                    </div>
-
-
-                    <div class="scann-div">
-                            <!--SOOONN-->
-                    </div>
-                    
-                    <button>CHECK FOR INTERACTION</button>
-      </div>
-
-
-      <div class="description-div">
-
-            <h5>-------</h5>
-            <p>------</p>
-            <svg></svg>
-
-      </div>
+    </div>
     
 </body>
-<footer></footer>
 </html>
