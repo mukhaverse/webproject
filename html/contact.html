@@ -1,13 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<header></header>
-<body>
-    
-</body>
-<footer></footer>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Medixa Contact Page</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../css/Contact.css" />
+  </head>
+  <body>
+    <div class="page-wrapper">
+      <main class="main-content" id="contact">
+        <section class="left-section">
+          <h1>Get in Touch</h1>
+
+          <div class="contact-details">
+            <p>
+              Email:
+              <button id="copyEmailBtn" class="email-copy-btn" type="button">
+                <span id="emailText">Medixainquiry@gmail.com</span>
+                <i class="fa-regular fa-copy"></i>
+              </button>
+            </p>
+            <p>Working hours: 8:00am - 4:00pm</p>
+            <span id="copyMessage" class="copy-message">Email copied to clipboard.</span>
+          </div>
+
+          <section class="faq-section">
+            <h2>Frequently Asked Questions</h2>
+
+            <div class="faq-card">
+              <div class="faq-slide active">
+                <h3>What services does Medixa provide?</h3>
+                <p>
+                  Medixa helps users check possible medication interactions and organize medicine schedules in a clear and easy way.
+                </p>
+              </div>
+
+              <div class="faq-slide">
+                <h3>How does the medication interaction check work?</h3>
+                <p>
+                  The user enters the medicine names, then the system uses an API to detect possible interactions and display the results clearly.
+                </p>
+              </div>
+
+              <div class="faq-slide">
+                <h3>Can I get a schedule for my medicines?</h3>
+                <p>
+                  Yes. The platform can generate a simple table to help organize medicine times and make daily use easier to manage.
+                </p>
+              </div>
+
+              <div class="faq-slide">
+                <h3>Is the contact form available for inquiries?</h3>
+                <p>
+                  Yes. Users can contact the team for support, general questions, or feedback through the contact form on this page.
+                </p>
+              </div>
+            </div>
+
+            <div class="faq-controls">
+              <button class="arrow-btn" id="prevBtn" type="button" aria-label="Previous question">
+                <i class="fa-solid fa-chevron-left"></i>
+              </button>
+
+              <div class="dots" id="dotsContainer">
+                <button class="dot active" type="button" data-index="0"></button>
+                <button class="dot" type="button" data-index="1"></button>
+                <button class="dot" type="button" data-index="2"></button>
+                <button class="dot" type="button" data-index="3"></button>
+              </div>
+
+              <button class="arrow-btn" id="nextBtn" type="button" aria-label="Next question">
+                <i class="fa-solid fa-chevron-right"></i>
+              </button>
+            </div>
+          </section>
+        </section>
+
+        <aside class="form-card">
+          <div class="form-heading-row">
+            <div class="mail-icon-wrap">
+              <i class="fa-regular fa-envelope"></i>
+            </div>
+            <h2 class="form-title">Contact Form</h2>
+          </div>
+
+          <p class="form-subtitle">We are here to assist you with any inquiries</p>
+
+          <form id="contactForm" novalidate>
+            <div class="row two-columns">
+              <div class="input-group">
+                <input type="text" id="firstName" name="firstName" placeholder=" " required />
+                <label for="firstName">First Name <span>*</span></label>
+              </div>
+
+              <div class="input-group">
+                <input type="text" id="lastName" name="lastName" placeholder=" " required />
+                <label for="lastName">Last Name <span>*</span></label>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <input type="text" id="subject" name="subject" placeholder=" " required />
+              <label for="subject">Subject <span>*</span></label>
+            </div>
+
+            <div class="input-group textarea-group">
+              <textarea id="message" name="message" placeholder=" " required></textarea>
+              <label for="message">Message <span>*</span></label>
+            </div>
+
+            <button type="submit" id="sendBtn" class="send-btn" disabled>Send Message</button>
+
+            <p class="terms-text">
+              By sending us an email, you agree to our Terms of Service and Privacy Policy.
+            </p>
+          </form>
+        </aside>
+      </main>
+    </div>
+
+    <script src="../js/contact.js"></script>
+  </body>
 </html>
