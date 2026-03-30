@@ -10,8 +10,11 @@ function init() {
     const container = document.getElementById('modelContainer');
     scene = new THREE.Scene();
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    const w = container.clientWidth || 400;
-    const h = container.clientHeight || 500;
+
+    const w = container.clientWidth /0.5|| 400;
+    const h = container.clientHeight /0.5|| 500;
+
+    
     renderer.setSize(w, h);
 
     
@@ -26,21 +29,21 @@ function init() {
 
 
     
-    camera = new THREE.PerspectiveCamera(60, w / h, 0.1, 1000);
-    camera.position.set(0, 0, 6);
+    camera = new THREE.PerspectiveCamera(13, w / h, 0.1, 1000);
+    camera.position.set(0, 10, 6);
     camera.lookAt(0, 0, 0);
 
 
       
-    const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+    const dirLight = new THREE.DirectionalLight(0xffffff, .8);
     dirLight.position.set(5, 10, 7);
     scene.add(dirLight);
 
-    const fillLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    const fillLight = new THREE.DirectionalLight(0xffffff, 0.7);
     fillLight.position.set(-5, 0, -5);
     scene.add(fillLight);
 
-    const ambient = new THREE.AmbientLight(0xffffff, 0.8);
+    const ambient = new THREE.AmbientLight(0xffffff, 0.9);
     scene.add(ambient);
 
 
@@ -100,7 +103,7 @@ function init() {
         renderer.domElement.style.height = '100%';
 
     });
-    
+
 }
 
 
