@@ -3,46 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/results.css">
     <title>Interaction Checker</title>
 </head>
 
 <body>
     <header></header>
 
-    <main class="drugs-div">
-
-        <header>
-            <button>342 Interaction Found</button>
-            <button>12 Controlled</button>
-        </header>
-
-        <div>
-
-            <section class="card-sect">
-                <div><h2>Contraindicated</h2></div>
-                <div> <h2>Major / High Risk</h2></div>
-                <div><h2>Moderate</h2></div>
-                <div><h2>Minor / Safe </h2></div>
-            </section>
-
-            <section class="Donut-chart">
-                <!-- SOOON BY Chart.js -->
-            </section>
-
-        </div>
+    <main>
 
         
+         <!-- SOOON BY Chart.js -->
+            <section class="chart-grid">
+
+                <div class="risk-chart">
+                    <canvas class="risk"></canvas>
+                </div>
+
+                <div class="breakdown-chart">
+                    <canvas class="brdown-chart"></canvas>
+                </div>
+
+                <div class="interaction-effects">
+                    <canvas class="effect-chart"></canvas>
+                </div>
+                
+            </section>
 
 
-        <div>
+            <div>
+                <h1>Latest interaction results</h1>
+            </div>
 
-        </div>
+            <section class="card-sect">
+                <article class="resul-card">
+                    
+                        <div class="status-div">
+                            <span class="date">DATE</span> 
+                            <span class="badge">STAUTS</span>
+                        </div>
+
+                        <div class="info-div">
+                            <h2>Contraindicated</h2>
+                            <p class="uni-id">ID: DI-1243</p>
+                            <p>DESCRIPTION</p>
+                        </div>
+                        
+                        <div class="drugs-result">
+                            <span class="drug-select">DRUG1</span>
+                            <span class="drug-select">DRUG2</span>
+                        </div>
+
+                 </article>
+
+
+                 <article class="resul-card">
+                    
+                        <div class="status-div">
+                            <span class="date">DATE</span> 
+                            <span class="badge">STAUTS</span>
+                        </div>
+
+                        <div class="info-div">
+                            <h2>Major</h2>
+                            <p class="uni-id">ID: DI-1243</p>
+                            <p>DESCRIPTION</p>
+                        </div>
+                        
+                        <div class="drugs-result">
+                            <span class="drug-select">DRUG1</span>
+                            <span class="drug-select">DRUG2</span>
+                        </div>
+                
+                 </article>
+
+
+                 <article class="resul-card">
+                    
+                        <div class="status-div">
+                            <span class="date">DATE</span> 
+                            <span class="badge">STAUTS</span>
+                        </div>
+
+                        <div class="info-div">
+                            <h2>Moderate</h2>
+                            <p class="uni-id">ID: DI-1243</p>
+                            <p>DESCRIPTION</p>
+                        </div>
+                        
+                        <div class="drugs-result">
+                            <span class="drug-select">DRUG1</span>
+                            <span class="drug-select">DRUG2</span>
+                        </div>
+
+                 </article>
+
+
+                 <article class="resul-card">
+                   
+                        <div class="status-div">
+                            <span class="date">DATE</span> 
+                            <span class="badge">STAUTS</span>
+                        </div>
+
+                        <div class="info-div">
+                            <h2>Minor</h2>
+                            <p class="uni-id">ID: DI-1243</p>
+                            <p>DESCRIPTION</p>
+                        </div>
+                        
+                        <div class="drugs-result">
+                            <span class="drug-select">DRUG1</span>
+                            <span class="drug-select">DRUG2</span>
+                        </div>
+                   
+                 </article>
+
+            </section>
+
+     
         
     </main>
     
 
 
     <footer></footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/chart.js"></script>
 
 </body>
 </html>
