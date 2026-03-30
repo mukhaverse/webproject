@@ -62,19 +62,23 @@
 
 
 
+/* Give center-bottom a real height and stop it from shrinking the model */
 .center-bottom { 
     display: flex;
     align-items: flex-end;
     gap: 30px;
-    margin-top: auto; 
-    outline: 5px solid ;
+    margin-top: auto;
+    width: 100%;
+    height: 380px;      /* ← add this */
+    outline: 5px solid;
 }
 
-.model 
-{ 
-    width: 100%;
-    height: 100%;
-     outline: 3px solid ;
+/* Give the model explicit dimensions */
+.model { 
+    flex: 1;            /* ← take up remaining space after the card */
+    height: 100%;       /* ← now this actually works since parent has height */
+    min-width: 0;       /* ← prevents flex overflow */
+    outline: 3px solid;
 }
 
 
