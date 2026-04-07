@@ -44,13 +44,3 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: 0.2 });
 
 revealEls.forEach(el => observer.observe(el));
-
-
-// ================= 3D EFFECT =================
-window.addEventListener('scroll', () => {
-  const stack = document.getElementById('featureStack');
-  if (!stack) return;
-
-  const rotateY = Math.min(window.scrollY * 0.03, 10);
-  stack.style.transform = `rotateY(${rotateY}deg)`;
-});
