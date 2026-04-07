@@ -1,0 +1,166 @@
+.steps-section {
+    width: 100%;
+    background: #f4f7fa; 
+    padding: 80px 0;
+    font-family: 'Barlow', sans-serif;
+}
+
+.how-it-works{
+    margin-bottom: 9rem;
+}
+
+
+
+.steps-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+/* .eyebrow {
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #4060e0; 
+} */
+
+.main-heading {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 48px;
+    color: #1a1f3a;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.accent-text { 
+    color: #8a94b8; 
+}
+
+
+.steps-container {
+    max-width: 1000px;
+    margin: 0 auto 120px;
+    display: flex;
+    gap: 80px;
+    align-items: center;
+}
+
+.steps-visual {
+    position: relative;
+    width: 300px;
+    height: 400px;
+}
+
+.curve-line {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 400px;
+    border: 1px solid #d4d8e8;
+    border-radius: 50%;
+    clip-path: inset(0 0 0 50%); 
+}
+
+.step-item {
+    margin-bottom: 40px;
+}
+
+.step-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 24px;
+    font-weight: 900;
+
+    display: block;
+    margin-bottom: 5px;
+}
+
+.step-item h3 { 
+    color: #1a1f3a; 
+    font-size: 20px; 
+    margin-bottom: 8px; 
+}
+.step-item p { 
+    color: #8a94b8; 
+    font-size: 15px; 
+    line-height: 1.5; 
+}
+
+
+
+
+
+
+
+
+.benefits-bento{
+ margin-bottom: 0rem;
+}
+
+.bento-grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 200px);
+    gap: 15px;
+}
+
+
+.bento-cell {
+    background: #fff;
+    border-radius: 24px;
+    padding: 30px;
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.bento-cell:hover { 
+    transform: scale(1.04); 
+    /* I might give them less opacity and increase it with the hover later */
+}
+
+.bento-cell h3 { 
+    font-family: 'Barlow Condensed', sans-serif; 
+    font-size: 22px; 
+    color: #1a1f3a; 
+    margin: 10px 0;
+}
+
+.bento-cell p { 
+    font-size: 13px; 
+    color: #8a94b8; 
+    margin: 0; 
+}
+
+.bento-icon { 
+    font-size: 28px; 
+    margin-bottom: auto; 
+}
+
+
+
+.tall { 
+    grid-row: span 2; 
+    background: #eff2fb; 
+} 
+.wide { 
+    grid-column: span 2; 
+    background: #f0f2f8; 
+}
+.medium-wide { 
+    grid-column: span 2; 
+    background: #e8ecf4; 
+}
+.small { 
+    background: #fff; 
+    /* border: 1px solid #dde2f0;  */
+} 
+
+
+.blue-tint { 
+    background: #e8f0ff; 
+}
