@@ -1,129 +1,102 @@
-const emailButton = document.getElementById('copyEmailBtn');
-const contactForm = document.getElementById('contactForm');
-const sendBtn = document.getElementById('sendBtn');
+const faqCards = [...document.querySelectorAll('.faq-card')];
+const carousel = document.getElementById('carousel');
+const dotsWrap = document.getElementById('dots');
+let currentIndex = 0;
 
-function restartFormAnimation() {
-  const icon = document.querySelector('.mail-icon-wrap');
-  const title = document.querySelector('.form-title');
-  const subtitle = document.querySelector('.form-subtitle');
+faqCards.forEach((_, index) => {
+  const dot = document.createElement('button');
+  dot.className = `dot ${index === 0 ? 'active' : ''}`;
+  dot.addEventListener('click', () => {
+    currentIndex = index;
+    updateCarousel();
+    resetAutoSlide();
+  });
+  dotsWrap.appendChild(dot);
+});
 
-  if (!icon || !title || !subtitle) return;
+const dots = [...document.querySelectorAll('.dot')];
 
-  icon.style.animation = 'none';
-  title.style.animation = 'none';
-  subtitle.style.animation = 'none';
-
-  void icon.offsetWidth;
-
-  icon.style.animation = 'slideIcon 0.8s ease forwards';
-  title.style.animation = 'fadeInText 0.45s ease forwards 0.45s';
-  subtitle.style.animation = 'fadeUp 0.45s ease forwards 0.9s';
+function getCardWidth() {
+  const card = faqCards[0];
+  const styles = window.getComputedStyle(carousel);
+  const gap = parseFloat(styles.gap) || 0;
+  return card.offsetWidth + gap;
 }
 
-setInterval(restartFormAnimation, 10000);
+function updateCarousel() {
+  const moveX = getCardWidth() * currentIndex;
+  carousel.style.transform = `translateX(calc(-${moveX}px + 33.333% + 13px))`;
 
-const formFields = [
+  faqCards.forEach((card, index) => {
+    card.classList.toggle('active', index === currentIndex);
+  });
+
+  dots.forEach((dot, index) => {
+    dot.classList.toggle('active', index === currentIndex);
+  });
+}
+
+function nextSlide() {
+  currentIndex = (currentIndex + 1) % faqCards.length;
+  updateCarousel();
+}
+
+let autoSlide = setInterval(nextSlide, 3200);
+
+function resetAutoSlide() {
+  clearInterval(autoSlide);
+  autoSlide = setInterval(nextSlide, 3200);
+}
+
+window.addEventListener('resize', updateCarousel);
+updateCarousel();
+
+const modal = document.getElementById('contactModal');
+const openModalBtn = document.getElementById('openModalBtn');
+const closeModalBtn = document.getElementById('closeModalBtn');
+const contactInfoBox = document.getElementById('contactInfoBox');
+const form = document.getElementById('contactForm');
+const submitBtn = document.getElementById('submitBtn');
+
+const fields = [
   document.getElementById('firstName'),
   document.getElementById('lastName'),
   document.getElementById('subject'),
   document.getElementById('message')
 ];
 
-emailButton.addEventListener('click', async () => {
-  const email = 'Medixainquiry@gmail.com';
-
-  try {
-    await navigator.clipboard.writeText(email);
-    } 
-  catch (error) {
-    console.error('Failed to copy email:', error);
-  }
-});
-
-function checkFormCompletion() {
-  const allFilled = formFields.every((field) => field.value.trim() !== '');
-
-  sendBtn.disabled = !allFilled;
-  sendBtn.classList.toggle('enabled', allFilled);
+function openModal() {
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
 }
 
-formFields.forEach((field) => {
-  field.addEventListener('input', checkFormCompletion);
-});
-
-contactForm.addEventListener('submit', (event) => {
-  event.preventDefault();
-
-  const allFilled = formFields.every((field) => field.value.trim() !== '');
-  if (!allFilled) return;
-
-  const firstName = document.getElementById('firstName').value.trim();
-  const lastName = document.getElementById('lastName').value.trim();
-  const subject = document.getElementById('subject').value.trim();
-  const message = document.getElementById('message').value.trim();
-
-  const emailBody = `First Name: ${firstName}\nLast Name: ${lastName}\n\nMessage:\n${message}`;
-  const mailtoLink = `mailto:Medixainquiry@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
-
-  window.location.href = mailtoLink;
-});
-
-const faqSlides = document.querySelectorAll('.faq-slide');
-const dots = document.querySelectorAll('.dot');
-const prevBtn = document.getElementById('prevBtn');
-const nextBtn = document.getElementById('nextBtn');
-
-let currentSlide = 0;
-let autoSlide;
-
-function showSlide(index) {
-  faqSlides.forEach((slide) => slide.classList.remove('active'));
-  dots.forEach((dot) => dot.classList.remove('active'));
-
-  faqSlides[index].classList.add('active');
-  dots[index].classList.add('active');
-  currentSlide = index;
+function closeModal() {
+  modal.classList.remove('active');
+  document.body.style.overflow = '';
 }
 
-function nextSlide() {
-  const nextIndex = (currentSlide + 1) % faqSlides.length;
-  showSlide(nextIndex);
-}
+openModalBtn.addEventListener('click', openModal);
+closeModalBtn.addEventListener('click', closeModal);
 
-function prevSlide() {
-  const prevIndex = (currentSlide - 1 + faqSlides.length) % faqSlides.length;
-  showSlide(prevIndex);
-}
-
-function startAutoSlide() {
-  autoSlide = setInterval(() => {
-    nextSlide();
-  }, 5000);
-}
-
-function resetAutoSlide() {
-  clearInterval(autoSlide);
-  startAutoSlide();
-}
-
-nextBtn.addEventListener('click', () => {
-  nextSlide();
-  resetAutoSlide();
+modal.addEventListener('click', (e) => {
+  if (e.target === modal) closeModal();
 });
 
-prevBtn.addEventListener('click', () => {
-  prevSlide();
-  resetAutoSlide();
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeModal();
 });
 
-dots.forEach((dot) => {
-  dot.addEventListener('click', () => {
-    const slideIndex = Number(dot.dataset.index);
-    showSlide(slideIndex);
-    resetAutoSlide();
-  });
-});
+function updateButtonState() {
+  const allFilled = fields.every(field => field.value.trim() !== '');
+  submitBtn.classList.toggle('enabled', allFilled);
+  submitBtn.disabled = !allFilled;
+}
 
-showSlide(0);
-startAutoSlide();
-checkFormCompletion();
+fields.forEach(field => field.addEventListener('input', updateButtonState));
+updateButtonState();
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  if (!submitBtn.classList.contains('enabled')) return;
+  contactInfoBox.classList.add('show');
+});
