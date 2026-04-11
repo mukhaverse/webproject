@@ -1,8 +1,10 @@
 .steps-section {
     width: 100%;
     background: #f4f7fa; 
-    padding: 80px 0;
+    padding: 7rem 0;
     font-family: 'Barlow', sans-serif;
+    /* margin-bottom: 5rem; */
+    padding-bottom: 5rem;
 }
 
 .how-it-works{
@@ -58,7 +60,7 @@
     top: 0;
     bottom: 0;
     width: 400px;
-    border: 1px solid #d4d8e8;
+    border: 2px solid #d4d8e8;
     border-radius: 50%;
     clip-path: inset(0 0 0 50%); 
 }
@@ -96,6 +98,25 @@
 
 .benefits-bento{
  margin-bottom: 0rem;
+ position: relative;
+}
+
+.behind-bento{
+    position: absolute;
+    top: 20%;
+    left: 23%;
+    width: 40%;
+    transform: rotate(-17deg);
+    z-index: 2;
+ /* might add a shadow later */
+    
+    
+}
+
+.behind-bento img{
+    width: 30%;
+    opacity: .7;
+    
 }
 
 .bento-grid {
@@ -105,6 +126,9 @@
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(2, 200px);
     gap: 15px;
+    position: relative;
+
+    /* opacity: .5; */
 }
 
 
@@ -121,6 +145,11 @@
 .bento-cell:hover { 
     transform: scale(1.04); 
     /* I might give them less opacity and increase it with the hover later */
+}
+
+.bento-icon{
+    width: 25%;
+    opacity: 0.7;
 }
 
 .bento-cell h3 { 
@@ -146,17 +175,21 @@
 .tall { 
     grid-row: span 2; 
     background: #eff2fb; 
+    z-index: 1;
 } 
 .wide { 
     grid-column: span 2; 
     background: #f0f2f8; 
+        z-index: 5;
 }
 .medium-wide { 
     grid-column: span 2; 
     background: #e8ecf4; 
+    z-index: 5;
 }
 .small { 
     background: #fff; 
+    /* z-index: 5; */
     /* border: 1px solid #dde2f0;  */
 } 
 
