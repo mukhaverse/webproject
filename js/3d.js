@@ -35,15 +35,19 @@ function init() {
 
 
       
-    const dirLight = new THREE.DirectionalLight(0xffffff, .8);
-    dirLight.position.set(5, 10, 7);
-    scene.add(dirLight);
+    const keyLight = new THREE.DirectionalLight(0xeaf2ff, 1.2);
+    keyLight.position.set(3, 6, 5); 
+    scene.add(keyLight);
 
-    const fillLight = new THREE.DirectionalLight(0xffffff, 0.7);
-    fillLight.position.set(-5, 0, -5);
+    const fillLight = new THREE.DirectionalLight(0xffffff, 0.3);
+    fillLight.position.set(-4, 2, -4); 
     scene.add(fillLight);
 
-    const ambient = new THREE.AmbientLight(0xffffff, 0.9);
+    const rimLight = new THREE.DirectionalLight(0xffffff, 0.9);
+    rimLight.position.set(0, 5, -6);
+    scene.add(rimLight);
+
+    const ambient = new THREE.AmbientLight(0xffffff, 0.35);
     scene.add(ambient);
 
 
