@@ -4,7 +4,7 @@ body {
   display: grid;
   flex-direction: row;
   align-items: center;
-  padding: 30px 30px ;
+  /* padding: 30px 30px ; */
 }
 
 h2 {
@@ -18,14 +18,19 @@ h2 {
 }
 
 .general-div{
+   background-image:
+        linear-gradient(#d0d0d0 1px, transparent 1px),
+        linear-gradient(90deg, #d0d0d0 1px, transparent 1px);
+    background-size: 200px 200px;
   display: grid;
   flex-direction: row;
     /* background: var(--clr-primary-ghost); */
-    background-color:#e8ecf4;
+    /* background-color:#e8ecf4; */
     min-height: 35rem;
-    margin: 2em 0 2em 0;
+    margin: 0em 0 2em 0;
     border-radius: 1rem;
-    width: 74rem;
+    width: 80rem;
+    padding-left: 2rem;
    
 }
 
@@ -36,8 +41,6 @@ h2 {
 }
 
 .main-div {
-  position:relative;
-  z-index: 5;
   width: 40em; 
   background: #f8f7fc;
   border-radius: 1rem;
@@ -56,6 +59,9 @@ h2 {
 
 .drug-field {
   margin-bottom: 18px;
+}
+.drug-field label{
+   color: var( --clr-dark-dim);
 }
 
 
@@ -136,6 +142,8 @@ input {
 }
 
 .description-div {
+   position:relative;
+  z-index: 5;
   width: 20rem;
   background: #f8f7fc;
   border-radius: 20px;
@@ -154,11 +162,10 @@ input {
   padding:0.5rem 0 1rem 1rem;
 }
 .description-div img{
-  margin:5rem 0 0 6rem;
+  margin:1rem 0 0 1rem;
 }
 
 .graph-div{
-  
   border: solid 8rem  #f8f7fc;
   border-radius: 20px;
   margin: 0 0 4rem 4.5rem;
@@ -172,10 +179,10 @@ input {
   /* There is many thing to change */
   position: absolute;
   z-index: 3;
-  left: 40rem;
-  bottom: 27rem;
-  right: 50rem;
-  transform: rotate(24deg);
+  left: 42rem;
+  bottom: 20rem;
+  right: 35rem;
+  transform: rotate(-35deg);
 
 }
 
@@ -184,14 +191,14 @@ input {
 
 /* ----ANIMATION--- */
 .add-div button:hover {
-  background: var(--clr-primary);
+  background:#1a1f3a;
   color: var(--clr-primary-ghost) ;
 }
 #check-but:hover {
   transform: translateY(-1px);
-  opacity: 0.95;
+  opacity: 0.85;
 }
 input:focus {
-  border-color: var(--clr-primary);
-  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.1);
+  border-color:#1a1f3a;
+  box-shadow: 1px 0px 0px 1px #1a1f3a;
 }

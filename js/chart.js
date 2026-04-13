@@ -102,3 +102,5 @@ new Chart(effectChart, {
   }
 });
 
+
+// Doughnut chart
