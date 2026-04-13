@@ -9,25 +9,20 @@ body {
   font-family: Arial, sans-serif;
   color: #1f1f1f;
 }
-
 main {
   padding: 2rem;
 }
-
-
 main h1 {
   font-size: 2.2rem;
   margin: 2rem 0 1.2rem;
   color: #111;
 }
-
 .chart-grid {
   display: grid;
   grid-template-columns: 1.5fr 1fr 1fr;
   gap: 1.2rem;
   margin-bottom: 2rem;
 }
-
 .risk-chart,
 .breakdown-chart,
 .interaction-effects {
@@ -37,14 +32,14 @@ main h1 {
   padding: 1.5rem;
   box-shadow: 0 8px 25px rgba(24, 39, 75, 0.08);
 }
-
-
+.interaction-effects{
+width: 40rem;
+}
 .card-sect {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1.2rem;
 }
-
 .resul-card {
   background: #ffffff;
   border-radius: 1.3rem;
@@ -55,20 +50,16 @@ main h1 {
   flex-direction: column;
   justify-content: space-between;
 }
-
-
 .status-div {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
 }
-
 .date {
   font-size: 0.85rem;
   color: #8b8b95;
 }
-
 .badge {
   padding: 0.4rem 0.8rem;
   border-radius: 999px;
@@ -77,34 +68,27 @@ main h1 {
   font-size: 0.8rem;
   font-weight: 600;
 }
-
-
 .info-div h2 {
   font-size: 1.5rem;
   margin-bottom: 0.6rem;
   color: #1a1a1a;
 }
-
 .uni-id {
   font-size: 0.9rem;
   color: #8b8b95;
   margin-bottom: 0.8rem;
 }
-
 .info-div p:last-child {
   font-size: 0.95rem;
   line-height: 1.6;
   color: #4a4a55;
 }
-
-
 .drugs-result {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-top: 1.2rem;
 }
-
 .drug-select {
   background: #eef2ff;
   color: #4f5bd5;
@@ -114,12 +98,59 @@ main h1 {
   font-weight: 500;
 }
 .risk{
-    max-width: 300px;
-    max-height: 20vw; 
+  width: 25rem;
+  max-height: 20vw; 
     
 }
+.interaction-effects {
+  background: white;
+  border-radius: 1.5rem;
+  padding: 1.2rem;
+  box-shadow: 0 8px 25px rgba(24, 39, 75, 0.08);
+}
+.interaction-effects h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.3rem;
+}
+.interaction-effects p {
+  font-size: 0.8rem;
+  color: #8b8b95;
+  margin-bottom: 1rem;
+}
+.chart-legend {
+  display: flex;
+  gap: 1.2rem;
+  margin-bottom: 1rem;
+  font-size: 0.8rem;
+  color: #555;
+}
+.chart-legend span {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.gray {
+  background: #bdbdbd;
+}
+.blue {
+  background: #4f5bd5;
+}
+.cyan {
+ background: #6fd3e7;
+}
+.effect-chart {
+ width: 100% !important;
+ height: 220px !important;
+}
 
-/* --- */
+
+
+/* --------*/
 @media (max-width: 1200px) {
   .chart-grid {
     grid-template-columns: 1fr;

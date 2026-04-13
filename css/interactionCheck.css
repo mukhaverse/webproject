@@ -1,6 +1,6 @@
 body {
   min-height: 100vh;
-  background: var( --clr-primary);
+  background: #f4f7fa;
   display: grid;
   flex-direction: row;
   align-items: center;
@@ -20,21 +20,25 @@ h2 {
 .general-div{
   display: grid;
   flex-direction: row;
-    background: var(--clr-primary-ghost);
+    /* background: var(--clr-primary-ghost); */
+    background-color:#e8ecf4;
     min-height: 35rem;
-    margin: 2rem  3rem 3rem;
+    margin: 2em 0 2em 0;
     border-radius: 1rem;
-    margin-right: 7rem;
-    width: 75rem;
+    width: 74rem;
+   
 }
 
 .content-div{
     display: flex;
     gap: 3rem;
+    position: relative;
 }
 
 .main-div {
-  width: 45rem;
+  position:relative;
+  z-index: 5;
+  width: 40em; 
   background: #f8f7fc;
   border-radius: 1rem;
   padding: 30px;
@@ -66,10 +70,10 @@ label {
 
 
 input {
-  width: 100%;
+  width: 70%;
   height: 52px;
   border-radius: 12px;
-  border: 2px solid var(--clr-primary-soft);
+  border: 2px solid #2b366a;
   padding: 0 14px;
   font-size: 15px;
   outline: none;
@@ -86,65 +90,61 @@ input {
 }
 
 .add-div button {
-  width: 100%;
+  width: 70%;
   height: 48px;
   border-radius: 12px;
-  border: 2px dashed var(--clr-primary-soft);
+  border: 2px dashed #2b366a;
   background: transparent;
-  color:var(--clr-primary-soft);
+  color: var( --clr-dark-dim);
   font-weight: bold;
   cursor: pointer;
   transition: 0.2s;
 }
-.scann-div button{
-  width: 100%;
-  height: 48px;
- 
-  border-radius: 12px;
-  border: 0.1rem solid var(--clr-primary-soft);
+.scann{
+  border: 0.1rem solid #1a1f3a;
   background: transparent;
-  color:var(--clr-primary-soft);
+  color:#1a1f3a;
   font-weight: bold;
   cursor: pointer;
   transition: 0.2s;
-  text-align: center;
 }
-.scann-div{
-  
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 
 #check-but {
-  width: 100%;
-  height: 55px;
   border: none;
-  border-radius: 12px;
-  background:var( --clr-primary);
+  height: 10rem;
+  background:#1a1f3a;
   color: white;
-  font-size: 16px;
+  font-size: 10px;
   font-weight: bold;
   cursor: pointer;
-  margin-top: 10px;
   transition: 0.2s;
+  padding: 1rem 0 1.5rem 0;
+}
+.scann,#check-but{
+  flex: 1;
+  width: 1%;
+  height: 3em;
+  font-weight: bold;
+  cursor: pointer;
+   border-radius: 12px;
+}
+.last-div{
+  display: flex;
+  gap: 2rem;
+  margin-top: 2em;
+  width: 70%;
 }
 
 .description-div {
   width: 20rem;
-  /* max-width: 650px; */
   background: #f8f7fc;
   border-radius: 20px;
-  /* margin-top: 0rem;
-  margin-right: 4rem; */
-   margin: 0 4rem 4rem 1rem;
+  margin: 0 4rem 4rem 1rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 .description-div h3 {
   color: #3f356b;
-  /* margin-bottom: 10px; */
   padding:1rem 0 0.5rem 1rem;
 }
 
@@ -160,7 +160,6 @@ input {
 .graph-div{
   
   border: solid 8rem  #f8f7fc;
-  /* background-color: #f8f7fc; */
   border-radius: 20px;
   margin: 0 0 4rem 4.5rem;
   display: flex;
@@ -168,7 +167,16 @@ input {
   align-items: center;
   max-width: 40rem;
   gap: 8rem;
-  /* max-height: 2rem; */
+}
+.med-div{
+  /* There is many thing to change */
+  position: absolute;
+  z-index: 3;
+  left: 40rem;
+  bottom: 27rem;
+  right: 50rem;
+  transform: rotate(24deg);
+
 }
 
 

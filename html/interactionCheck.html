@@ -5,9 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" href="../css/interactionCheck.css">
+    <link href="../css/nav.css" rel="stylesheet">
+    <link href="../css/footer.css" rel="stylesheet">
     <title>Interaction Checker</title>
-</head>
+    <header>
+    <div class="nav-wrap">
+    <nav class="nav">
+        <div class="nav-brand">
+            <div class="nav-logo">
+                <img src="/assets/medixa.svg" alt="medixa logo">
+            </div>
+    
+        </div>
 
+        <div class="nav-tabs" id="navTabs">
+        <div class="nav-tab-bg" id="tabBg"></div>
+        <a href="#" class="nav-tab active" data-page="home">Home</a>
+        <a href="#" class="nav-tab" data-page="checker">Checker</a>
+        <a href="#" class="nav-tab" data-page="about">About</a>
+        <a href="#" class="nav-tab" data-page="contact">Contact Us</a>
+        </div>
+
+        <div class="nav-right">
+        <a href="#" class="nav-signin">Sign In</a>
+        </div>
+    </nav>
+    </div>
+</header>
+
+</head>
 
 <body>
     <main class="general-div">
@@ -52,15 +78,17 @@
                                         <button>ADD DRUG </button>
                                     </div>
 
-
+                                    <div class="last-div">
                                     <!-- SOONN BY Tesseract.js -->
-                                    <div class="scann-div">
-                                            <button class="scann"> SACNN THE  /button>
-                                    </div>
-
                                     
-                                    <button id="check-but">CHECK FOR INTERACTION</button>
+                                        <button class="scann"> SACNN THE  </button>
+                                        <button id="check-but">CHECK INTERACTION</button>
+                                    </div>
+                                    
                     </section>
+                    <div class="med-div">
+                        <img src="../assets/med.svg" alt="" width= "200rem" height="250rem">
+                    </div>
 
 
                     <section class="description-div">
@@ -76,6 +104,53 @@
         
 
     </main>
-    
+
+    <div class="foot-wrap">
+  <footer class="foot">
+    <div class="foot-top">
+ 
+      <div>
+        <div class="foot-brand">
+            <div class="foot-logo">
+                <img src="/assets/medixa.svg" alt="medixa logo">
+            </div>
+        </div>
+        <p class="foot-desc">A trusted tool for checking medication interactions. Built for patients and healthcare professionals alike.</p>
+        
+      </div>
+ 
+      <div class="foot-col">
+        <div class="foot-col-head">Pages</div>
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Checker</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+ 
+      <div class="foot-col">
+        <div class="foot-col-head">Project Info</div>
+        <ul>
+            <li><a href="#" target="_blank">GitHub Repo</a></li>
+            <li><a href="#">Technical Report</a></li>
+            <li><a href="#">About the Team</a></li>
+            <li><a href="#">University Portal</a></li>
+        </ul>
+    </div>
+ 
+    </div>
+ 
+        <div class="foot-bottom">
+        <span class="foot-copy">© 2026 Medixa Inc. All rights reserved.</span>
+            <div class="foot-links">
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+                <a href="#">Contact</a>
+            </div>
+        </div>
+  </footer>
+</div>
+     <script src="js/nav.js"></script>
 </body>
 </html>

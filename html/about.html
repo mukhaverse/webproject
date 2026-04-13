@@ -1,13 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Medixa About</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <link href="../css/nav.css" rel="stylesheet">
+  <link href="../css/footer.css" rel="stylesheet">
+  <link href="../css/about.css" rel="stylesheet">
+
 </head>
-<header></header>
 <body>
-    
+  <header>
+    <div class="nav-wrap">
+      <nav class="nav">
+        <div class="nav-brand">
+          <div class="nav-logo">
+            <img src="../assets/medixa.svg" alt="medixa logo">
+          </div>
+        </div>
+        <div class="nav-tabs" id="navTabs">
+          <div class="nav-tab-bg" id="tabBg"></div>
+          <a href="#" class="nav-tab active">Home</a>
+          <a href="#" class="nav-tab">Checker</a>
+          <a href="#" class="nav-tab">About</a>
+          <a href="#" class="nav-tab">Contact Us</a>
+        </div>
+        <div class="nav-right">
+          <a href="#" class="nav-signin">Sign In</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+  <section class="hero">
+    <div class="container">
+      <div class="hero-card reveal active">
+        <div class="hero-top">
+          <div class="hero-copy">
+            <div class="eyebrow">Medixa.com</div>
+            <h1>About MEDIXA</h1>
+            <p>Your smart companion for safer, simpler, and more confident medication management.</p>
+          </div>
+
+          <div class="cards-stage">
+            <div class="stack" id="featureStack">
+              <article class="feature-card" data-order="0">
+                <div class="card-content">
+                  <h3>Easy &amp; Secure</h3>
+                  <p>Clear, reliable medication guidance in a safe and user-friendly experience.</p>
+                </div>
+              </article>
+
+              <article class="feature-card" data-order="1">
+                <div class="card-content">
+                  <h3>Check Interactions</h3>
+                  <p>Users can identify possible medication conflicts before they become risky.</p>
+                </div>
+              </article>
+
+              <article class="feature-card" data-order="2">
+                <div class="card-content">
+                  <h3>Smart Scheduling</h3>
+                  <p>Build organized medication timing plans that are easier to follow daily.</p>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-bottom">
+          <div>
+            <h2>What is <span>Medixa</span> ?</h2>
+            <p>
+              Medixa is an intelligent medication management platform that empowers individuals to take their medications safely, on time, and with full awareness of any potential risks.
+            </p>
+            <br />
+            <p>
+              We believe that informed patients make better health decisions. Medixa translates complex pharmacological data into plain, actionable guidance — bridging the gap between prescription and practice.
+            </p>
+          </div>
+
+          <aside class="hero-brand">
+            <div class="logo-img">
+              <img src="assets/medixa.svg" alt="Medixa Logo">
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="story" id="story">
+    <div class="container">
+      <div class="story-shell reveal">
+        <div class="story-head">
+          <h2>People Behind <span>MEDIXA</span></h2>
+        </div>
+
+        <div class="story-grid">
+          <div class="story-block">
+            <h3>who we are?</h3>
+            <p>
+              Medixa was founded by a group of individuals who witnessed firsthand how confusing medication management can be — for patients, caregivers, and even healthcare providers. We combined our backgrounds in software engineering and product design to build a tool we wished existed.
+            </p>
+
+            <div class="highlight-box">
+              <h3>Our role</h3>
+              <p>
+                We are not a pharmaceutical company. We do not prescribe, diagnose, or replace medical professionals. What we do is give patients the information and organization they deserve — transparently and without compromise.
+              </p>
+            </div>
+
+            <p class="mini-note">
+              Medixa is a platform for information and scheduling. Always consult your pharmacist or physician for personalized medical advice.
+            </p>
+          </div>
+
+          <div class="mission">
+            <h2><span>OUR</span> MISSION</h2>
+            <p>
+              We believe that informed patients make better health decisions. Medixa translates complex pharmacological data into plain, actionable guidance and helps users build routines they can actually follow.
+            </p>
+
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="foot-wrap">
+    <footer class="foot">
+      <div class="foot-top">
+        <div>
+          <div class="foot-brand">
+            <div class="foot-logo">
+              <img src="assets/medixa.svg" alt="medixa logo">
+            </div>
+          </div>
+          <p class="foot-desc">A trusted tool for checking medication interactions. Built for patients and healthcare professionals alike.</p>
+        </div>
+        <div class="foot-col">
+          <div class="foot-col-head">Pages</div>
+          <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Checker</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </div>
+        <div class="foot-col">
+          <div class="foot-col-head">Project Info</div>
+          <ul>
+            <li><a href="#">GitHub Repo</a></li>
+            <li><a href="#">Technical Report</a></li>
+            <li><a href="#">About the Team</a></li>
+            <li><a href="#">University Portal</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="foot-bottom">
+        <span class="foot-copy">© 2026 Medixa Inc. All rights reserved.</span>
+        <div class="foot-links">
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+  <script src="../js/about.js"></script>
 </body>
-<footer></footer>
 </html>

@@ -182,7 +182,8 @@
 .icon-stack { 
     display: flex; 
     flex-direction: column; 
-    gap: 10px; 
+    gap: 1.5rem; 
+    font-size: 2rem;
 }
 
 .mini-icon { 
