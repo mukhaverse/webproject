@@ -6,14 +6,13 @@ animate();
 
 function init() {
 
-
     const container = document.getElementById('modelContainer');
     scene = new THREE.Scene();
 
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 
-    const w = container.clientWidth / 0.5 || 400;
-    const h = container.clientHeight / 0.5 || 500;
+    const w = container.clientWidth || 400;
+    const h = container.clientHeight || 500;
 
     renderer.setSize(w, h);
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -23,14 +22,15 @@ function init() {
 
     container.appendChild(renderer.domElement);
 
+    
+
     camera = new THREE.PerspectiveCamera(13, w / h, 0.1, 1000);
-    camera.position.set(0, 10, 6);
+    camera.position.set(0, 12, 12);
     camera.lookAt(0, 0, 0);
 
 
-
-
     
+
     const keyLight = new THREE.DirectionalLight(0xeaf2ff, 1.2);
     keyLight.position.set(3, 6, 5);
     scene.add(keyLight);
@@ -49,7 +49,6 @@ function init() {
 
 
 
-
     const loader = new THREE.GLTFLoader();
 
     loader.load(
@@ -59,7 +58,7 @@ function init() {
 
             const model = gltf.scene;
 
-            // the whole model
+            
             const box = new THREE.Box3().setFromObject(model);
             const center = box.getCenter(new THREE.Vector3());
             const size = box.getSize(new THREE.Vector3());
@@ -76,9 +75,8 @@ function init() {
             scene.add(pivot);
             loadedModel = pivot;
 
-
-
-            //individualy picking meshes and pills
+            
+            
 
             model.traverse((child) => {
                 if (child.isMesh) {
@@ -86,7 +84,7 @@ function init() {
                 }
             });
 
-            // console.log("Total meshes:", meshes.length);
+            console.log("Total meshes:", meshes.length);
 
             
             const pill1 = [meshes[3], meshes[14]];
@@ -94,17 +92,14 @@ function init() {
             const pill3 = [meshes[19], meshes[10]];
             const pill4 = [meshes[17], meshes[1]];
 
-            // just for visability to know which mesh is selected
+            // colors to distinguish between them
             colorGroup(pill1, 0xff0000); 
             colorGroup(pill2, 0x00ff00); 
             colorGroup(pill3, 0x0000ff); 
             colorGroup(pill4, 0x4f002f); 
 
-            startFloatingGroup(pill1, 0);
-            startFloatingGroup(pill2, 0.3);
-            startFloatingGroup(pill3, 0.6);
-            startFloatingGroup(pill4, 0.8);
-
+            
+            addScrollAnimation(pill1, pill2, pill3, pill4);
 
         },
 
@@ -129,16 +124,13 @@ function init() {
     });
 }
 
-
-
 function animate() {
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
 }
 
 
-
-
+// color helper 
 function colorGroup(group, color) {
     group.forEach(mesh => {
         mesh.material = mesh.material.clone();
@@ -148,33 +140,43 @@ function colorGroup(group, color) {
 
 
 
-function startFloatingGroup(group, delay = 0) {
+function addScrollAnimation(pill1, pill2, pill3, pill4) {
 
-    group.forEach(mesh => {
+    gsap.registerPlugin(ScrollTrigger);
 
-        gsap.to(mesh.position, {
-
-            y: "+=0.9",
-            duration: 1.5,
-            yoyo: true,
-            repeat: -1,
-            ease: "sine.inOut",
-            delay: delay
-
-        });
-
-        gsap.to(mesh.rotation, {
-
-            y: "+=0.1",
-            duration: 2,
-            yoyo: true,
-            repeat: -1,
-            ease: "sine.inOut",
-            delay: delay
-
-        });
-
+    const tl = gsap.timeline({
+        scrollTrigger: {
+            trigger: ".hero-section",
+            start: "top top",
+            end: "bottom+=2000 top",
+            scrub: true,
+        }
     });
 
+    // move entire pill group
+    function move(group, y, z, at = 0) {
+        group.forEach(mesh => {
+            tl.to(mesh.position, {
+                y: `+=${y}`,
+                z: `+=${z}`,
+                ease: "power2.out"
+            }, at);
+        });
+    }
+
     
+    //  1
+    move(pill1, 300, 40, 0);
+    move(pill2, 320, 50, 0);
+    move(pill3, 400, 60, 0);
+    move(pill4, 200, 30, 0);
+
+    //  2
+    // move(pill2, 200, 30, 0.5);
+    move(pill3, 180, 30, 0.5);
+    move(pill4, 200, 20, 0.5);
+
+    //  3
+    // move(pill3, 200, 30, 1);
+
 }
