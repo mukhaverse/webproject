@@ -14,7 +14,7 @@ new Chart(myChart, {
         datasets: [
 
         {
-            label: "PROJECT MEMBER",
+            label: "Risk ratio",
             data: charData.data,
         
         },
@@ -103,4 +103,4 @@ new Chart(effectChart, {
 });
 
 
-// Doughnut chart
+

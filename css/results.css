@@ -71,8 +71,8 @@ width: 40rem;
 .badge {
   padding: 0.4rem 0.8rem;
   border-radius: 999px;
-  background: #ecebff;
-  color: #5a57d8;
+  background: rgb(227, 237, 253);
+  color: var( --clr-dark-dim);
   font-size: 0.8rem;
   font-weight: 600;
 }
@@ -98,8 +98,8 @@ width: 40rem;
   margin-top: 1.2rem;
 }
 .drug-select {
-  background: #eef2ff;
-  color: #4f5bd5;
+  background: rgb(227, 237, 253);
+  color:  var( --clr-dark-dim);
   padding: 0.4rem 0.8rem;
   border-radius: 999px;
   font-size: 0.82rem;
