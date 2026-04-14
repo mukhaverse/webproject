@@ -10,7 +10,7 @@
   max-width: 1160px;
   margin: 0 auto;
   background: #fff;
-  border: 1px solid #d4d8e8;
+  border: 1px solid #e5e5e5;
   border-radius: 18px;
   padding: 48px 40px 30px;
   box-shadow: 0 4px 24px rgba(60,80,140,0.06);
@@ -21,17 +21,14 @@
   grid-template-columns: 2fr 1fr 1fr;
   gap: 48px;
   padding-bottom: 36px;
-  border-bottom: 1px solid #eff1f8;
+  border-bottom: 1px solid #e5e5e5;
 }
  
-
 .foot-brand {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
-
-
 
 .foot-desc {
   color: #8a94b8;
@@ -41,16 +38,15 @@
   margin-bottom: 20px;
 }
 
-
-
 .foot-col-head {
   font-weight: 700;
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #1a1f3a;
+  color: #1e1b4b;
   margin-bottom: 16px;
 }
+
 .foot-col ul { list-style: none; }
 .foot-col ul li { margin-bottom: 10px; }
 .foot-col ul li a {
@@ -59,21 +55,24 @@
   font-size: 14px;
   transition: color 0.15s;
 }
-.foot-col ul li a:hover { color: #4060e0; }
+
+.foot-col ul li a:hover { 
+  color: #1e1b4b; 
+}
  
-
-
 .foot-bottom {
   padding-top: 22px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+
 .foot-copy { color: #c4cad8; font-size: 12.5px; }
 .foot-links {
   display: flex;
   gap: 20px;
 }
+
 .foot-links a {
   color: #c4cad8;
   text-decoration: none;
@@ -81,13 +80,6 @@
   transition: color 0.15s;
 }
 .foot-links a:hover { color: #8a94b8; }
-
-
-
-
-
-
-
 
 @media (max-width: 1024px) {
 

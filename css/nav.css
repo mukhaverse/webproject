@@ -12,7 +12,7 @@
   max-width: 1160px;
   margin: 0 auto;
   background: #fff;
-  border: 1px solid #d4d8e8;
+  border: 1px solid #f4f7fa;
   border-radius: 18px;
   padding: 0 10px 0 22px;
   height: 58px;
@@ -21,8 +21,6 @@
   justify-content: space-between;
   box-shadow: 0 4px 24px rgba(60,80,140,0.08), 0 1px 4px rgba(0,0,0,0.04);
 }
-
-
 
 .nav-brand {
   display: flex;
@@ -46,17 +44,15 @@
   display: block; 
 }
 
-
-
-
 .nav-tabs {
   position: relative;
   display: flex;
   align-items: center;
-  background: #f0f2f8;
+  background: #f4f7fa;
   border-radius: 12px;
   padding: .4rem .7rem;
 }
+
 .nav-tab-bg {
   position: absolute;
   background: #fff;
@@ -67,9 +63,10 @@
   transition: left 0.25s cubic-bezier(0.34, 1.4, 0.64, 1),
               width 0.25s cubic-bezier(0.34, 1.4, 0.64, 1);
   box-shadow: 0 1px 6px rgba(60,80,180,0.10);
-  border: 1px solid #dde2f0;
+  border: 1px solid #e5e5e5;
   pointer-events: none;
 }
+
 .nav-tab {
   position: relative;
   font-family: 'Outfit', sans-serif;
@@ -87,14 +84,11 @@
   display: block;
 }
 .nav-tab:hover { 
-    color: #3a4a7a; 
+    color: #1e1b4b; 
 }
 .nav-tab.active { 
-    color: #1a1f3a; 
+    color: #1e1b4b; 
 }
-
-
-
 
 .nav-right {
   display: flex;
@@ -102,7 +96,7 @@
   flex-shrink: 0;
 }
 .nav-signin {
-  background: #1a1f3a;
+  background: #1e1b4b;
   color: #fff;
   font-family: 'Outfit', sans-serif;
   font-weight: 400;
@@ -115,11 +109,8 @@
   white-space: nowrap;
 }
 .nav-signin:hover { 
-    background: #2a3060; 
+    background: #8a94b8; 
 }
-
-
-
 
 /* --RESPONNSIVE */
 @media (max-width: 992px) {

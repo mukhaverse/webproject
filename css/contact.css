@@ -47,19 +47,19 @@ body {
   font-size: clamp(54px, 7vw, 86px);
   line-height: 0.95;
   font-weight: 800;
-  color: #111;
+  color: #1e1b4b;
   margin-bottom: 8px;
 }
 
 .contact-email {
   font-size: 13px;
-  color: #6f7486;
+  color: #4b5563;
   margin-bottom: 34px;
   text-align: left;
 }
 
 .contact-email a {
-  color: #6f7486;
+  color: #4b5563;
   text-decoration: underline;
 }
 
@@ -93,7 +93,7 @@ body {
   max-width: 390px;
   margin-left: auto;
   background: #f7f7f7;
-  border: 1px solid #d9d9d9;
+  border: 1px solid #e5e5e5;
   border-radius: 18px;
   box-shadow: 0 10px 26px rgba(0, 0, 0, 0.12);
   padding: 18px 16px 14px;
@@ -104,7 +104,7 @@ body {
   text-align: center;
   font-size: 15px;
   font-weight: 700;
-  color: #5a5f6f;
+  color: #4b5563;
   margin-bottom: 14px;
 }
 
@@ -126,7 +126,7 @@ body {
 
 .form-group label {
   font-size: 11px;
-  color: #6f7486;
+  color: #4b5563;
   font-weight: 500;
 }
 
@@ -134,13 +134,13 @@ body {
 .form-group select,
 .form-group textarea {
   width: 100%;
-  border: 1px solid #cfd3dc;
+  border: 1px solid #e5e5e5;
   border-radius: 8px;
   background: #fff;
   padding: 10px 10px;
   font-size: 12px;
   font-family: 'Inter', sans-serif;
-  color: #5e5e5e;
+  color: #4b5563;
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -153,18 +153,18 @@ body {
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
-  border-color: #7d88a5;
+  border-color: #4b5563;
   box-shadow: 0 0 0 3px rgba(125, 136, 165, 0.12);
 }
 
 .error-message {
   min-height: 14px;
   font-size: 10px;
-  color: #b42318;
+  color: #bd1d1d;
 }
 
 .input-error {
-  border-color: #b42318 !important;
+  border-color: #bd1d1d !important;
   box-shadow: 0 0 0 3px rgba(180, 35, 24, 0.09);
 }
 
@@ -174,7 +174,7 @@ body {
   margin-bottom: 0px;
   text-align: center;
   font-size: 12px;
-  color: #5f667c;
+  color: #4b5563;
 }
 
 .submit-btn {
@@ -182,7 +182,7 @@ body {
   height: 34px;
   border: none;
   border-radius: 999px;
-  background: #6b7084;
+  background: #4b5563;
   color: #fff;
   font-size: 12px;
   font-weight: 600;
@@ -203,7 +203,7 @@ body {
   font-family: 'Barlow', sans-serif;
   font-size: 30px;
   font-weight: 700;
-  color: #6b738a;
+  color: #4b5563;
   margin-bottom: 14px;
 }
 
@@ -219,8 +219,8 @@ body {
   position: absolute;
   left: 0;
   border-radius: 30px;
-  border: 1px solid #dddddd;
-  background: #f7f7f7;
+  border: 1px solid #d0d0d0;
+  background: #f4f7fa;
 }
 
 .faq-shadow-card {
@@ -265,7 +265,7 @@ body {
 .faq-card h3 {
   font-size: 15px;
   font-weight: 700;
-  color: #5f667c;
+  color: #4b5563;
   margin-bottom: 10px;
   line-height: 1.35;
 }
@@ -273,7 +273,7 @@ body {
 .faq-card p {
   font-size: 13px;
   line-height: 1.5;
-  color: #6f7486;
+  color: #4b5563;
   max-width: 340px;
 }
 

@@ -41,7 +41,7 @@ body {
   font-size: 64px;
   line-height: 1.05;
   font-weight: 800;
-  color: #000;
+  color: #1e1b4b;
   letter-spacing: 0.5px;
 }
 
@@ -55,14 +55,14 @@ body {
 .stat h2 {
   font-size: 34px;
   font-weight: 800;
-  color: #5f667c;
+  color: #4b5563;
   line-height: 1;
   margin-bottom: 4px;
 }
 
 .stat p {
   font-size: 15px;
-  color: #6f7486;
+  color: #4b5563;
   font-weight: 500;
 }
 
@@ -86,7 +86,7 @@ body {
   position: relative;
   overflow: hidden;
   z-index: 2;
-  background: #fbfbfa;
+  background: #f4f7fa;
   border: 1px solid #e5e5e5;
   padding: 54px 46px 44px;
   display: grid;
@@ -105,14 +105,14 @@ body {
   right: 0px;
   width: 170px;
   height: 80px;
-  background: #eeeeee;
+  background: #e5e5e5;
   z-index: 3;  
   clip-path: polygon(18% 0, 100% 100%, 30% 95%);
 }
 
 .sheet-left,
 .sheet-right {
-  color: #666a78;
+  color: #4b5563;
 }
 
 .sheet-logo {
@@ -130,7 +130,7 @@ body {
 .sheet-note-title {
   text-align: center;
   font-size: 13px;
-  color: #6f7486;
+  color: #4b5563;
   margin-bottom: 4px;
 }
 
@@ -138,7 +138,7 @@ body {
   text-align: center;
   font-size: 11px;
   line-height: 1.35;
-  color: #777d8f;
+  color: #4b5563;
   max-width: 330px;
   margin: 0 auto 20px;
   font-style: italic;
@@ -156,7 +156,7 @@ body {
 .sheet-block h3 {
   font-size: 14px;
   font-weight: 800;
-  color: #5a5f6f;
+  color: #4b5563;
   margin-bottom: 6px;
   line-height: 1.3;
 }
@@ -164,24 +164,24 @@ body {
 .sheet-block p {
   font-size: 13px;
   line-height: 1.45;
-  color: #6c7180;
+  color: #4b5563;
   margin-bottom: 4px;
 }
 
 .sheet-block span {
   font-size: 12px;
-  color: #7b8090;
+  color: #4b5563;
 }
 
 .divider {
-  background: #bdbdbd;
+  background: #b9b9b9;
   width: 1px;
   height: 100%;
 }
 
 .people span {
   font-size: 12px;
-  color: #7b8090;
+  color: #4b5563;
 }
 
 .right-side .text-block {
@@ -194,21 +194,21 @@ body {
 
 .name {
   font-weight: 600;
-  color: #2a2f3a;
+  color: #4b5563;
   margin-bottom: 4px;
 }
 
 .link {
   display: block;
   font-size: 13px;
-  color: #6c7285;
+  color: #4b5563;
   text-decoration: none;
   margin-left: 10px;
   transition: 0.2s;
 }
 
 .link:hover {
-  color: #0b1e3c;
+  color: #1e1b4b;
 }
 
 /* Responsive Design */
