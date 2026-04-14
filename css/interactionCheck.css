@@ -164,7 +164,6 @@ input {
 .description-div img{
   margin:1rem 0 0 1rem;
 }
-
 .graph-div{
   border: solid 8rem  #f8f7fc;
   border-radius: 20px;
@@ -176,20 +175,24 @@ input {
   gap: 8rem;
 }
 .med-div{
-  /* There is many thing to change */
+ 
   position: absolute;
   z-index: 3;
-  left: 42rem;
+  left: 39rem;
   bottom: 20rem;
   right: 35rem;
   transform: rotate(-35deg);
 
 }
+img{
+  width: 18rem;
+  height: 15rem;
+}
 
 
 
 
-/* ----ANIMATION--- */
+/* ----PSEUDO CLASS--- */
 .add-div button:hover {
   background:#1a1f3a;
   color: var(--clr-primary-ghost) ;

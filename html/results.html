@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" href="../css/results.css">
     <link href="../css/nav.css" rel="stylesheet">
@@ -16,7 +16,7 @@
 <body>
     <header>
         <div class="nav-wrap">
-    <nav class="nav">
+    <nav class="nav" aria-label="Main navigation">
         <div class="nav-brand">
             <div class="nav-logo">
                 <img src="/assets/medixa.svg" alt="medixa logo">
@@ -46,14 +46,14 @@
             <section class="chart-grid">
 
                 <div class="risk-chart">
-                    <canvas class="risk"></canvas>
+                    <canvas class="risk" aria-label="Risk ratio chart showing contraindicated, major, moderate, and minor interaction levels" role="img"></canvas>
                     <h3>Risk Ratio</h3>
                 </div>
 
                 
 
                 <div class="interaction-effects">
-                    <canvas class="effect-chart"> <canvas class="effect-chart">
+                    <canvas class="effect-chart" aria-label="Interaction side effects chart showing bleeding, toxicity, drowsiness, heart risk, and other effects" role="img"> </canvas>
                     <h3>Interaction Side Effects</h3>    
                 </div>
                 
@@ -65,15 +65,15 @@
             </div>
 
             <section class="card-sect">
-                <article class="resul-card">
+                <article class="resul-card" aria-labelledby="card1">
                     
                         <div class="status-div">
-                            <span class="date">14-4</span> 
-                            <span class="badge">STAUTS</span>
+                            <time datetime="2026-04-14" class="date">14 Apr</time> 
+                            <span class="badge">STATUS</span>
                         </div>
 
                         <div class="info-div">
-                            <h2>Contraindicated</h2>
+                            <h2 id="card1">Contraindicated</h2>
                             <p class="uni-id">ID-0001</p>
                             <p>This combination may significantly increase the risk of serious bleeding. Concurrent use should generally be avoid unless directed by a healthcare provider .</p>
                         </div>
@@ -86,15 +86,15 @@
                  </article>
 
 
-                 <article class="resul-card">
+                 <article class="resul-card" aria-labelledby="card2">
                     
                         <div class="status-div">
-                            <span class="date">14-4</span> 
-                            <span class="badge">STAUTS</span>
+                            <time datetime="2026-04-14" class="date">14 Apr</time> 
+                            <span class="badge">STATUS</span>
                         </div>
 
                         <div class="info-div">
-                            <h2>Major</h2>
+                            <h2 id="card2">Major</h2>
                             <p class="uni-id">ID-0001</p>
                             <p>Using these drugs together ca increase the risk of gastrointestinal bleeding due to their combined effects on blood clotting. Close mointoring is required.</p>
                         </div>
@@ -107,15 +107,15 @@
                  </article>
 
 
-                 <article class="resul-card">
+                 <article class="resul-card" aria-labelledby="card3">
                     
                         <div class="status-div">
-                            <span class="date">14-4</span> 
-                            <span class="badge">STAUTS</span>
+                            <time datetime="2026-04-14" class="date">14 Apr</time>
+                            <span class="badge">STATUS</span>
                         </div>
 
                         <div class="info-div">
-                            <h2>Moderate</h2>
+                            <h2 id="card3">Moderate</h2>
                             <p class="uni-id">ID-0001</p>
                             <p>Ibuprofen may enhance the anticoagulant effect of warfarin, requiring dose adjustment and regular mointoring of INR level.</p>
                         </div>
@@ -128,15 +128,16 @@
                  </article>
 
 
-                 <article class="resul-card">
+                 <article class="resul-card" aria-labelledby="card4">
                    
                         <div class="status-div">
-                            <span class="date">14-4</span> 
-                            <span class="badge">STAUTS</span>
+                            <!-- <span class="date">14 Apr</span>  -->
+                            <time datetime="2026-04-14" class="date">14 Apr</time>
+                            <span class="badge">STATUS</span>
                         </div>
 
                         <div class="info-div">
-                            <h2>Minor</h2>
+                            <h2 id="card4">Minor</h2>
                             <p class="uni-id">ID-0001</p>
                             <p>Minor side effects such as mild stomach discomfort may occur. patients should any unusual symptoms to their healthcare provider.</p>
                         </div>
@@ -205,6 +206,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../js/chart.js"></script>
+    <script src="../js/results.js"></script>
 
 </body>
 </html>
