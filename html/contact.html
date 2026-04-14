@@ -1,17 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Medixa Contact</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://unpkg.com/lucide-static@latest/font/lucide.css">
-
-  <link rel="stylesheet" href="../css/nav.css">
-  <link rel="stylesheet" href="../css/footer.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact MEDIXA</title>
   <link rel="stylesheet" href="../css/contact.css">
 </head>
 <body>
@@ -36,72 +28,164 @@
       </nav>
     </div>
   </header>
+  <main class="contact-page">
+    <section class="contact-layout" aria-labelledby="contact-title">
+      <article class="contact-left">
+        <h1 id="contact-title">Git in Touch</h1>
+        <p class="contact-email">
+          Email:
+          <a href="mailto:medixainquiry@gmail.com">medixainquiry@gmail.com</a>
+        </p>
 
-  <main class="page">
-    <section class="shell">
-      <div class="contact-top">
-        <h1>Get in Touch</h1>
-        <div class="contact-meta">
-          Email: <a href="mailto:Medixainquiry@gmail.com">Medixainquiry@gmail.com</a><br>
-          Working hours: 8:00am - 4:00pm
-        </div>
-        <button class="open-modal-btn" id="openModalBtn">send us a message</button>
-      </div>
+        <section class="faq-section" aria-labelledby="faq-title">
+          <h2 id="faq-title">Frequently Asked Questions</h2>
 
-      <div class="faq-section">
-        <h2 class="faq-title">Frequently Asked Questions</h2>
+          <div class="faq-stack">
+            <div class="faq-shadow-card faq-shadow-back" aria-hidden="true"></div>
+            <div class="faq-shadow-card faq-shadow-middle" aria-hidden="true"></div>
 
-        <div class="carousel-wrap">
-          <div class="carousel" id="carousel">
-            <article class="faq-card active">
-              <div>
-                <h3>What services does Medixa provide?</h3>
-                <p>Medixa helps users check medication interactions, understand medication risks, and organize daily medication schedules more clearly.</p>
-              </div>
-            </article>
-
-            <article class="faq-card">
-              <div>
-                <h3>How to use Medixa?</h3>
-                <p>Users enter their medications, review possible interactions, and get simple guidance to manage their medicine safely and on time.</p>
-              </div>
-            </article>
-
-            <article class="faq-card">
-              <div>
-                <h3>How can I contact Medixa?</h3>
-                <p>You can contact Medixa through the contact form or by email during the listed working hours.</p>
-              </div>
-            </article>
-
-            <article class="faq-card">
-              <div>
-                <h3>How long does it take to receive a response?</h3>
-                <p>Response times may vary, but Medixa aims to reply to inquiries as soon as possible during working hours.</p>
-              </div>
-            </article>
-
-            <article class="faq-card">
-              <div>
-                <h3>Is my information secure?</h3>
-                <p>Medixa is designed to provide a safer and more secure user experience when accessing medication-related guidance.</p>
-              </div>
+            <article class="faq-card" id="faqCard">
+              <h3 id="faqQuestion">What services does Medixa provide?</h3>
+              <p id="faqAnswer">
+                Medixa provides a medication management platform that helps users understand medication interactions, organize schedules, and make safer daily medication decisions.
+              </p>
             </article>
           </div>
+        </section>
+      </article>
+
+      <section class="contact-right">
+        <div class="pill-bg" aria-hidden="true">
+          <img src="../assets/med.svg" alt="">
         </div>
 
-        <div class="dots" id="dots"></div>
-      </div>
+        <section class="contact-form-panel" aria-labelledby="contact-form-title">
+          <article class="contact-form-card">
+            <h2 id="contact-form-title">Contact us</h2>
+
+            <form id="contactForm" novalidate>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="firstName">First Name</label>
+                  <input
+                    type="text"
+                    id="firstName"
+                    name="firstName"
+                    required
+                    maxlength="30"
+                    pattern="[A-Za-zÀ-ÿ\u0600-\u06FF\s'-]{2,30}"
+                    autocomplete="given-name"
+                  >
+                  <small class="error-message"></small>
+                </div>
+
+                <div class="form-group">
+                  <label for="lastName">Last Name</label>
+                  <input
+                    type="text"
+                    id="lastName"
+                    name="lastName"
+                    required
+                    maxlength="30"
+                    pattern="[A-Za-zÀ-ÿ\u0600-\u06FF\s'-]{2,30}"
+                    autocomplete="family-name"
+                  >
+                  <small class="error-message"></small>
+                </div>
+
+                <div class="form-group">
+                  <label for="phoneNumber">Phone Number</label>
+                  <input
+                    type="tel"
+                    id="phoneNumber"
+                    name="phoneNumber"
+                    required
+                    maxlength="15"
+                    pattern="^\+?[0-9]{8,15}$"
+                    placeholder="+9665XXXXXXXX"
+                    autocomplete="tel"
+                  >
+                  <small class="error-message"></small>
+                </div>
+
+                <div class="form-group">
+                  <label for="email">Email Address</label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    maxlength="100"
+                    pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
+                    placeholder="example@domain.com"
+                    autocomplete="email"
+                  >
+                  <small class="error-message"></small>
+                </div>
+
+                <div class="form-group">
+                  <label for="language">Language</label>
+                  <select id="language" name="language" required>
+                    <option value="">Select</option>
+                    <option value="English">English</option>
+                    <option value="Arabic">Arabic</option>
+                    <option value="French">French</option>
+                  </select>
+                  <small class="error-message"></small>
+                </div>
+
+                <div class="form-group">
+                  <label for="gender">Gender</label>
+                  <select id="gender" name="gender" required>
+                    <option value="">Select</option>
+                    <option value="Female">Female</option>
+                    <option value="Male">Male</option>
+                  </select>
+                  <small class="error-message"></small>
+                </div>
+
+                <div class="form-group form-group-full">
+                  <label for="contactDate">Date of birth</label>
+                  <input
+                    type="date"
+                    id="contactDate"
+                    name="contactDate"
+                    required
+                  >
+                  <small class="error-message"></small>
+                </div>
+
+                <div class="form-group form-group-full">
+                  <label for="message">Message</label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows="5"
+                    required
+                    minlength="10"
+                    maxlength="500"
+                    placeholder="Write your message..."
+                  ></textarea>
+                  <small class="error-message"></small>
+                </div>
+              </div>
+
+              <p class="form-status" id="formStatus" aria-live="polite"></p>
+
+              <button type="submit" class="submit-btn">Send Message</button>
+            </form>
+          </article>
+        </section>
+      </section>
     </section>
   </main>
-
-  <div class="foot-wrap">
+  <section class="foot-wrap">
     <footer class="foot">
       <div class="foot-top">
         <div>
           <div class="foot-brand">
             <div class="foot-logo">
-              <img src="../assets/medixa.svg" alt="medixa logo">
+              <img src="medixa.svg" alt="medixa logo">
             </div>
           </div>
           <p class="foot-desc">A trusted tool for checking medication interactions. Built for patients and healthcare professionals alike.</p>
@@ -137,38 +221,7 @@
         </div>
       </div>
     </footer>
-  </div>
-
-  <div class="modal" id="contactModal">
-    <div class="modal-card">
-      <button class="close-btn" id="closeModalBtn">×</button>
-
-      <div class="modal-head">
-        <i class="icon-mail"></i>
-        <h2>Contact Form</h2>
-      </div>
-      <p class="modal-sub">We are here to assist you with any inquiries</p>
-
-      <div class="contact-info-box" id="contactInfoBox">
-        <strong>Email:</strong> Medixainquiry@gmail.com<br>
-        <strong>Working hours:</strong> 8:00am - 4:00pm
-      </div>
-
-      <form id="contactForm">
-        <div class="form-grid">
-          <input class="input" id="firstName" type="text" placeholder="First Name *">
-          <input class="input" id="lastName" type="text" placeholder="Last Name *">
-        </div>
-
-        <input class="input subject-input" id="subject" type="text" placeholder="Subject *">
-        <textarea class="textarea" id="message" placeholder="Message *"></textarea>
-
-        <button type="submit" class="submit-btn" id="submitBtn" disabled>Send Message</button>
-      </form>
-
-      <p class="fine-print">By Send us an email you agree to our Terms of Service and Privacy Policy</p>
-    </div>
-  </div>
+  </section>
 
   <script src="../js/contact.js"></script>
 </body>

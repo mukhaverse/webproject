@@ -1,102 +1,149 @@
-const faqCards = [...document.querySelectorAll('.faq-card')];
-const carousel = document.getElementById('carousel');
-const dotsWrap = document.getElementById('dots');
-let currentIndex = 0;
+document.addEventListener('DOMContentLoaded', () => {
+  const contactForm = document.getElementById('contactForm');
+  const formStatus = document.getElementById('formStatus');
 
-faqCards.forEach((_, index) => {
-  const dot = document.createElement('button');
-  dot.className = `dot ${index === 0 ? 'active' : ''}`;
-  dot.addEventListener('click', () => {
-    currentIndex = index;
-    updateCarousel();
-    resetAutoSlide();
+  const faqQuestion = document.getElementById('faqQuestion');
+  const faqAnswer = document.getElementById('faqAnswer');
+  const faqCard = document.getElementById('faqCard');
+
+  const faqItems = [
+    {
+      question: 'What services does Medixa provide?',
+      answer:
+        'Medixa provides a medication management platform that helps users understand medication interactions, organize schedules, and make safer daily medication decisions.'
+    },
+    {
+      question: 'How to use Medixa?',
+      answer:
+        'You use Medixa by entering your medication information, reviewing the generated guidance, and following the organized schedule and interaction alerts shown on the platform.'
+    },
+    {
+      question: 'How can I contact Medixa?',
+      answer:
+        'You can contact Medixa through the contact form on the website or by sending an email to medixainquiry@gmail.com.'
+    },
+    {
+      question: 'How long does it take to receive a response?',
+      answer:
+        'Most responses are sent within one to two business days, depending on the number of inquiries and the nature of the request.'
+    },
+    {
+      question: 'Is my information secure?',
+      answer:
+        'Medixa is designed to handle user information responsibly and aims to protect submitted data through secure practices and careful data handling.'
+    }
+  ];
+
+  let faqIndex = 0;
+
+  const fields = {
+    firstName: {
+      element: document.getElementById('firstName'),
+      validate: (value) => /^[A-Za-zÀ-ÿ\u0600-\u06FF\s'-]{2,30}$/.test(value.trim()),
+      message: 'Enter a valid first name using 2 to 30 letters.'
+    },
+    lastName: {
+      element: document.getElementById('lastName'),
+      validate: (value) => /^[A-Za-zÀ-ÿ\u0600-\u06FF\s'-]{2,30}$/.test(value.trim()),
+      message: 'Enter a valid last name using 2 to 30 letters.'
+    },
+    phoneNumber: {
+      element: document.getElementById('phoneNumber'),
+      validate: (value) => /^\+?[0-9]{8,15}$/.test(value.trim()),
+      message: 'Enter a valid phone number with 8 to 15 digits.'
+    },
+    email: {
+      element: document.getElementById('email'),
+      validate: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim()) && value.length <= 100,
+      message: 'Enter a valid email address.'
+    },
+    language: {
+      element: document.getElementById('language'),
+      validate: (value) => ['English', 'Arabic', 'French'].includes(value),
+      message: 'Select a language.'
+    },
+    gender: {
+      element: document.getElementById('gender'),
+      validate: (value) => ['Female', 'Male'].includes(value),
+      message: 'Select a gender.'
+    },
+    contactDate: {
+      element: document.getElementById('contactDate'),
+      validate: (value) => value.trim() !== '',
+      message: 'Select a date.'
+    },
+    message: {
+      element: document.getElementById('message'),
+      validate: (value) => value.trim().length >= 10 && value.trim().length <= 500,
+      message: 'Message must be between 10 and 500 characters.'
+    }
+  };
+
+  function setFieldError(input, message) {
+    input.classList.add('input-error');
+    const errorBox = input.parentElement.querySelector('.error-message');
+    if (errorBox) errorBox.textContent = message;
+  }
+
+  function clearFieldError(input) {
+    input.classList.remove('input-error');
+    const errorBox = input.parentElement.querySelector('.error-message');
+    if (errorBox) errorBox.textContent = '';
+  }
+
+  function validateField(fieldConfig) {
+    const input = fieldConfig.element;
+    const value = input.value;
+    const isValid = fieldConfig.validate(value);
+
+    if (!isValid) {
+      setFieldError(input, fieldConfig.message);
+      return false;
+    }
+
+    clearFieldError(input);
+    return true;
+  }
+
+  Object.values(fields).forEach((field) => {
+    field.element.addEventListener('input', () => validateField(field));
+    field.element.addEventListener('change', () => validateField(field));
   });
-  dotsWrap.appendChild(dot);
-});
 
-const dots = [...document.querySelectorAll('.dot')];
+  contactForm.addEventListener('submit', (event) => {
+    event.preventDefault();
 
-function getCardWidth() {
-  const card = faqCards[0];
-  const styles = window.getComputedStyle(carousel);
-  const gap = parseFloat(styles.gap) || 0;
-  return card.offsetWidth + gap;
-}
+    let isFormValid = true;
 
-function updateCarousel() {
-  const moveX = getCardWidth() * currentIndex;
-  carousel.style.transform = `translateX(calc(-${moveX}px + 33.333% + 13px))`;
+    Object.values(fields).forEach((field) => {
+      const valid = validateField(field);
+      if (!valid) isFormValid = false;
+    });
 
-  faqCards.forEach((card, index) => {
-    card.classList.toggle('active', index === currentIndex);
+    if (!isFormValid) {
+      formStatus.textContent = 'Please correct the highlighted fields before submitting.';
+      return;
+    }
+
+    formStatus.textContent = 'Your message is ready to be sent.';
+    contactForm.reset();
+
+    Object.values(fields).forEach((field) => clearFieldError(field.element));
   });
 
-  dots.forEach((dot, index) => {
-    dot.classList.toggle('active', index === currentIndex);
-  });
-}
+  function rotateFaqCard() {
+    faqCard.classList.remove('fade-in');
+    faqCard.classList.add('fade-out');
 
-function nextSlide() {
-  currentIndex = (currentIndex + 1) % faqCards.length;
-  updateCarousel();
-}
+    setTimeout(() => {
+      faqIndex = (faqIndex + 1) % faqItems.length;
+      faqQuestion.textContent = faqItems[faqIndex].question;
+      faqAnswer.textContent = faqItems[faqIndex].answer;
 
-let autoSlide = setInterval(nextSlide, 3200);
+      faqCard.classList.remove('fade-out');
+      faqCard.classList.add('fade-in');
+    }, 550);
+  }
 
-function resetAutoSlide() {
-  clearInterval(autoSlide);
-  autoSlide = setInterval(nextSlide, 3200);
-}
-
-window.addEventListener('resize', updateCarousel);
-updateCarousel();
-
-const modal = document.getElementById('contactModal');
-const openModalBtn = document.getElementById('openModalBtn');
-const closeModalBtn = document.getElementById('closeModalBtn');
-const contactInfoBox = document.getElementById('contactInfoBox');
-const form = document.getElementById('contactForm');
-const submitBtn = document.getElementById('submitBtn');
-
-const fields = [
-  document.getElementById('firstName'),
-  document.getElementById('lastName'),
-  document.getElementById('subject'),
-  document.getElementById('message')
-];
-
-function openModal() {
-  modal.classList.add('active');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeModal() {
-  modal.classList.remove('active');
-  document.body.style.overflow = '';
-}
-
-openModalBtn.addEventListener('click', openModal);
-closeModalBtn.addEventListener('click', closeModal);
-
-modal.addEventListener('click', (e) => {
-  if (e.target === modal) closeModal();
-});
-
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') closeModal();
-});
-
-function updateButtonState() {
-  const allFilled = fields.every(field => field.value.trim() !== '');
-  submitBtn.classList.toggle('enabled', allFilled);
-  submitBtn.disabled = !allFilled;
-}
-
-fields.forEach(field => field.addEventListener('input', updateButtonState));
-updateButtonState();
-
-form.addEventListener('submit', (e) => {
-  e.preventDefault();
-  if (!submitBtn.classList.contains('enabled')) return;
-  contactInfoBox.classList.add('show');
+  setInterval(rotateFaqCard, 5000);
 });
