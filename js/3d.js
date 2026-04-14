@@ -7,6 +7,7 @@ animate();
 function init() {
 
     const container = document.getElementById('modelContainer');
+
     scene = new THREE.Scene();
 
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -22,7 +23,8 @@ function init() {
 
     container.appendChild(renderer.domElement);
 
-    
+
+
 
     camera = new THREE.PerspectiveCamera(13, w / h, 0.1, 1000);
     camera.position.set(0, 12, 12);
@@ -70,10 +72,12 @@ function init() {
 
             const maxDim = Math.max(size.x, size.y, size.z);
             const scale = 3 / maxDim;
-            pivot.scale.setScalar(scale);
+            pivot.scale.setScalar(scale *0.54);
 
             scene.add(pivot);
             loadedModel = pivot;
+
+            pivot.position.y = size.y * 18;
 
             
             
@@ -92,13 +96,12 @@ function init() {
             const pill3 = [meshes[19], meshes[10]];
             const pill4 = [meshes[17], meshes[1]];
 
-            // colors to distinguish between them
-            colorGroup(pill1, 0xff0000); 
-            colorGroup(pill2, 0x00ff00); 
-            colorGroup(pill3, 0x0000ff); 
-            colorGroup(pill4, 0x4f002f); 
+            // color for debugging
+            // colorGroup(pill1, 0xff0000);
+            // colorGroup(pill2, 0x00ff00);
+            // colorGroup(pill3, 0x0000ff);
+            // colorGroup(pill4, 0x4f002f);
 
-            
             addScrollAnimation(pill1, pill2, pill3, pill4);
 
         },
@@ -111,6 +114,8 @@ function init() {
 
     );
 
+
+
     window.addEventListener('resize', () => {
         const w = container.clientWidth;
         const h = container.clientHeight;
@@ -119,10 +124,10 @@ function init() {
         camera.updateProjectionMatrix();
 
         renderer.setSize(w, h);
-        renderer.domElement.style.width = '100%';
-        renderer.domElement.style.height = '100%';
     });
 }
+
+
 
 function animate() {
     requestAnimationFrame(animate);
@@ -130,7 +135,10 @@ function animate() {
 }
 
 
-// color helper 
+
+
+
+
 function colorGroup(group, color) {
     group.forEach(mesh => {
         mesh.material = mesh.material.clone();
@@ -140,43 +148,74 @@ function colorGroup(group, color) {
 
 
 
+function getOthers(...groups) {
+    const selected = new Set(groups.flat());
+    return meshes.filter(m => !selected.has(m));
+}
+
+
+
 function addScrollAnimation(pill1, pill2, pill3, pill4) {
 
     gsap.registerPlugin(ScrollTrigger);
 
-    const tl = gsap.timeline({
-        scrollTrigger: {
-            trigger: ".hero-section",
-            start: "top top",
-            end: "bottom+=2000 top",
-            scrub: true,
-        }
-    });
+    const others = getOthers(pill1, pill2, pill3, pill4);
 
-    // move entire pill group
-    function move(group, y, z, at = 0) {
+   function move(group, y, z, finalXOffset = -4) {
         group.forEach(mesh => {
-            tl.to(mesh.position, {
-                y: `+=${y}`,
-                z: `+=${z}`,
-                ease: "power2.out"
-            }, at);
+
+            if (mesh.userData.baseX === undefined) {
+                mesh.userData.baseX = mesh.position.x;
+            }
+
+            gsap.to(mesh.position, {
+
+            y: mesh.position.y + y,
+            z: mesh.position.z + z,
+
+            x: mesh.userData.baseX + finalXOffset,
+
+            ease: "power2.out",
+
+            scrollTrigger: {
+                trigger: ".hero-section",
+                start: "top+=100 top",
+                end: "bottom-=50 top",
+                scrub: true,
+            },
+
+
+            
+            onUpdate: function () {
+                const progress = this.progress();
+
+                // controling when they satrt going to the left
+                if (progress < 0.4) {
+                    mesh.position.x = mesh.userData.baseX;
+                } else {
+                    const t = (progress - 0.4) / 0.4; 
+                    mesh.position.x =
+                        mesh.userData.baseX +
+                        (finalXOffset * t);
+                }
+            }
+
+
+
         });
-    }
 
-    
-    //  1
-    move(pill1, 300, 40, 0);
-    move(pill2, 320, 50, 0);
-    move(pill3, 400, 60, 0);
-    move(pill4, 200, 30, 0);
+        });
+}
 
-    //  2
-    // move(pill2, 200, 30, 0.5);
-    move(pill3, 180, 30, 0.5);
-    move(pill4, 200, 20, 0.5);
 
-    //  3
-    // move(pill3, 200, 30, 1);
+
+
+    move(pill1, 1600, 100, -440); //red
+    move(pill2, 1600, 100, -440); //green
+    move(pill3, 1550, 100, -440); //blue
+    move(pill4, 1600, 110, -440); //purp
+
+
+    move(others, -1100, -20, 0);
 
 }

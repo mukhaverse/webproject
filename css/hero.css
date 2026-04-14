@@ -74,13 +74,14 @@
 
 
 .sticky-model {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
+    position: absolute;
+    top: 25%;
+    height: 170vh;
+    width: 90vw;
     pointer-events: none;
     z-index: 5;
+    
+    /* border: 1px solid rgb(0, 0, 0);  */
 }
 
 .model {
@@ -103,8 +104,8 @@
     border: 1px solid rgb(200, 200, 200);
     margin-bottom: 20px;
     position: absolute;
-    top: 50%;
-    left: 70%;
+    top: 25%;
+    left: 53%;
 }
 
 .info-label {

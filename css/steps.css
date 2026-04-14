@@ -1,30 +1,20 @@
+
+
 .steps-section {
     width: 100%;
     background: #f4f7fa; 
     padding: 7rem 0;
     font-family: 'Barlow', sans-serif;
-    /* margin-bottom: 5rem; */
-    padding-bottom: 5rem;
 }
 
-.how-it-works{
-    margin-bottom: 9rem;
-}
-
-
+/* .how-it-works {
+   
+} */
 
 .steps-header {
     text-align: center;
     margin-bottom: 60px;
 }
-
-/* .eyebrow {
-    font-size: 12px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: #4060e0; 
-} */
 
 .main-heading {
     font-family: 'Barlow Condensed', sans-serif;
@@ -39,10 +29,9 @@
     color: #8a94b8; 
 }
 
-
 .steps-container {
     max-width: 1000px;
-    margin: 0 auto 120px;
+    margin: 0 auto;
     display: flex;
     gap: 80px;
     align-items: center;
@@ -73,7 +62,6 @@
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 24px;
     font-weight: 900;
-
     display: block;
     margin-bottom: 5px;
 }
@@ -83,6 +71,7 @@
     font-size: 20px; 
     margin-bottom: 8px; 
 }
+
 .step-item p { 
     color: #8a94b8; 
     font-size: 15px; 
@@ -96,27 +85,29 @@
 
 
 
-.benefits-bento{
- margin-bottom: 0rem;
- position: relative;
+
+
+.benefits-section {
+    padding: 13rem 0; 
+    background: #f4f7fa;
 }
 
-.behind-bento{
+.benefits-bento {
+    position: relative;
+}
+
+.behind-bento {
     position: absolute;
     top: 20%;
     left: 23%;
     width: 40%;
     transform: rotate(-17deg);
     z-index: 2;
- /* might add a shadow later */
-    
-    
 }
 
-.behind-bento img{
+.behind-bento img {
     width: 30%;
     opacity: .7;
-    
 }
 
 .bento-grid {
@@ -127,10 +118,7 @@
     grid-template-rows: repeat(2, 200px);
     gap: 15px;
     position: relative;
-
-    /* opacity: .5; */
 }
-
 
 .bento-cell {
     background: #fff;
@@ -144,12 +132,12 @@
 
 .bento-cell:hover { 
     transform: scale(1.04); 
-    /* I might give them less opacity and increase it with the hover later */
 }
 
-.bento-icon{
+.bento-icon {
     width: 25%;
     opacity: 0.7;
+    margin-bottom: auto;
 }
 
 .bento-cell h3 { 
@@ -165,10 +153,6 @@
     margin: 0; 
 }
 
-.bento-icon { 
-    font-size: 28px; 
-    margin-bottom: auto; 
-}
 
 
 
@@ -176,23 +160,23 @@
     grid-row: span 2; 
     background: #eff2fb; 
     z-index: 1;
-} 
+}
+
 .wide { 
     grid-column: span 2; 
     background: #f0f2f8; 
-        z-index: 5;
+    z-index: 5;
 }
+
 .medium-wide { 
     grid-column: span 2; 
     background: #e8ecf4; 
     z-index: 5;
 }
+
 .small { 
     background: #fff; 
-    /* z-index: 5; */
-    /* border: 1px solid #dde2f0;  */
-} 
-
+}
 
 .blue-tint { 
     background: #e8f0ff; 
