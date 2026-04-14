@@ -26,7 +26,7 @@
 }
 
 .accent-text { 
-    color: #8a94b8; 
+    color: #312e81; 
 }
 
 .steps-container {
@@ -182,18 +182,18 @@
     background: #e8f0ff; 
 }
 
-/* =========================
-   iPAD BENTO FIX (REAL)
-========================= */
+
 
 @media (min-width: 769px) and (max-width: 1024px) {
 
-  /* Add breathing space */
+
+    
   .benefits-bento {
     padding: 0 40px;
   }
 
-  /* Fix floating background image */
+
+  
   .behind-bento {
     left: 50%;
     transform: translateX(-50%) rotate(-17deg);
@@ -204,14 +204,16 @@
     width: 40%;
   }
 
-  /* MAIN GRID FIX */
+
+  
   .bento-grid {
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: auto;
     gap: 24px;
   }
 
-  /* RESET weird spans so they don't break layout */
+
+  
   .tall,
   .wide,
   .medium-wide {
@@ -219,7 +221,8 @@
     grid-row: auto;
   }
 
-  /* Make everything feel bigger */
+
+  
   .bento-cell {
     padding: 28px;
     min-height: 180px;
@@ -239,30 +242,33 @@
 
 }
 
-/* =========================
-   MOBILE BENTO FIX (REAL)
-========================= */
+
+
 
 @media (max-width: 768px) {
 
-  /* Add safe side padding */
+
+    
   .benefits-bento {
     padding: 0 16px;
   }
 
-  /* FIX background image overflow */
+
+  
   .behind-bento {
     display: none;
   }
 
-  /* MAIN GRID FIX */
+ 
+  
   .bento-grid {
     grid-template-columns: 1fr;
     grid-template-rows: auto;
     gap: 16px;
   }
 
-  /* RESET ALL SPANS (this is the key fix) */
+  
+  
   .tall,
   .wide,
   .medium-wide {
@@ -270,14 +276,16 @@
     grid-row: auto;
   }
 
-  /* FIX cell sizing */
+
+  
   .bento-cell {
     width: 100%;
     padding: 20px;
     min-height: 140px;
   }
 
-  /* TEXT SCALE */
+
+  
   .bento-cell h3 {
     font-size: 20px;
   }
@@ -286,18 +294,18 @@
     font-size: 14px;
   }
 
-  /* ICON SCALE */
+
+  
   .bento-icon {
     width: 30%;
   }
 
 }
 
-/* =========================
-   BENTO ICON SIZE FIX
-========================= */
 
-/* iPAD */
+
+
+
 @media (min-width: 769px) and (max-width: 1024px) {
 
   .bento-icon {
@@ -308,7 +316,7 @@
 }
 
 
-/* MOBILE */
+
 @media (max-width: 768px) {
 
   .bento-icon {
@@ -319,7 +327,7 @@
 }
 
 
-/* SMALL PHONES */
+
 @media (max-width: 480px) {
 
   .bento-icon {
