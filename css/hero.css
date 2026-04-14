@@ -134,7 +134,7 @@
 .info-bar-fill { 
     width: 78%; 
     height: 100%; 
-    background: #597ab9; 
+    background: #312e81; 
 }
 
 
@@ -162,7 +162,7 @@
 }
 
 .btn { 
-    background: #597ab9; 
+    background: #312e81; 
     color: #eaeaea; 
     font-family: 'Barlow Condensed', sans-serif; 
     font-weight: 600; 
@@ -179,7 +179,7 @@
     width: 11rem;
 }
 .btn-arrow { 
-    background: #597ab9; 
+    background: #312e81; 
     color: #eaeaea; 
     width: 42px; 
     height: 42px; 
