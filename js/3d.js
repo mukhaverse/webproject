@@ -72,12 +72,40 @@ function init() {
 
             const maxDim = Math.max(size.x, size.y, size.z);
             const scale = 3 / maxDim;
-            pivot.scale.setScalar(scale *0.54);
+
+            // pivot.scale.setScalar(scale *0.54);
+            const isMobile = window.innerWidth < 768;
+            const isTablet = window.innerWidth < 1200;
+
+            let scaleMultiplier = 0.54;
+
+            if (isMobile) scaleMultiplier = 1;
+            else if (isTablet) scaleMultiplier = 1.4;
+
+            pivot.scale.setScalar(scale * scaleMultiplier);
 
             scene.add(pivot);
             loadedModel = pivot;
 
-            pivot.position.y = size.y * 18;
+
+
+            // pivot.position.y = size.y * 18;
+
+            const width = window.innerWidth;
+
+            let yOffset = 18;
+
+            if (width < 768) {
+                yOffset = 18;        
+            } 
+            else if (width <= 1200) {
+                yOffset = 11;        
+            } 
+            else {
+                yOffset = 18;        
+            }
+
+            pivot.position.y = size.y * yOffset;
 
             
             

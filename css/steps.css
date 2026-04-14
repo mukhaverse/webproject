@@ -19,7 +19,7 @@
 .main-heading {
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 900;
-    font-size: 48px;
+    font-size:9vw;
     color: #1a1f3a;
     margin-top: 10px;
     text-align: center;
@@ -180,4 +180,151 @@
 
 .blue-tint { 
     background: #e8f0ff; 
+}
+
+/* =========================
+   iPAD BENTO FIX (REAL)
+========================= */
+
+@media (min-width: 769px) and (max-width: 1024px) {
+
+  /* Add breathing space */
+  .benefits-bento {
+    padding: 0 40px;
+  }
+
+  /* Fix floating background image */
+  .behind-bento {
+    left: 50%;
+    transform: translateX(-50%) rotate(-17deg);
+    width: 60%;
+  }
+
+  .behind-bento img {
+    width: 40%;
+  }
+
+  /* MAIN GRID FIX */
+  .bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto;
+    gap: 24px;
+  }
+
+  /* RESET weird spans so they don't break layout */
+  .tall,
+  .wide,
+  .medium-wide {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  /* Make everything feel bigger */
+  .bento-cell {
+    padding: 28px;
+    min-height: 180px;
+  }
+
+  .bento-cell h3 {
+    font-size: 24px;
+  }
+
+  .bento-cell p {
+    font-size: 14px;
+  }
+
+  .bento-icon {
+    width: 35%;
+  }
+
+}
+
+/* =========================
+   MOBILE BENTO FIX (REAL)
+========================= */
+
+@media (max-width: 768px) {
+
+  /* Add safe side padding */
+  .benefits-bento {
+    padding: 0 16px;
+  }
+
+  /* FIX background image overflow */
+  .behind-bento {
+    display: none;
+  }
+
+  /* MAIN GRID FIX */
+  .bento-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    gap: 16px;
+  }
+
+  /* RESET ALL SPANS (this is the key fix) */
+  .tall,
+  .wide,
+  .medium-wide {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  /* FIX cell sizing */
+  .bento-cell {
+    width: 100%;
+    padding: 20px;
+    min-height: 140px;
+  }
+
+  /* TEXT SCALE */
+  .bento-cell h3 {
+    font-size: 20px;
+  }
+
+  .bento-cell p {
+    font-size: 14px;
+  }
+
+  /* ICON SCALE */
+  .bento-icon {
+    width: 30%;
+  }
+
+}
+
+/* =========================
+   BENTO ICON SIZE FIX
+========================= */
+
+/* iPAD */
+@media (min-width: 769px) and (max-width: 1024px) {
+
+  .bento-icon {
+    width: 22%;
+    max-width: 60px;
+  }
+
+}
+
+
+/* MOBILE */
+@media (max-width: 768px) {
+
+  .bento-icon {
+    width: 18%;
+    max-width: 50px;
+  }
+
+}
+
+
+/* SMALL PHONES */
+@media (max-width: 480px) {
+
+  .bento-icon {
+    width: 16%;
+    max-width: 45px;
+  }
+
 }
