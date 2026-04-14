@@ -22,11 +22,11 @@ main h1 {
   color: #111;
 }
 .chart-grid {
-  margin: 2rem 0 2rem 2rem;
+  margin: 2.5rem 0 0 2rem;
   /* margin-left: 2rem; */
   display: grid;
   grid-template-columns: 1.5fr 1fr 1fr;
-  gap: 4rem;
+  gap: 7rem;
   /* margin-bottom: 2rem; */
 }
 .risk-chart,
@@ -106,24 +106,32 @@ width: 40rem;
   font-weight: 500;
 }
 .risk{
-  width: 25rem;
+  width:20rem;
   max-height: 20vw; 
-    
 }
-.interaction-effects {
-  background: white;
-  border-radius: 1.5rem;
-  padding: 1.2rem;
-  box-shadow: 0 8px 25px rgba(24, 39, 75, 0.08);
+.risk-chart{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
-.interaction-effects h3 {
-  font-size: 1.1rem;
-  margin-bottom: 0.3rem;
-}
-.interaction-effects p {
+.risk-chart h3{
+  font-weight: lighter;
+  margin-top: 1rem;
   font-size: 0.8rem;
-  color: #8b8b95;
-  margin-bottom: 1rem;
+  text-align: center;
+}
+.interaction-effects{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.interaction-effects h3{
+   font-weight: lighter;
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  text-align: center;
 }
 .chart-legend {
   display: flex;
@@ -131,6 +139,16 @@ width: 40rem;
   margin-bottom: 1rem;
   font-size: 0.8rem;
   color: #555;
+}
+.tit-div{
+  margin-top: 4.5rem;
+}
+.tit-div h1{
+  /* HEEERRREE */
+  font-family:'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 35px;
+  padding-left: 1rem;
 }
 .chart-legend span {
   display: flex;
