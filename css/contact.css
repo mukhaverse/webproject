@@ -321,6 +321,10 @@ body {
     font-size: 56px;
   }
 
+  .contact-email {
+    text-align: center;
+  }
+
   .contact-form-card {
     max-width: 100%;
   }
