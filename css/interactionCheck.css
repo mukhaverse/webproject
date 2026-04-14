@@ -52,7 +52,7 @@ h1 {
 
 .main-div h2 {
   font-size: 18px;
-  color: #3f356b;
+  color: #4b5563;
   margin-bottom: 25px;
   font-weight: 600;
 }
@@ -69,7 +69,7 @@ label {
   display: block;
   font-size: 12px;
   font-weight: bold;
-  color: #7b74b4;
+  color: #4b5563;
   margin-bottom: 8px;
   letter-spacing: 1px;
 }
@@ -79,7 +79,7 @@ input {
   width: 70%;
   height: 52px;
   border-radius: 12px;
-  border: 2px solid #2b366a;
+  border: 2px solid #e5e5e5;
   padding: 0 14px;
   font-size: 15px;
   outline: none;
@@ -99,7 +99,7 @@ input {
   width: 70%;
   height: 48px;
   border-radius: 12px;
-  border: 2px dashed #2b366a;
+  border: 2px dashed #4b5563;
   background: transparent;
   color: var( --clr-dark-dim);
   font-weight: bold;
@@ -107,9 +107,9 @@ input {
   transition: 0.2s;
 }
 .scann{
-  border: 0.1rem solid #1a1f3a;
+  border: 0.1rem solid #4b5563;
   background: transparent;
-  color:#1a1f3a;
+  color:#1e1b4b;
   font-weight: bold;
   cursor: pointer;
   transition: 0.2s;
@@ -121,9 +121,9 @@ input {
   /* color: white; */
   cursor: pointer;
   transition: 0.2s;
-  border: 0.1rem solid #1a1f3a;
+  border: 0.1rem solid #1e1b4b;
   background: transparent;
-  color:#1a1f3a;
+  color:#1e1b4b;
   font-weight: bold;
   cursor: pointer;
   transition: 0.2s;
@@ -154,12 +154,12 @@ input {
 }
 
 .description-div h3 {
-  color: #3f356b;
+  color: #4b5563;
   padding:1rem 0 0.5rem 1rem;
 }
 
 .description-div p {
-  color: #6e6794;
+  color: #4b5563;
   line-height: 1.5;
   padding:0.5rem 0 1rem 1rem;
 }
@@ -191,9 +191,6 @@ img{
   height: 15rem;
 }
 
-
-
-
 /* ----PSEUDO CLASS--- */
 .add-div button:hover {
   background:#1a1f3a;
@@ -207,7 +204,6 @@ input:focus {
   border-color:#1a1f3a;
   box-shadow: 1px 0px 0px 1px #1a1f3a;
 }
-
 
 @media (max-width: 992px) {
 
@@ -265,8 +261,6 @@ input:focus {
     height: auto;
   }
 }
-
-
 
 @media (max-width: 768px) {
 
@@ -342,6 +336,7 @@ input:focus {
     right: 1rem;
     top: -2rem;
     transform: rotate(-15deg);
+    display: none;
   }
 
   .med-div img{
@@ -349,8 +344,6 @@ input:focus {
     height: auto;
   }
 }
-
-
 
 @media (max-width: 576px) {
 
