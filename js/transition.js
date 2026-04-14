@@ -1,6 +1,6 @@
 const panels = document.querySelectorAll(".panel");
 
-// splash (on load)
+
 window.addEventListener("load", () => {
   gsap.to(panels, {
     y: "0%",
@@ -16,7 +16,9 @@ window.addEventListener("load", () => {
   });
 });
 
-// page transition
+
+
+
 document.querySelectorAll("a").forEach(link => {
   if (link.hostname === window.location.hostname) {
     link.addEventListener("click", function (e) {
@@ -27,7 +29,7 @@ document.querySelectorAll("a").forEach(link => {
       gsap.to(panels, {
         y: "0%",
         stagger: 0.1,
-        duration: 0.5,
+        duration: 0.3,
         onComplete: () => {
           window.location.href = href;
         }
