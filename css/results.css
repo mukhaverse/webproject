@@ -30,7 +30,6 @@ main h1 {
   /* margin-bottom: 2rem; */
 }
 .risk-chart,
-.breakdown-chart,
 .interaction-effects {
   background: #ffffff;
   border-radius: 1.5rem;
@@ -38,9 +37,7 @@ main h1 {
   padding: 1.5rem;
   box-shadow: 0 8px 25px rgba(24, 39, 75, 0.08);
 }
-.interaction-effects{
-width: 40rem;
-}
+
 .card-sect {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -122,6 +119,7 @@ width: 40rem;
   text-align: center;
 }
 .interaction-effects{
+  width: 40rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -173,30 +171,85 @@ width: 40rem;
  width: 100% !important;
  height: 220px !important;
 }
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 
 
 
-/* --------*/
-@media (max-width: 1200px) {
+
+/* ----RESPONSIVE----*/
+@media (max-width: 992px) {
+
   .chart-grid {
     grid-template-columns: 1fr;
+    gap: 2rem;
+    margin: 2rem 0;
   }
+
+  .risk-chart,
+  .interaction-effects {
+    width: 100%;
+  }
+
+}
+
+@media (max-width: 768px) {
 
   .card-sect {
     grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
   }
-}
 
-@media (max-width: 700px) {
+  main h1 {
+    font-size: 1.8rem;
+  }
+
+  .risk {
+    max-width: 280px;
+    height: 280px !important;
+  }
+
+}
+@media (max-width: 576px) {
+
   main {
     padding: 1rem;
   }
 
+  .chart-grid {
+    gap: 1.5rem;
+    margin: 1rem 0;
+  }
+
   .card-sect {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .risk {
+    max-width: 240px;
+    height: 240px !important;
+  }
+
+  .effect-chart {
+    height: 180px !important;
   }
 
   main h1 {
-    font-size: 1.7rem;
+    font-size: 1.6rem;
   }
+
+  .info-div h2 {
+    font-size: 1.2rem;
+  }
+
 }

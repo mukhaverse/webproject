@@ -6,39 +6,40 @@
   <title>Contact MEDIXA</title>
   <link rel="stylesheet" href="../css/contact.css">
   <link rel="stylesheet" href="../css/nav.css">
+  <link href="../css/transition.css" rel="stylesheet">
   <link rel="stylesheet" href="../css/footer.css">
 </head>
 <body>
+  <div class="transition-overlay">
+  <div class="panel"></div>
+  <div class="panel"></div>
+  <div class="panel"></div>
+  <div class="panel"></div>
+</div>
   <header>
     <div class="nav-wrap">
-      <nav class="nav">
+    <nav class="nav">
         <div class="nav-brand">
-          <div class="nav-logo">
-            <img src="../assets/medixa.svg" alt="medixa logo">
-          </div>
+            <div class="nav-logo">
+                <img src="../assets/medixa.svg" alt="medixa logo">
+            </div>
+    
         </div>
-        <div class="nav-tabs" id="navTabs">
-          <div class="nav-tab-bg" id="tabBg"></div>
-          <a href="#" class="nav-tab active">Home</a>
-          <a href="#" class="nav-tab">Checker</a>
-          <a href="#" class="nav-tab">About</a>
-          <a href="#" class="nav-tab">Contact Us</a>
-        </div>
-        <div class="nav-right">
-          <a href="#" class="nav-signin">Sign In</a>
-        </div>
-      </nav>
-    </div>
-  </header>
-  <main class="contact-page">
-    <section class="contact-layout" aria-labelledby="contact-title">
-      <article class="contact-left">
-        <h1 id="contact-title">Git in Touch</h1>
-        <p class="contact-email">
-          Email:
-          <a href="mailto:medixainquiry@gmail.com">medixainquiry@gmail.com</a>
-        </p>
 
+        <div class="nav-tabs" id="navTabs">
+        <div class="nav-tab-bg" id="tabBg"></div>
+        <a href="../index.html" class="nav-tab active" data-page="home">Home</a>
+        <a href="interactionCheck.html" class="nav-tab" data-page="checker">Checker</a>
+        <a href="about.html" class="nav-tab" data-page="about">About</a>
+        <a href="contact.html" class="nav-tab" data-page="contact">Contact Us</a>
+        </div>
+
+        <div class="nav-right">
+        <a href="#" class="nav-signin">Sign In</a>
+        </div>
+    </nav>
+    </div>
+</header>
         <section class="faq-section" aria-labelledby="faq-title">
           <h2 id="faq-title">FAQs</h2>
 
@@ -223,8 +224,41 @@
         </div>
       </div>
     </footer>
-  </section>
+  </div>
+
+  <div class="modal" id="contactModal">
+    <div class="modal-card">
+      <button class="close-btn" id="closeModalBtn">×</button>
+
+      <div class="modal-head">
+        <i class="icon-mail"></i>
+        <h2>Contact Form</h2>
+      </div>
+      <p class="modal-sub">We are here to assist you with any inquiries</p>
+
+      <div class="contact-info-box" id="contactInfoBox">
+        <strong>Email:</strong> Medixainquiry@gmail.com<br>
+        <strong>Working hours:</strong> 8:00am - 4:00pm
+      </div>
+
+      <form id="contactForm">
+        <div class="form-grid">
+          <input class="input" id="firstName" type="text" placeholder="First Name *">
+          <input class="input" id="lastName" type="text" placeholder="Last Name *">
+        </div>
+
+        <input class="input subject-input" id="subject" type="text" placeholder="Subject *">
+        <textarea class="textarea" id="message" placeholder="Message *"></textarea>
+
+        <button type="submit" class="submit-btn" id="submitBtn" disabled>Send Message</button>
+      </form>
+
+      <p class="fine-print">By Send us an email you agree to our Terms of Service and Privacy Policy</p>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 
   <script src="../js/contact.js"></script>
+   <script src="../js/transition.js"></script>
 </body>
 </html>

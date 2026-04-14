@@ -1,0 +1,13 @@
+.transition-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.panel {
+  flex: 1;
+  background: #1e3a8a;
+  /* transform: translateY(100%); */
+}
