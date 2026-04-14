@@ -7,7 +7,7 @@ body {
   /* padding: 30px 30px ; */
 }
 
-h2 {
+h1 {
   color: white;
   font-size: 32px;
   margin-bottom: 25px;
@@ -50,7 +50,7 @@ h2 {
   margin: 0 0 4rem 4rem;
 }
 
-.main-div h5 {
+.main-div h2 {
   font-size: 18px;
   color: #3f356b;
   margin-bottom: 25px;
@@ -117,14 +117,16 @@ input {
 
 #check-but {
   border: none;
-  height: 10rem;
-  background:#1a1f3a;
-  color: white;
-  font-size: 10px;
+  /* background:#1a1f3a; */
+  /* color: white; */
+  cursor: pointer;
+  transition: 0.2s;
+  border: 0.1rem solid #1a1f3a;
+  background: transparent;
+  color:#1a1f3a;
   font-weight: bold;
   cursor: pointer;
   transition: 0.2s;
-  padding: 1rem 0 1.5rem 0;
 }
 .scann,#check-but{
   flex: 1;
@@ -204,4 +206,432 @@ img{
 input:focus {
   border-color:#1a1f3a;
   box-shadow: 1px 0px 0px 1px #1a1f3a;
+}
+
+/* ======================= 992px ======================= */
+/* @media (max-width: 992px) {
+
+  .general-div{
+    width: calc(100% - 2rem);
+    max-width: 100%;
+    margin: 0 1rem 2rem 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  h2{
+    padding-left: 2rem;
+    padding-top: 3rem;
+    font-size: 28px;
+  }
+
+  .content-div{
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .main-div{
+    width: 100%;
+    margin: 0;
+  }
+
+  .description-div{
+    width: 100%;
+    margin: 0;
+  }
+
+  .last-div{
+    width: 100%;
+  }
+
+  .med-div{
+    position: absolute;
+    left: auto;
+    right: 2rem;
+    top: -1rem;
+    bottom: auto;
+    transform: rotate(-20deg);
+  }
+
+  .med-div img{
+    width: 12rem;
+    height: auto;
+  }
+}
+
+
+
+@media (max-width: 768px) {
+
+  body{
+    display: block;
+  }
+
+  .general-div{
+    width: calc(100% - 1.5rem);
+    margin: 0 0.75rem 2rem 0.75rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    background-size: 120px 120px;
+  }
+
+  h2{
+    font-size: 24px;
+    padding-left: 1rem;
+    padding-top: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .main-div{
+    padding: 1.25rem;
+  }
+
+  .main-div h3{
+    font-size: 16px;
+  }
+
+  input{
+    width: 100%;
+  }
+
+  .add-div button{
+    width: 100%;
+  }
+
+  .last-div{
+    width: 100%;
+    gap: 1rem;
+  }
+
+  .scann,
+  #check-but{
+    height: 3.2rem;
+    font-size: 12px;
+  }
+
+  .description-div{
+    padding-bottom: 1rem;
+  }
+
+  .description-div img{
+    margin: 1rem auto 0;
+    display: block;
+    width: 8rem;
+    height: auto;
+  }
+
+  .med-div{
+    right: 1rem;
+    top: 1rem;
+    transform: rotate(-15deg);
+  }
+
+  .med-div img{
+    width: 9rem;
+    height: auto;
+  }
+}
+
+
+
+@media (max-width: 576px) {
+
+  .general-div{
+    width: calc(100% - 1rem);
+    margin: 0 0.5rem 1.5rem 0.5rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    border-radius: 0.75rem;
+    background-size: 90px 90px;
+  }
+
+  h2{
+    font-size: 21px;
+    padding-left: 0.5rem;
+    padding-top: 1.5rem;
+  }
+
+  .content-div{
+    gap: 1.25rem;
+  }
+
+  .main-div{
+    padding: 1rem;
+    border-radius: 0.75rem;
+  }
+
+  .description-div{
+    border-radius: 0.75rem;
+  }
+
+  .drug-field{
+    margin-bottom: 1rem;
+  }
+
+  label{
+    font-size: 11px;
+  }
+
+  input{
+    height: 46px;
+    font-size: 14px;
+  }
+
+  .add-div{
+    margin: 16px 0;
+  }
+
+  .last-div{
+    flex-direction: column;
+    width: 100%;
+    gap: 0.75rem;
+  }
+
+  .scann,
+  #check-but{
+    width: 100%;
+    flex: unset;
+    height: 3rem;
+    font-size: 11px;
+  }
+
+  .description-div h3{
+    font-size: 18px;
+  }
+
+  .description-div p{
+    font-size: 14px;
+    line-height: 1.6;
+    padding-right: 1rem;
+  }
+
+  .med-div{
+    display: none;
+  }
+} */
+
+/* ======================= 992px ======================= */
+@media (max-width: 992px) {
+
+  .general-div{
+    width: calc(100% - 2rem);
+    max-width: 100%;
+    margin: 0 1rem 2rem 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    position: relative;
+  }
+
+  h2{
+    padding-left: 2rem;
+    padding-top: 3rem;
+    font-size: 28px;
+  }
+
+  .content-div{
+    flex-direction: column;
+    gap: 2rem;
+    position: relative;
+  }
+
+  .main-div{
+    width: 100%;
+    margin: 0;
+    position: relative;
+    z-index: 5;
+  }
+
+  .description-div{
+    width: 100%;
+    margin: 0;
+    position: relative;
+    z-index: 5;
+  }
+
+  .last-div{
+    width: 100%;
+  }
+
+  .med-div{
+    position: absolute;
+    z-index: 1;
+    left: auto;
+    right: 2rem;
+    top: -3rem;
+    bottom: auto;
+    transform: rotate(-20deg);
+  }
+
+  .med-div img{
+    width: 12rem;
+    height: auto;
+  }
+}
+
+
+/* ======================= 768px ======================= */
+@media (max-width: 768px) {
+
+  body{
+    display: block;
+  }
+
+  .general-div{
+    width: calc(100% - 1.5rem);
+    margin: 0 0.75rem 2rem 0.75rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    background-size: 120px 120px;
+    position: relative;
+  }
+
+  h2{
+    font-size: 24px;
+    padding-left: 1rem;
+    padding-top: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .content-div{
+    position: relative;
+  }
+
+  .main-div{
+    padding: 1.25rem;
+    position: relative;
+    z-index: 5;
+  }
+
+  .main-div h3{
+    font-size: 16px;
+  }
+
+  input{
+    width: 100%;
+  }
+
+  .add-div button{
+    width: 100%;
+  }
+
+  .last-div{
+    width: 100%;
+    gap: 1rem;
+  }
+
+  .scann,
+  #check-but{
+    height: 3.2rem;
+    font-size: 12px;
+  }
+
+  .description-div{
+    padding-bottom: 1rem;
+    position: relative;
+    z-index: 5;
+  }
+
+  .description-div img{
+    margin: 1rem auto 0;
+    display: block;
+    width: 8rem;
+    height: auto;
+  }
+
+  .med-div{
+    position: absolute;
+    z-index: 1;
+    right: 1rem;
+    top: -2rem;
+    transform: rotate(-15deg);
+  }
+
+  .med-div img{
+    width: 9rem;
+    height: auto;
+  }
+}
+
+
+/* ======================= 576px ======================= */
+@media (max-width: 576px) {
+
+  .general-div{
+    width: calc(100% - 1rem);
+    margin: 0 0.5rem 1.5rem 0.5rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    border-radius: 0.75rem;
+    background-size: 90px 90px;
+    position: relative;
+  }
+
+  h2{
+    font-size: 21px;
+    padding-left: 0.5rem;
+    padding-top: 1.5rem;
+  }
+
+  .content-div{
+    gap: 1.25rem;
+    position: relative;
+  }
+
+  .main-div{
+    padding: 1rem;
+    border-radius: 0.75rem;
+    position: relative;
+    z-index: 5;
+  }
+
+  .description-div{
+    border-radius: 0.75rem;
+    position: relative;
+    z-index: 5;
+  }
+
+  .drug-field{
+    margin-bottom: 1rem;
+  }
+
+  label{
+    font-size: 11px;
+  }
+
+  input{
+    height: 46px;
+    font-size: 14px;
+  }
+
+  .add-div{
+    margin: 16px 0;
+  }
+
+  .last-div{
+    flex-direction: column;
+    width: 100%;
+    gap: 0.75rem;
+  }
+
+  .scann,
+  #check-but{
+    width: 100%;
+    flex: unset;
+    height: 3rem;
+    font-size: 11px;
+  }
+
+  .description-div h3{
+    font-size: 18px;
+  }
+
+  .description-div p{
+    font-size: 14px;
+    line-height: 1.6;
+    padding-right: 1rem;
+  }
+
+  .med-div{
+    display: none;
+  }
 }

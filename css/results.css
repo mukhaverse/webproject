@@ -174,33 +174,8 @@ main h1 {
 
 
 
+
 /* ----RESPONSIVE----*/
-/* @media (max-width: 1200px) {
-  .chart-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .card-sect {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 700px) {
-  main {
-    padding: 1rem;
-  }
-
-  .card-sect {
-    grid-template-columns: 1fr;
-  }
-
-  main h1 {
-    font-size: 1.7rem;
-  }
-} */
-
-
-/* ================== 992px ================== */
 @media (max-width: 992px) {
 
   .chart-grid {
@@ -216,8 +191,6 @@ main h1 {
 
 }
 
-
-/* ================== 768px ================== */
 @media (max-width: 768px) {
 
   .card-sect {
@@ -235,9 +208,6 @@ main h1 {
   }
 
 }
-
-
-/* ================== 576px ================== */
 @media (max-width: 576px) {
 
   main {

@@ -16,7 +16,7 @@
 
     <header>
     <div class="nav-wrap">
-    <nav class="nav">
+    <nav class="nav" aria-label="Main navigation">
         <div class="nav-brand">
             <div class="nav-logo">
                 <img src="/assets/medixa.svg" alt="medixa logo">
@@ -41,7 +41,7 @@
 
     <main class="general-div">
 
-         <h2>Drug Interaction Checker</h2>
+         <h1>Drug Interaction Checker</h1>
         <div class="content-div">
 
                 <!-- <div class="overlay">
@@ -50,13 +50,15 @@
 
                     <section class="main-div">
 
-                                <h5>Drugs, Supplements & OTC interaction</h5>
+                                <h2>Drugs, Supplements & OTC interaction</h2>
                                 
                                     <div class="drugs-container">
                                             <div class="drug-field">
 
-                                                    <label for="drug1">Search drug1</label>
+                                                    <label for="drug1">Search Drug 1</label>
                                                     <input type="text" id="drug1" placeholder="Enter drug name" >
+
+                                                    <!-- functionality on JS -->
                                                         <div>
                                                             <ul class="list-div"></ul>
                                                         </div>
@@ -66,8 +68,10 @@
 
                                             <div class="drug-field">
                                                 
-                                                    <label for="drug2">Search drug2</label>
+                                                    <label for="drug2">Search Drug 2</label>
                                                     <input type="text" id="drug2" placeholder="Enter drug name">
+
+                                                    <!-- functionality on JS -->
                                                         <div>
                                                             <ul class="list-div"></ul>
                                                         </div>
@@ -84,14 +88,14 @@
                                     <div class="last-div">
                                     <!-- SOONN BY Tesseract.js -->
                                     
-                                        <button class="scann"> Scann  </button>
+                                        <button class="scann"> Scan </button>
                                         <button id="check-but">Check interaction</button>
                                     </div>
                                     
                     </section>
 
                     <div class="med-div">
-                        <img src="../assets/med.svg" alt="med icon" >
+                        <img src="../assets/med.svg" alt="med icon" aria-hidden="true">
                     </div>
 
 
