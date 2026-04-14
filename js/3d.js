@@ -97,10 +97,14 @@ function init() {
             const pill4 = [meshes[17], meshes[1]];
 
             // color for debugging
-            // colorGroup(pill1, 0xff0000);
+            // colorGroup(pill1, 0xff0000); 
             // colorGroup(pill2, 0x00ff00);
             // colorGroup(pill3, 0x0000ff);
             // colorGroup(pill4, 0x4f002f);
+
+            const pillGroups = [pill1, pill2, pill3, pill4];
+
+            addIdleRotation(pillGroups);
 
             addScrollAnimation(pill1, pill2, pill3, pill4);
 
@@ -154,68 +158,124 @@ function getOthers(...groups) {
 }
 
 
-
 function addScrollAnimation(pill1, pill2, pill3, pill4) {
 
     gsap.registerPlugin(ScrollTrigger);
 
+
+    ScrollTrigger.create({
+        trigger: ".hero-section",
+        start: "top top",
+        end: "+=200", // controling where the pin stops
+        pin: true,
+        pinSpacing: true,
+    });
+
+
+
     const others = getOthers(pill1, pill2, pill3, pill4);
 
-   function move(group, y, z, finalXOffset = -4) {
-        group.forEach(mesh => {
+
+
+    
+    function move(group, y, z, finalXOffset = -4, groupIndex = 0) {
+
+        group.forEach((mesh) => {
 
             if (mesh.userData.baseX === undefined) {
                 mesh.userData.baseX = mesh.position.x;
+                mesh.userData.baseY = mesh.position.y;
             }
+
 
             gsap.to(mesh.position, {
 
-            y: mesh.position.y + y,
-            z: mesh.position.z + z,
+                
+                y: mesh.userData.baseY + y,
+                z: mesh.position.z + z,
+                x: mesh.userData.baseX + finalXOffset,
 
-            x: mesh.userData.baseX + finalXOffset,
+                ease: "none",
 
-            ease: "power2.out",
+                scrollTrigger: {
+                    trigger: ".hero-section",
+                    start: "top top",
+                    end: "bottom-=50 top",
+                    scrub: true,
+                },
 
-            scrollTrigger: {
-                trigger: ".hero-section",
-                start: "top+=100 top",
-                end: "bottom-=50 top",
-                scrub: true,
-            },
+                onUpdate: function () {
 
+                    const raw = this.progress();
 
-            
-            onUpdate: function () {
-                const progress = this.progress();
+                    
+                    const offset = groupIndex * 0.12;
+                    let progress = raw - offset;
 
-                // controling when they satrt going to the left
-                if (progress < 0.4) {
-                    mesh.position.x = mesh.userData.baseX;
-                } else {
-                    const t = (progress - 0.4) / 0.4; 
-                    mesh.position.x =
-                        mesh.userData.baseX +
-                        (finalXOffset * t);
+                    
+                    progress = Math.max(0, Math.min(1, progress));
+
+                    
+                    mesh.position.y =
+                        mesh.userData.baseY + (y * progress);
+
+                    
+                    if (progress < 0.4) {
+                        mesh.position.x = mesh.userData.baseX;
+                    } else {
+                        const t = (progress - 0.4) / 0.4;
+                        mesh.position.x =
+                            mesh.userData.baseX +
+                            (finalXOffset * t);
+                    }
+
+                    // I migth leave it without any scale change since I added the pinning 
+                    // but still not sure
+                    let scale;
+
+                    if (progress < 0.5) {
+                        scale = 1 + (progress * 0.1);
+                    } else {
+                        const t = (progress - 0.5) / 0.5;
+                        scale = 1.05 - (t * 0.05);
+                    }
+
+                    mesh.scale.set(scale, scale, scale);
                 }
-            }
+            });
 
 
 
         });
 
-        });
+
+    }
+
+    
+    move(pill1, 1650, 110, -300, 0); //red
+    move(pill2, 1900, 110, -350, 1); //green 
+    move(pill3, 2100, 110, -530, 2); //blue
+    move(pill4, 2500, 110, -570, 3); //purp
+
+   
+    move(others, -1200, -20, 0, 0);
 }
+function addIdleRotation(pillGroups) {
 
+    pillGroups.forEach((group, i) => {
 
+        const rotY = "+=0.1";
+        const rotX = "+=0.1";
 
+        
+        gsap.to(group.map(m => m.rotation), {
+            y: rotY,
+            x: rotX,
+            duration: 2 + i * 0.2,
+            yoyo: true,
+            repeat: -1,
+            ease: "sine.inOut",
+        });
 
-    move(pill1, 1600, 100, -440); //red
-    move(pill2, 1600, 100, -440); //green
-    move(pill3, 1550, 100, -440); //blue
-    move(pill4, 1600, 110, -440); //purp
-
-
-    move(others, -1100, -20, 0);
-
+    });
 }
