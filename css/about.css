@@ -11,7 +11,6 @@ body {
   background: #f4f7fa;
 }
 
-/* About Us Section */
 .about-section {
   width: 100%;
   min-height: 100vh;
@@ -179,36 +178,34 @@ body {
   height: 100%;
 }
 
-.people span {
-  font-size: 12px;
-  color: #4b5563;
+table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.right-side .text-block {
-  margin-bottom: 18px;
+.person td {
+  vertical-align: top;
+  padding-bottom: 16px;
 }
 
-.person {
-  margin-bottom: 16px;
+.person td:first-child {
+  width: 40%;
 }
 
-.name {
-  font-weight: 600;
-  color: #4b5563;
-  margin-bottom: 4px;
-}
-
-.link {
-  display: block;
-  font-size: 13px;
-  color: #4b5563;
-  text-decoration: none;
-  margin-left: 10px;
+.link{
+  width: 30%;
+  margin-left: 5px;
+  font-size: 13px; 
+  color: #4b5563; 
   transition: 0.2s;
 }
 
-.link:hover {
-  color: #1e1b4b;
+.link:hover { 
+  color: #1e1b4b; 
+}
+
+.person td a {
+  display: block;
 }
 
 /* Responsive Design */
