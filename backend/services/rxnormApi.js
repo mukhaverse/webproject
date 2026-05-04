@@ -4,7 +4,7 @@ const normalizeDrug = async (drugName) => {
   try {
     console.log("\n=== NORMALIZING:", drugName, "===");
 
-    
+      
     const rxcuiRes = await fetch(
       `https://rxnav.nlm.nih.gov/REST/rxcui.json?name=${encodeURIComponent(drugName)}`
     );
@@ -22,16 +22,16 @@ const normalizeDrug = async (drugName) => {
 
     console.log(" RxCUI:", rxcui);
 
-    // Get related info 
+
     const relatedRes = await fetch(
       `https://rxnav.nlm.nih.gov/REST/rxcui/${rxcui}/related.json?tty=IN+BN`
     );
 
-    //  log raw response
+
     const rawText = await relatedRes.text();
     console.log("RAW RELATED RESPONSE:", rawText);
 
-    // try parsing
+
     let relatedData;
     try {
       relatedData = JSON.parse(rawText);
@@ -45,7 +45,7 @@ const normalizeDrug = async (drugName) => {
       JSON.stringify(relatedData, null, 2)
     );
 
-    //  Inspect groups
+
     const groups = relatedData?.relatedGroup?.conceptGroup || [];
 
     for (let group of groups) {

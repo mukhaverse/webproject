@@ -13,6 +13,7 @@
     <link href="css/transition.css" rel="stylesheet">
     <link href="css/Hero.css" rel="stylesheet">
     <link href="css/steps.css" rel="stylesheet">
+    <link href="css/testimonials.css" rel="stylesheet">
     <!-- <link href="css/hiw.css" rel="stylesheet"> -->
     <link href="css/footer.css" rel="stylesheet">
 </head>
@@ -188,6 +189,55 @@
 
 
 
+
+    <section class="testimonials-section">
+
+        <div class="section-header">
+            <h2 class="main-heading">
+                What users say about <span class="accent-text">Medixa</span>
+            </h2>
+        </div>
+
+        <div class="testimonial-wrapper" id="wrapper">
+
+            <div class="lr-overlay">
+                <div class="lr-panel"></div>
+                <div class="lr-panel"></div>
+                <div class="lr-panel"></div>
+            </div>
+
+           
+            
+            <div class="testimonial-list-container">
+
+                <button id="toggleFormBtn" class="add-btn">+</button>
+
+                <div class="testimonial-header">
+                    <h3>Leave a feedback</h3>
+                </div>
+
+                <div class="testimonial-list" id="entriesContainer">
+                    <p class="no-entries">No feedback yet. Be the first!</p>
+                </div>
+
+            </div>
+
+            
+            
+            <div class="testimonial-input" id="testimonialForm">
+                <input type="text" id="guestName" placeholder="Your name" class="tb-input">
+                <textarea id="guestMessage" placeholder="Share your experience..." class="tb-input tb-textarea"></textarea>
+                <button id="submitGuestbook" class="btn">Submit</button>
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+
+
 </main>
 
 
@@ -244,6 +294,7 @@
     
     <script src="js/nav.js"></script>
     <script src="js/transition.js"></script>
+    <script src="js/testimonials.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/js/loaders/DRACOLoader.js"></script>
