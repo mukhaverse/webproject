@@ -67,7 +67,17 @@
   align-items: center;
 }
 
-.foot-copy { color: #c4cad8; font-size: 12.5px; }
+.foot-copy { 
+  color: #c4cad8; font-size: 12.5px; 
+}
+
+.Disclaimer {
+  color: #c4cad8;
+  font-size: 12.5px;
+  text-align: left;
+}
+
+
 .foot-links {
   display: flex;
   gap: 20px;
@@ -85,6 +95,7 @@
 
   .foot {
     padding: 40px 28px;
+    text-align: center;
   }
 
   

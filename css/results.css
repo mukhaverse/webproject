@@ -186,6 +186,203 @@ main h1 {
 
 
 
+.schedule-section {
+  margin: 2.5rem 0 0 2rem;
+}
+
+.schedule-section h2 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 35px;
+  color: #1e1b4b;
+  margin-bottom: 1.2rem;
+  letter-spacing: 0.03em;
+}
+
+.schedule-card {
+  background: #ffffff;
+  border-radius: 2.2rem;
+  padding: 2rem 3.2rem;
+  box-shadow: 0 8px 25px rgba(24, 39, 75, 0.08);
+  overflow-x: auto;
+}
+
+.schedule-row {
+  min-width: 780px;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  color: #d0d0d0;
+  font-size: 1.05rem;
+  margin-bottom: 0.4rem;
+}
+
+.schedule-row .time {
+  text-align: center;
+}
+
+.schedule-lines {
+  min-width: 780px;
+  height: 105px;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  position: relative;
+  margin-bottom: 1.4rem;
+}
+
+.hour-slot {
+  position: relative;
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.hour-slot::before {
+  content: "";
+  position: absolute;
+  width: 2px;
+  height: 100%;
+  background: #e5e5e5;
+  border-radius: 2px;
+}
+
+.hour-slot.blue-slot::before {
+  background: #36a5e8;
+}
+
+.hour-slot.pink-slot::before {
+  background: #ff5b83;
+}
+
+.hour-slot.yellow-slot::before {
+  background: #ffc64d;
+}
+
+.dose-wrapper {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+}
+
+.dose-line {
+  display: none;
+}
+
+.dose-wrapper {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 100%;
+}
+
+.dose-line {
+  position: absolute;
+  width: 2px;
+  height: 100%;
+  top: 0;
+  border-radius: 2px;
+}
+
+.dose {
+  width: clamp(42px, 5vw, 68px);
+  height: 24px;
+  border-radius: 4px;
+  display: block;
+  z-index: 2;
+}
+
+.blue-dose {
+  background: #36a5e8;
+}
+
+.pink-dose {
+  background: #ff5b83;
+}
+
+.yellow-dose {
+  background: #ffc64d;
+}
+
+.dose-2 {
+  grid-column: 3;
+}
+
+.dose-8 {
+  grid-column: 9;
+}
+
+.dose-10 {
+  grid-column: 11;
+}
+
+.dose-6 {
+  grid-column: 7;
+}
+
+.second {
+  margin-top: 0.2rem;
+}
+
+.schedule-legend {
+  display: flex;
+  justify-content: center;
+  gap: 5rem;
+  color: #555;
+  font-size: 0.95rem;
+  min-width: 780px;
+}
+
+.schedule-legend span {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.legend-line {
+  width: 68px;
+  height: 14px;
+  display: inline-block;
+}
+
+@media (max-width: 992px) {
+  .schedule-section {
+    margin: 2rem 0;
+  }
+
+  .schedule-card {
+    padding: 1.5rem;
+  }
+
+  .legend-line {
+  width: clamp(42px, 5vw, 68px);
+  height: 14px;
+  display: inline-block;
+  }
+}
+
+@media (max-width: 576px) {
+  .schedule-section {
+    margin: 1rem 0;
+  }
+
+  .schedule-section h2 {
+    font-size: 1.6rem;
+  }
+
+  .schedule-card {
+    border-radius: 1.5rem;
+    padding: 1.2rem;
+  }
+
+  .legend-line {
+  width: clamp(42px, 5vw, 68px);
+  height: 14px;
+  display: inline-block;
+  }
+}
+
+
+
+
 /* ----RESPONSIVE----*/
 @media (max-width: 992px) {
 
