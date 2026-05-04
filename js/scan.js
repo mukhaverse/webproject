@@ -5,8 +5,11 @@ const captureBtn = document.querySelector(".take-but");
 const closeBtn = document.querySelector(".close-but");
 const scanBtn = document.querySelector(".scann");
 const ctx = canvas.getContext("2d");
+// const text ="";
+let capturedImage = " ";
 
 
+  //     Listeners
 scanBtn.addEventListener("click",scan);
 closeBtn.addEventListener("click",closeCamera);
 captureBtn.addEventListener("click",capture);
@@ -14,10 +17,13 @@ captureBtn.addEventListener("click",capture);
 
 
 function scan() {
+
+  openCamera();
   video.style.display ="block";
   canvas.style.display ="none";
   captureBtn.style.display ="block";
   closeBtn.style.display ="block";
+
 }
 
 
@@ -27,6 +33,7 @@ function closeCamera() {
   canvas.style.display ="none";
   captureBtn.style.display ="none";
   closeBtn.style.display ="none";
+
 }
 
 function capture(){
@@ -41,11 +48,13 @@ function capture(){
   video.style.display ="none";
   canvas.style.display ="block";
 
-
-  const image = canvas.toDataURL("image/png");
-  console.log(image);
+    //get the img
+  capturedImage = canvas.toDataURL("image/png");
+  console.log(capturedImage);
+  readOCR(capturedImage);
 
 }
+
 
 async function openCamera() {
   let stream;
@@ -70,27 +79,65 @@ async function openCamera() {
 }
 
 
-async function testOCR() {
-
-  try{
-
+async function readOCR(image) {
+  try {
     console.log("OCR started...");
 
-        //TTESST OCR
+    const result = await Tesseract.recognize(
+      image,
+      "eng"
+    );
 
-      const result = await Tesseract.recognize(
-        "../assets/panadol_box.png",
-        "eng"
-      );
+     const text = result.data.text;
 
-      console.log("OCR RESULT:");
-      console.log(result.data.text);
+    console.log("OCR RESULT:");
+    console.log(text);
 
-      alert("OCR finished. Check the console.");
+    const drugName = extractDrugName(text);
+    console.log("Detected drug:", drugName);
 
+  } catch(error) {
+    console.log("ERROR OCR", error);
   }
-   catch(error){
-     console.log("ERRROORR OCR");
-  }
-  
 }
+
+
+function extractDrugName(text) {
+  const knownDrugs = ["panadol", "ibuprofen", "warfarin", "aspirin", "paracetamol"];
+
+  const cleanText = text.toLowerCase();
+
+  const foundDrug = knownDrugs.find(drug => cleanText.includes(drug));
+
+  return foundDrug || "No drug found";
+}
+
+
+
+
+
+
+// async function testOCR() {
+
+//   try{
+
+//     console.log("OCR started...");
+
+//         //TTESST OCR
+
+//       const result = await Tesseract.recognize(
+//         "../assets/panadol_box.png",
+//         "eng"
+//       );
+
+//       console.log("OCR RESULT:");
+//       console.log(result.data.text);
+
+//       alert("OCR finished. Check the console.");
+
+//   }
+//    catch(error){
+//      console.log("ERRROORR OCR"+error);
+//   }
+  
+// }
