@@ -190,49 +190,86 @@
 
 
 
-    <section class="testimonials-section">
+    <section class="testimonials">
 
-        <div class="section-header">
-            <h2 class="main-heading">
-                What users say about <span class="accent-text">Medixa</span>
-            </h2>
-        </div>
+        <div class="testimonials-layout">
 
-        <div class="testimonial-wrapper" id="wrapper">
+    
 
-            <div class="lr-overlay">
-                <div class="lr-panel"></div>
-                <div class="lr-panel"></div>
-                <div class="lr-panel"></div>
+
+            <div class="left">
+                <p class="label">TESTIMONIALS</p>
+
+                <h2>
+                    What users say <br>
+                    about <span>Medixa</span>
+                </h2>
+
+                <p class="count">3 reviews</p>
+
+                <button id="openBtn" class="btn-add">
+                    + Add yours
+                </button>
             </div>
 
-           
+
             
-            <div class="testimonial-list-container">
 
-                <button id="toggleFormBtn" class="add-btn">+</button>
 
-                <div class="testimonial-header">
-                    <h3>Leave a feedback</h3>
+
+            <div class="right" id="list">
+
+                <div class="item">
+                    <!-- <div class="avatar">"</div> -->
+                    <div class="text">
+                        <strong>Sarah A.</strong>
+                        <p>"Medixa caught a dangerous interaction..."</p>
+                    </div>
                 </div>
 
-                <div class="testimonial-list" id="entriesContainer">
-                    <p class="no-entries">No feedback yet. Be the first!</p>
+                <div class="item">
+                    <!-- <div class="avatar">"</div> -->
+                    <div class="text">
+                        <strong>Mohammed K.</strong>
+                        <p>"Three steps and I had my answer."</p>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <!-- <div class="avatar">"</div> -->
+                    <div class="text">
+                        <strong>Dr. Reyes</strong>
+                        <p>"I recommend Medixa..."</p>
+                    </div>
                 </div>
 
             </div>
 
-            
-            
-            <div class="testimonial-input" id="testimonialForm">
-                <input type="text" id="guestName" placeholder="Your name" class="tb-input">
-                <textarea id="guestMessage" placeholder="Share your experience..." class="tb-input tb-textarea"></textarea>
-                <button id="submitGuestbook" class="btn">Submit</button>
-            </div>
-
         </div>
+
+
 
     </section>
+
+
+    <div class="modal" id="modal">
+
+        <div class="overlay" id="overlay"></div>
+
+        <div class="modal-box">
+
+            <button class="close" id="closeBtn">×</button>
+
+            <h3>Share your experience</h3>
+
+            <input id="name" type="text" placeholder="Your name" class="input">
+            <textarea id="message" placeholder="Your experience..." class="input textarea"></textarea>
+
+            <button id="submit" class="submit">Submit</button>
+
+        </div>
+
+    </div>
 
 
 
