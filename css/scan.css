@@ -1,0 +1,69 @@
+.camera {
+  display: none;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 10;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.camera-box {
+  position: relative;
+  left: 20rem;
+  width: 600px;
+  height: 600px;
+  /* background: black; */
+  border-radius: 18px;
+  overflow: hidden;
+  /* box-shadow: 0 25px 70px rgba(0, 0, 0, 0.45); */
+}
+
+#video,
+#scan {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+#scan {
+  display: none;
+}
+
+.buto-camera {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.7rem;
+  z-index: 10;
+}
+
+.buto-camera button {
+  min-width: 80px;
+  height: 36px;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.take-but {
+  background: #1a1f3a;
+  color: white;
+}
+
+.close-but,
+.retake-but {
+  background: white;
+  color: #1a1f3a;
+}
+
+.retake-but {
+  display: none;
+}
