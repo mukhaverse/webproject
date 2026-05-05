@@ -110,26 +110,52 @@ document.addEventListener('DOMContentLoaded', () => {
     field.element.addEventListener('change', () => validateField(field));
   });
 
-  contactForm.addEventListener('submit', (event) => {
-    event.preventDefault();
 
-    let isFormValid = true;
+  // Handle form submission
+  contactForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
 
-    Object.values(fields).forEach((field) => {
-      const valid = validateField(field);
-      if (!valid) isFormValid = false;
+  let isFormValid = true;
+
+  Object.values(fields).forEach((field) => {
+    const valid = validateField(field);
+    if (!valid) isFormValid = false;
+  });
+
+  if (!isFormValid) {
+    formStatus.textContent = 'Please correct the highlighted fields before submitting.';
+    return;
+  }
+
+  try {
+    const res = await fetch("https://atelier-0adu.onrender.com/contact", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        firstName: fields.firstName.element.value.trim(),
+        lastName: fields.lastName.element.value.trim(),
+        phoneNumber: fields.phoneNumber.element.value.trim(),
+        email: fields.email.element.value.trim(),
+        language: fields.language.element.value,
+        gender: fields.gender.element.value,
+        contactDate: fields.contactDate.element.value,
+        message: fields.message.element.value.trim()
+      })
     });
 
-    if (!isFormValid) {
-      formStatus.textContent = 'Please correct the highlighted fields before submitting.';
-      return;
-    }
+    if (!res.ok) throw new Error("HTTP " + res.status);
 
-    formStatus.textContent = 'Your message is ready to be sent.';
+    formStatus.textContent = 'Your message has been sent successfully.';
     contactForm.reset();
 
     Object.values(fields).forEach((field) => clearFieldError(field.element));
-  });
+  } catch (error) {
+    console.error("Contact send error:", error);
+    formStatus.textContent = 'Something went wrong. Please try again.';
+  }
+});
 
   function rotateFaqCard() {
     faqCard.classList.remove('fade-in');

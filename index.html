@@ -147,92 +147,139 @@
     
 
     <section class="benefits-section">
-        <div class="benefits-bento">
-            <div class="flow-header">
-                <h2 class="main-heading">Why use <span class="accent-text">Medixa</span>?</h2>
-            </div>
 
-            <!-- <div class="behind-bento">
-                <img src="assets/pills-colored.svg">
-            </div> -->
-
-            <div class="bento-grid">
-                <div class="bento-cell tall purple-tint">
-                    <h3>Built for Everyone</h3>
-                    <p>Should we add a description like this or leave it empty</p>
-                </div>
-
-                <div class="bento-cell wide blue-tint">
-                    <h3>Peace of Mind</h3>
-                    <p>Stop second-guessing. Get clarity on your medications in seconds</p>
-                </div>
-
-                <div class="bento-cell small">
-                    <img src="assets/zap-fast.svg" class="bento-icon" alt="Fast performance icon">
-                    <h3>Instant Results</h3>
-                </div>
-
-                <div class="bento-cell small gray-tint">
-                    <img src="assets/shield-check.svg" class="bento-icon" alt="Security shield icon">
-                    <h3>Always Available</h3>
-                </div>
-
-                <div class="bento-cell medium-wide">
-                    <h3>Easy to Use</h3>
-                    <p>Three steps. No jargon. No confusion</p>
-                </div>
-            </div>
-        </div>
-    </section>
+    <div class="benefits-wrapper">
 
 
 
+        <div class="benefits-left">
+            <p class="benefits-label">WHY MEDIXA</p>
 
-
-
-    <section class="testimonials-section">
-
-        <div class="section-header">
-            <h2 class="main-heading">
-                What users say about <span class="accent-text">Medixa</span>
+            <h2>
+                Built for real people, not just <span>doctors</span>.
             </h2>
+
+            <p class="benefits-desc">
+                Whether you're a patient juggling prescriptions or a caregiver managing a family member’s health <br>
+                Medixa gives you the clarity you need, without the medical jargon.
+            </p>
         </div>
 
-        <div class="testimonial-wrapper" id="wrapper">
+       
+        
 
-            <div class="lr-overlay">
-                <div class="lr-panel"></div>
-                <div class="lr-panel"></div>
-                <div class="lr-panel"></div>
+
+        <div class="benefits-grid">
+
+            <div class="benefit-card highlight">
+                <h3>&gt; 2s</h3>
+                <p class="title">Instant Results</p>
+                <p>10,000+ data points checked instantly</p>
             </div>
 
-           
-            
-            <div class="testimonial-list-container">
-
-                <button id="toggleFormBtn" class="add-btn">+</button>
-
-                <div class="testimonial-header">
-                    <h3>Leave a feedback</h3>
-                </div>
-
-                <div class="testimonial-list" id="entriesContainer">
-                    <p class="no-entries">No feedback yet. Be the first!</p>
-                </div>
-
+            <div class="benefit-card soft">
+                <h3>Always On</h3>
+                <p>24/7, no login required</p>
             </div>
 
-            
-            
-            <div class="testimonial-input" id="testimonialForm">
-                <input type="text" id="guestName" placeholder="Your name" class="tb-input">
-                <textarea id="guestMessage" placeholder="Share your experience..." class="tb-input tb-textarea"></textarea>
-                <button id="submitGuestbook" class="btn">Submit</button>
+            <div class="benefit-card wide">
+                <h3>Be Sure</h3>
+                <p>Stop second-guessing. Three steps, clear answer.</p>
             </div>
 
         </div>
+
+    </div>
+
+
+
+</section>
+
+
+
+
+
+
+    <section class="testimonials">
+
+        <div class="testimonials-layout">
+
+    
+
+
+            <div class="left">
+                <p class="label">TESTIMONIALS</p>
+
+                <h2>
+                    What users say <br>
+                    about <span>Medixa</span>
+                </h2>
+
+                <p class="count">3 reviews</p>
+
+                <button id="openBtn" class="btn-add">
+                    + Add yours
+                </button>
+            </div>
+
+
+            
+
+
+
+            <div class="right" id="list">
+
+                <div class="item">
+                    <!-- <div class="avatar">"</div> -->
+                    <div class="text">
+                        <strong>Sarah A.</strong>
+                        <p>"Medixa caught a dangerous interaction..."</p>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <!-- <div class="avatar">"</div> -->
+                    <div class="text">
+                        <strong>Mohammed K.</strong>
+                        <p>"Three steps and I had my answer."</p>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <!-- <div class="avatar">"</div> -->
+                    <div class="text">
+                        <strong>Dr. Reyes</strong>
+                        <p>"I recommend Medixa..."</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
 
     </section>
+
+
+    <div class="modal" id="modal">
+
+        <div class="overlay" id="overlay"></div>
+
+        <div class="modal-box">
+
+            <button class="close" id="closeBtn">×</button>
+
+            <h3>Share your experience</h3>
+
+            <input id="name" type="text" placeholder="Your name" class="input">
+            <textarea id="message" placeholder="Your experience..." class="input textarea"></textarea>
+
+            <button id="submit" class="submit">Submit</button>
+
+        </div>
+
+    </div>
 
 
 
