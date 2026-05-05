@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 
+const db = require("./db");
+
 // import service
 const { checkInteraction } = require("./services/interactionApi");
 const { normalizeDrug } = require("./services/rxnormApi");
@@ -11,9 +13,24 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+
+
+
 app.get("/", (req, res) => {
   res.send("You're at MEDIXA server root!")
 })
+
+
+
+db.query("SELECT 1", (err, result) => {
+  if (err) console.error("DB test failed:", err);
+  else console.log("DB working ✔");
+});
+
+
+
+
+
 
 
 app.post("/check", async (req, res) => {
@@ -103,6 +120,61 @@ app.get("/search", async (req, res) => {
     });
   }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+app.post("/testimonials", (req, res) => {
+  const { name, message } = req.body;
+
+  if (!name || !message) {
+    return res.status(400).json({ error: "All fields required" });
+  }
+
+  const sql = "INSERT INTO testimonials (name, message) VALUES (?, ?)";
+
+  db.query(sql, [name, message], (err, result) => {
+    if (err) {
+      console.error("DB ERROR:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+
+    res.json({ success: true });
+  });
+});
+
+
+app.get("/testimonials", (req, res) => {
+  db.query(
+    "SELECT id, name, message, created_at FROM testimonials ORDER BY created_at DESC",
+    (err, results) => {
+      if (err) {
+        console.error("DB ERROR:", err);
+        return res.status(500).json({ error: "Database error" });
+      }
+
+      res.json(results);
+    }
+  );
+});
+
+
+
+
+
+
+
+
 
 
 
