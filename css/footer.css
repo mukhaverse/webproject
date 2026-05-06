@@ -2,18 +2,16 @@
 /* colors & fonts will be edited to match base at the end dw !*/
 
 .foot-wrap {
-  background: #e8ecf4;
+  background: #ffffff;
   padding: 8px 24px 24px;
 }
  
 .foot {
   max-width: 1160px;
   margin: 0 auto;
-  background: #fff;
-  border: 1px solid #e5e5e5;
-  border-radius: 18px;
+  background: none;
+  border: none;
   padding: 48px 40px 30px;
-  box-shadow: 0 4px 24px rgba(60,80,140,0.06);
 }
  
 .foot-top {

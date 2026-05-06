@@ -7,11 +7,6 @@
   padding: 0;
 }
 
-html,
-body {
-  overflow-x: hidden;
-}
-
 body {
   font-family: 'Inter', sans-serif;
   background: #f4f7fa;
