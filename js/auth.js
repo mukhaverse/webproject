@@ -318,16 +318,17 @@ function updateNavAuth() {
 
   
 
-
-if (user.role === "admin") {
+ if (user.role === "admin") {
  
-    if (!document.querySelector(".nav-admin-badge")) {
+    if (!document.querySelector(".nav-admin-links")) {
  
-      const badge = document.createElement("a");
-      badge.className = "nav-admin-badge";
-      badge.href = "/HTML/admin-dashboard.html";
-      badge.textContent = "Admin Panel";
-      badge.style.cssText = [
+      const wrapper = document.createElement("span");
+      wrapper.className = "nav-admin-links";
+ 
+      const mappingsLink = document.createElement("a");
+      mappingsLink.href = "/HTML/drug-mappings.html";
+      mappingsLink.textContent = "Drug Mappings";
+      mappingsLink.style.cssText = [
         "font-size:11px",
         "background:#312e81",
         "color:rgba(255,255,255,0.85)",
@@ -335,19 +336,15 @@ if (user.role === "admin") {
         "border-radius:20px",
         "text-decoration:none",
         "margin-left:8px",
-        "letter-spacing:0.5px",
-        "transition:background 0.2s"
+        "letter-spacing:0.5px"
       ].join(";");
  
-      badge.addEventListener("mouseenter", () => badge.style.background = "#1e1b4b");
-      badge.addEventListener("mouseleave", () => badge.style.background = "#312e81");
- 
-      signinEl.parentElement.appendChild(badge);
+      wrapper.appendChild(mappingsLink);
+      signinEl.parentElement.appendChild(wrapper);
  
     }
  
   }
- 
 
 
 

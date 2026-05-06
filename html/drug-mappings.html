@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medixa — Drug Mappings</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+      color: #333;
+    }
+
+    h1 { margin-bottom: 6px; }
+    p.sub { color: #666; margin-top: 0; margin-bottom: 30px; }
+
+    h2 { margin-top: 40px; margin-bottom: 12px; font-size: 18px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th { background: #f5f5f5; font-weight: 600; }
+
+    input[type="text"] {
+      padding: 6px 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 200px;
+    }
+
+    button {
+      padding: 6px 14px;
+      font-size: 14px;
+      cursor: pointer;
+      border: 1px solid #999;
+      border-radius: 4px;
+      background: white;
+    }
+
+    button:hover { background: #f0f0f0; }
+
+    .msg {
+      display: none;
+      margin-top: 6px;
+      font-size: 13px;
+      padding: 6px 10px;
+      border-radius: 4px;
+    }
+
+    .msg.error   { background: #fee; color: #900; display: block; }
+    .msg.success { background: #efe; color: #060; display: block; }
+
+    #status { margin-bottom: 20px; font-size: 14px; color: #555; }
+
+    .empty { color: #999; font-size: 14px; padding: 12px 0; }
+
+    nav {
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+
+    nav a { margin-right: 16px; color: #333; text-decoration: none; }
+    nav a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="/">← Home</a>
+  </nav>
+
+  <h1>Drug Mappings</h1>
+  <p class="sub">View unresolved drug names and manually map them to their correct generic names.</p>
+
+  <div id="status">Loading…</div>
+
+
+  <!-- PENDING TABLE -->
+  <h2>Pending</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Drug Name</th>
+        <th>Flagged At</th>
+        <th>Map To</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="pendingBody">
+      <tr><td colspan="4" class="empty">Loading…</td></tr>
+    </tbody>
+  </table>
+
+
+  <!-- RESOLVED TABLE -->
+  <h2>Resolved</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Original</th>
+        <th>Mapped To</th>
+        <th>Resolved By</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody id="resolvedBody">
+      <tr><td colspan="4" class="empty">Loading…</td></tr>
+    </tbody>
+  </table>
+
+
+  <script src="../js/auth.js"></script>
+  <script src="../js/drug-mappings.js"></script>
+
+</body>
+</html>
