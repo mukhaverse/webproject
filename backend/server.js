@@ -18,6 +18,7 @@ app.use(express.json());
 app.use(cors());
 
 const path = require("path");
+const { error } = require("console");
 app.use(express.static(path.join(__dirname, "..")));
 
 
@@ -67,6 +68,25 @@ app.post("/check", async (req, res) => {
 
     
     const data = await checkInteraction(normalizedDrug1, normalizedDrug2);
+    console.log(JSON.stringify(data, null, 2)); //TEMP TEST
+    
+      
+    //shumokh i added that to insert interaction info
+     const sql =`INSERT INTO interaction_checks
+     (drug1, drug2 ,severity, description) VALUES (?,?,?,?)`;
+
+      db.query(sql,[
+
+        normalizedDrug1,
+        normalizedDrug2,
+        data.severity,
+        data.description
+
+      ],(error) => {
+        if(error){
+          console.log("Error during insert inf of interaction");
+        }
+      })
 
     res.json(data)
 
@@ -82,6 +102,30 @@ app.post("/check", async (req, res) => {
   }
 
 })
+
+
+
+                              // #### endpoint for interaction ####
+
+app.get("/interaction",async (req,res) => {
+
+
+    db.query(
+         `SELECT id, drug1, drug2 ,severity ,description ,created_at FROM interaction_checks 
+          ORDER BY created_at DESC `,
+
+         (err,results) =>{
+
+          if(err){
+             console.error("DB ERROR:", err);
+             return res.status(404).json({error: "occure during get interaction from DB"})
+          }
+          res.json(results);
+         }
+       )
+
+})
+
 
 
 
