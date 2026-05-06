@@ -9,8 +9,9 @@ const { checkInteraction } = require("./services/interactionApi");
 const { normalizeDrug } = require("./services/rxnormApi");
 
 
-const jwt        = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 const authRoutes = require("./routes/authRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
 const app = express();
 
@@ -25,6 +26,8 @@ app.use(express.static(path.join(__dirname, "..")));
 
 // /auth/signup, /auth/login, /auth/me, /auth/logout
 app.use("/auth", authRoutes);
+
+app.use("/admin", adminRoutes);
 
 
 
@@ -61,8 +64,13 @@ app.post("/check", async (req, res) => {
 
     // const data = await checkInteraction(drug1, drug2)
 
-    const normalizedDrug1 = await normalizeDrug(drug1);
-    const normalizedDrug2 = await normalizeDrug(drug2);
+    // const normalizedDrug1 = await normalizeDrug(drug1);
+    // const normalizedDrug2 = await normalizeDrug(drug2);
+
+
+    //connects the drug checker to the admin task and db
+    const normalizedDrug1 = await normalizeDrug(drug1, db);
+    const normalizedDrug2 = await normalizeDrug(drug2, db);
 
     console.log("Normalized:", normalizedDrug1, normalizedDrug2);
 

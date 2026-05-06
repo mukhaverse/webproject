@@ -319,15 +319,14 @@ function updateNavAuth() {
   
 
 
-  if (user.role === "expert" || user.role === "admin") {
-
-    
-    if (!document.querySelector(".nav-expert-badge")) {
-
+if (user.role === "admin") {
+ 
+    if (!document.querySelector(".nav-admin-badge")) {
+ 
       const badge = document.createElement("a");
-      badge.className = "nav-expert-badge";
-      badge.href = "/HTML/expert-dashboard.html";
-      badge.textContent = "Expert Portal";
+      badge.className = "nav-admin-badge";
+      badge.href = "/HTML/admin-dashboard.html";
+      badge.textContent = "Admin Panel";
       badge.style.cssText = [
         "font-size:11px",
         "background:#312e81",
@@ -339,18 +338,16 @@ function updateNavAuth() {
         "letter-spacing:0.5px",
         "transition:background 0.2s"
       ].join(";");
-
-
+ 
       badge.addEventListener("mouseenter", () => badge.style.background = "#1e1b4b");
       badge.addEventListener("mouseleave", () => badge.style.background = "#312e81");
-
+ 
       signinEl.parentElement.appendChild(badge);
-
-
+ 
     }
-
+ 
   }
-
+ 
 
 
 
