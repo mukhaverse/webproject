@@ -8,10 +8,22 @@ const db = require("./db");
 const { checkInteraction } = require("./services/interactionApi");
 const { normalizeDrug } = require("./services/rxnormApi");
 
+
+const jwt        = require("jsonwebtoken");
+const authRoutes = require("./routes/authRoutes");
+
 const app = express();
 
 app.use(express.json());
 app.use(cors());
+
+const path = require("path");
+app.use(express.static(path.join(__dirname, "..")));
+
+
+
+// /auth/signup, /auth/login, /auth/me, /auth/logout
+app.use("/auth", authRoutes);
 
 
 
@@ -53,7 +65,7 @@ app.post("/check", async (req, res) => {
 
     console.log("Normalized:", normalizedDrug1, normalizedDrug2);
 
-    // call interaction API
+    
     const data = await checkInteraction(normalizedDrug1, normalizedDrug2);
 
     res.json(data)

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account – Medixa</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <link href="/CSS/nav.css"  rel="stylesheet">
+  <link href="/CSS/transition.css" rel="stylesheet">
+  <link href="/CSS/auth.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/base.css">
+</head>
+<body>
+
+  <div class="transition-overlay">
+    <div class="panel"></div>
+    <div class="panel"></div>
+    <div class="panel"></div>
+    <div class="panel"></div>
+  </div>
+
+  <a href="/" class="auth-back">← Back to Medixa</a>
+
+  <div class="auth-page">
+
+
+    
+    
+    <div class="auth-brand">
+      <div class="auth-brand-logo">
+        <img src="/assets/medixa.svg" alt="Medixa">
+      </div>
+
+      <div class="auth-brand-body">
+        <span class="label">Join Medixa Today</span>
+        <h2>Stay<br><span>Safe.</span></h2>
+        <p>
+          whatever long text we put in here to fill up the space and talk more about medixa blah blah blah blah blah even more blah blah here and there.
+        </p>
+      </div>
+
+      <div class="auth-brand-footer">© 2026 Medixa Inc.</div>
+    </div>
+
+
+    
+
+
+
+    <div class="auth-form-panel">
+      <div class="auth-card">
+
+        <div class="auth-card-header">
+          <h1>Create Account</h1>
+          <p>Already have an account? <a href="/HTML/login.html">Sign in</a></p>
+        </div>
+
+
+
+        <div class="auth-msg" id="authMsg"></div>
+
+        <form class="auth-form" id="signupForm" novalidate>
+
+
+
+          <div class="field-group">
+            <label for="name">Full name</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="Sarah Ahmed"
+              autocomplete="name"
+              required
+            >
+          </div>
+
+          <div class="field-group">
+            <label for="email">Email address</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="you@example.com"
+              autocomplete="email"
+              required
+            >
+          </div>
+
+          <div class="field-group">
+            <label for="password">Password</label>
+            <div class="password-wrapper">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="At least 6 characters"
+                autocomplete="new-password"
+                required
+              >
+              
+            </div>
+          </div>
+
+          <button type="submit" class="auth-submit" id="submitBtn">
+            <span class="spinner"></span>
+            <span class="btn-text">Create Account</span>
+          </button>
+
+        </form>
+
+      </div>
+    </div>
+
+  </div>
+
+
+
+
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="/JS/transition.js"></script>
+  <script src="/JS/auth.js"></script>
+
+  <script>
+    initSignupForm();
+  </script>
+
+</body>
+</html>
