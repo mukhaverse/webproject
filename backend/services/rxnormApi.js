@@ -1,17 +1,12 @@
-// services/rxnormApi.js
-
 const normalizeDrug = async (drugName) => {
   try {
     console.log("\n=== NORMALIZING:", drugName, "===");
 
-      
+    // Step 1: Get RxCUI
     const rxcuiRes = await fetch(
       `https://rxnav.nlm.nih.gov/REST/rxcui.json?name=${encodeURIComponent(drugName)}`
     );
-
     const rxcuiData = await rxcuiRes.json();
-
-    console.log("RxCUI RESPONSE:", JSON.stringify(rxcuiData, null, 2));
 
     const rxcui = rxcuiData?.idGroup?.rxnormId?.[0];
 
@@ -22,42 +17,29 @@ const normalizeDrug = async (drugName) => {
 
     console.log(" RxCUI:", rxcui);
 
-
+    // Step 2: Get ONLY generic (IN)
     const relatedRes = await fetch(
-      `https://rxnav.nlm.nih.gov/REST/rxcui/${rxcui}/related.json?tty=IN+BN`
+      `https://rxnav.nlm.nih.gov/REST/rxcui/${rxcui}/related.json?tty=IN`
     );
 
-
-    const rawText = await relatedRes.text();
-    console.log("RAW RELATED RESPONSE:", rawText);
-
-
-    let relatedData;
-    try {
-      relatedData = JSON.parse(rawText);
-    } catch (err) {
-      console.error(" JSON parse failed");
-      return drugName;
-    }
-
-    console.log(
-      "PARSED RELATED RESPONSE:",
-      JSON.stringify(relatedData, null, 2)
-    );
-
+    const relatedData = await relatedRes.json();
 
     const groups = relatedData?.relatedGroup?.conceptGroup || [];
 
     for (let group of groups) {
-      console.log("GROUP TTY:", group.tty);
+      if (group.tty === "IN") {
+        const concepts = group.conceptProperties || [];
 
-      const concepts = group.conceptProperties || [];
+        if (concepts.length > 0) {
+          const genericName = concepts[0].name;
 
-      for (let concept of concepts) {
-        console.log("  →", concept.name);
+          console.log(" Normalized to:", genericName);
+          return genericName;
+        }
       }
     }
 
+    console.log(" No IN found, fallback to original");
     return drugName;
 
   } catch (error) {

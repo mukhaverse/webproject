@@ -24,7 +24,7 @@ app.get("/", (req, res) => {
 
 db.query("SELECT 1", (err, result) => {
   if (err) console.error("DB test failed:", err);
-  else console.log("DB working ✔");
+  else console.log("DB working !");
 });
 
 
@@ -46,15 +46,15 @@ app.post("/check", async (req, res) => {
 
   try {
 
-    const data = await checkInteraction(drug1, drug2)
+    // const data = await checkInteraction(drug1, drug2)
 
-    // const normalizedDrug1 = await normalizeDrug(drug1);
-    // const normalizedDrug2 = await normalizeDrug(drug2);
+    const normalizedDrug1 = await normalizeDrug(drug1);
+    const normalizedDrug2 = await normalizeDrug(drug2);
 
-    // console.log("Normalized:", normalizedDrug1, normalizedDrug2);
+    console.log("Normalized:", normalizedDrug1, normalizedDrug2);
 
-    // // call interaction API
-    // const data = await checkInteraction(normalizedDrug1, normalizedDrug2);
+    // call interaction API
+    const data = await checkInteraction(normalizedDrug1, normalizedDrug2);
 
     res.json(data)
 
@@ -97,7 +97,7 @@ app.get("/search", async (req, res) => {
       }
     );
 
-    // debug (important for your testing)
+
     const rawText = await response.text();
     console.log("RAW SEARCH RESPONSE:", rawText);
 
@@ -120,6 +120,54 @@ app.get("/search", async (req, res) => {
     });
   }
 });
+
+
+
+
+
+
+
+
+
+
+app.post("/normalize", async (req, res) => {
+  const { drugs } = req.body;
+
+  if (!drugs || !Array.isArray(drugs)) {
+    return res.status(400).json({
+      error: "drugs must be an array"
+    });
+  }
+
+  try {
+    const results = [];
+
+    for (let drug of drugs) {
+      const normalized = await normalizeDrug(drug);
+
+      results.push({
+        original: drug,
+        normalized: normalized
+      });
+    }
+
+    res.json({
+      count: results.length,
+      results
+    });
+
+  } catch (error) {
+    console.error("NORMALIZE ERROR:", error.message);
+
+    res.status(500).json({
+      error: "Normalization failed"
+    });
+  }
+});
+
+
+
+
 
 
 
