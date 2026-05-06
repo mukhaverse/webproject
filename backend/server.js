@@ -8,9 +8,7 @@ const db = require("./db");
 const { checkInteraction } = require("./services/interactionApi");
 const { normalizeDrug } = require("./services/rxnormApi");
 
-
-const jwt = require("jsonwebtoken");
-const authRoutes = require("./routes/authRoutes");
+const authRoutes  = require("./routes/authRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 
 const app = express();
@@ -19,7 +17,6 @@ app.use(express.json());
 app.use(cors());
 
 const path = require("path");
-const { error } = require("console");
 app.use(express.static(path.join(__dirname, "..")));
 
 
@@ -46,96 +43,107 @@ db.query("SELECT 1", (err, result) => {
 
 
 
-
-
-
 app.post("/check", async (req, res) => {
   const { drug1, drug2 } = req.body;
 
   if (!drug1 || !drug2) {
-
     return res.status(400).json({
       error: "drug1 and drug2 are required"
-    })
-
+    });
   }
 
   try {
 
-    // const data = await checkInteraction(drug1, drug2)
 
-    // const normalizedDrug1 = await normalizeDrug(drug1);
-    // const normalizedDrug2 = await normalizeDrug(drug2);
-
-
-    //connects the drug checker to the admin task and db
     const normalizedDrug1 = await normalizeDrug(drug1, db);
     const normalizedDrug2 = await normalizeDrug(drug2, db);
 
     console.log("Normalized:", normalizedDrug1, normalizedDrug2);
 
-    
     const data = await checkInteraction(normalizedDrug1, normalizedDrug2);
-    console.log(JSON.stringify(data, null, 2)); //TEMP TEST
-    
+
+    // Detect "drug not found in database" from the interaction API response.
+
+    if (data.message && data.message.includes("not found in database")) {
+      // Figure out which drug the API rejected by checking
+      // which normalized name appears in the message.
+      const failedDrugs = [];
       
+      if (data.message.toLowerCase().includes(normalizedDrug1.toLowerCase())) {
+        failedDrugs.push({ original: drug1, normalized: normalizedDrug1 });
+      }
+
+      if (data.message.toLowerCase().includes(normalizedDrug2.toLowerCase())) {
+        failedDrugs.push({ original: drug2, normalized: normalizedDrug2 });
+      }
+
+      
+      if (failedDrugs.length === 0) {
+        failedDrugs.push(
+          { original: drug1, normalized: normalizedDrug1 },
+          { original: drug2, normalized: normalizedDrug2 }
+        );
+      }
+
+      for (const failed of failedDrugs) {
+        db.query(
+          `INSERT INTO unresolved_drugs (drug_name, status)
+           VALUES (?, 'pending')
+           ON DUPLICATE KEY UPDATE attempted_at = NOW()`,
+          [failed.original],
+          (err) => {
+            if (err) console.error("[DB] Failed to log unresolved drug:", err.message);
+            else console.log(`[Mapping] Logged unresolved drug: "${failed.original}"`);
+          }
+        );
+      }
+    }
+
     //shumokh i added that to insert interaction info
-     const sql =`INSERT INTO interaction_checks
+    const sql = `INSERT INTO interaction_checks
      (drug1, drug2 ,severity, description) VALUES (?,?,?,?)`;
 
-      db.query(sql,[
+    db.query(sql, [
+      normalizedDrug1,
+      normalizedDrug2,
+      data.severity,
+      data.description
+    ], (error) => {
+      if (error) {
+        console.log("Error during insert inf of interaction");
+      }
+    });
 
-        normalizedDrug1,
-        normalizedDrug2,
-        data.severity,
-        data.description
-
-      ],(error) => {
-        if(error){
-          console.log("Error during insert inf of interaction");
-        }
-      })
-
-    res.json(data)
-
+    res.json(data);
 
   } catch (error) {
-
-    console.error("ERROR:", error.message)
-
+    console.error("ERROR:", error.message);
     res.status(500).json({
       error: "Failed to fetch interaction data"
-
-    })
+    });
   }
 
-})
+});
 
 
 
                               // #### endpoint for interaction ####
 
-app.get("/interaction",async (req,res) => {
+app.get("/interaction", async (req, res) => {
 
+  db.query(
+    `SELECT id, drug1, drug2 ,severity ,description ,created_at FROM interaction_checks 
+     ORDER BY created_at DESC `,
+    (err, results) => {
+      if (err) {
+        console.error("DB ERROR:", err);
+        return res.status(404).json({ error: "occure during get interaction from DB" });
+      }
+      res.json(results);
+    }
+  );
 
-    db.query(
-         `SELECT id, drug1, drug2 ,severity ,description ,created_at FROM interaction_checks 
-          ORDER BY created_at DESC `,
-
-         (err,results) =>{
-
-          if(err){
-             console.error("DB ERROR:", err);
-             return res.status(404).json({error: "occure during get interaction from DB"})
-          }
-          res.json(results);
-         }
-       )
-
-})
-
-
-
+});
 
 
 
@@ -161,7 +169,6 @@ app.get("/search", async (req, res) => {
       }
     );
 
-
     const rawText = await response.text();
     console.log("RAW SEARCH RESPONSE:", rawText);
 
@@ -178,18 +185,11 @@ app.get("/search", async (req, res) => {
 
   } catch (error) {
     console.error(error);
-
     res.status(500).json({
       error: "Search request failed"
     });
   }
 });
-
-
-
-
-
-
 
 
 
@@ -237,15 +237,6 @@ app.post("/normalize", async (req, res) => {
 
 
 
-
-
-
-
-
-
-
-
-
 app.post("/testimonials", (req, res) => {
   const { name, message } = req.body;
 
@@ -279,19 +270,6 @@ app.get("/testimonials", (req, res) => {
     }
   );
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
