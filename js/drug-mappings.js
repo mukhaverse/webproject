@@ -1,5 +1,4 @@
-
-
+// Guard: admins only
 (function() {
   const user = Auth.getUser();
   if (!user || user.role !== "admin") {
@@ -8,87 +7,38 @@
 })();
 
 
+let openPanel = null;
+let pendingData  = null;
+let resolvedData = null;
+
+
 document.addEventListener("DOMContentLoaded", () => {
-  loadPending();
-  loadResolved();
+  loadCounts();
 });
 
 
 
 
 
-async function loadPending() {
-  const tbody = document.getElementById("pendingBody");
 
+
+async function loadCounts() {
   try {
-    const res  = await fetch(`${API_BASE}/admin/mappings/pending`, {
-      headers: Auth.headers()
-    });
-    const data = await res.json();
+    const [pendingRes, resolvedRes] = await Promise.all([
+      fetch(`${API_BASE}/admin/mappings/pending`,  { headers: Auth.headers() }),
+      fetch(`${API_BASE}/admin/mappings/resolved`, { headers: Auth.headers() })
+    ]);
 
-    if (!res.ok) throw new Error(data.error || "Failed");
+    pendingData  = await pendingRes.json();
+    resolvedData = await resolvedRes.json();
 
-    updateStatus(data.length);
-
-    if (data.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="4" class="empty">No pending drugs.</td></tr>`;
-      return;
-    }
-
-    tbody.innerHTML = data.map(d => `
-      <tr id="row-${d.id}">
-        <td><strong>${escHtml(d.drug_name)}</strong></td>
-        <td>${new Date(d.attempted_at).toLocaleString()}</td>
-        <td>
-          <input
-            type="text"
-            id="input-${d.id}"
-            placeholder="e.g. Acetylsalicylic acid"
-          >
-        </td>
-        <td>
-          <button onclick="resolve(${d.id}, '${escHtml(d.drug_name)}')">Save</button>
-          <div class="msg" id="msg-${d.id}"></div>
-        </td>
-      </tr>
-    `).join("");
+    document.getElementById("count-pending").textContent  = pendingData.length;
+    document.getElementById("count-resolved").textContent = resolvedData.length;
 
   } catch (err) {
-    tbody.innerHTML = `<tr><td colspan="4" class="empty">Failed to load: ${err.message}</td></tr>`;
-  }
-}
-
-
-
-
-
-async function loadResolved() {
-  const tbody = document.getElementById("resolvedBody");
-
-  try {
-    const res  = await fetch(`${API_BASE}/admin/mappings/resolved`, {
-      headers: Auth.headers()
-    });
-    const data = await res.json();
-
-    if (!res.ok) throw new Error(data.error || "Failed");
-
-    if (data.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="4" class="empty">No resolved mappings yet.</td></tr>`;
-      return;
-    }
-
-    tbody.innerHTML = data.map(m => `
-      <tr>
-        <td>${escHtml(m.original)}</td>
-        <td><strong>${escHtml(m.mapped)}</strong></td>
-        <td>${escHtml(m.resolved_by_name || "Admin")}</td>
-        <td>${new Date(m.created_at).toLocaleString()}</td>
-      </tr>
-    `).join("");
-
-  } catch (err) {
-    tbody.innerHTML = `<tr><td colspan="4" class="empty">Failed to load: ${err.message}</td></tr>`;
+    console.error("Failed to load counts:", err.message);
+    document.getElementById("count-pending").textContent  = "!";
+    document.getElementById("count-resolved").textContent = "!";
   }
 }
 
@@ -97,16 +47,124 @@ async function loadResolved() {
 
 
 
-async function resolve(id, drugName) {
+
+
+function togglePanel(name) {
+  const panel = document.getElementById(`panel-${name}`);
+  const card  = document.getElementById(`card-${name}`);
+  const arrow = document.getElementById(`arrow-${name}`);
+
+  // If clicking the already-open panel, close it
+  if (openPanel === name) {
+    panel.classList.remove("open");
+    card.classList.remove("active");
+    openPanel = null;
+    return;
+  }
+
+
+  if (openPanel) {
+    document.getElementById(`panel-${openPanel}`).classList.remove("open");
+    document.getElementById(`card-${openPanel}`).classList.remove("active");
+  }
+
+
+  panel.classList.add("open");
+  card.classList.add("active");
+  openPanel = name;
+
+
+  if (name === "pending")  renderPending();
+  if (name === "resolved") renderResolved();
+
+
+  setTimeout(() => panel.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+}
+
+
+
+
+
+
+
+function renderPending() {
+  const container = document.getElementById("pendingList");
+
+  if (!pendingData) {
+    container.innerHTML = `<div class="list-loading">Loading…</div>`;
+    return;
+  }
+
+  if (pendingData.length === 0) {
+    container.innerHTML = `<div class="list-empty">No pending drugs. All caught up.</div>`;
+    return;
+  }
+
+  container.innerHTML = pendingData.map(d => `
+    <div class="item-row" id="row-${d.id}">
+      <div class="item-name">${escHtml(d.drug_name)}</div>
+      <div class="item-date">Flagged ${formatDate(d.attempted_at)}</div>
+      <div class="item-action">
+        <input
+          class="item-input"
+          type="text"
+          id="input-${d.id}"
+          placeholder="Enter generic name…"
+        >
+        <button class="item-btn" onclick="resolve(${d.id})">Save</button>
+      </div>
+      <div class="item-msg" id="msg-${d.id}"></div>
+    </div>
+  `).join("");
+}
+
+
+
+
+
+
+
+function renderResolved() {
+  const container = document.getElementById("resolvedList");
+
+  if (!resolvedData) {
+    container.innerHTML = `<div class="list-loading">Loading…</div>`;
+    return;
+  }
+
+  if (resolvedData.length === 0) {
+    container.innerHTML = `<div class="list-empty">No resolved mappings yet.</div>`;
+    return;
+  }
+
+  container.innerHTML = resolvedData.map(m => `
+    <div class="item-row">
+      <div class="item-name">${escHtml(m.original)}</div>
+      <div class="item-mapped">→ ${escHtml(m.mapped)}</div>
+      <div class="item-by">by ${escHtml(m.resolved_by_name || "Admin")}</div>
+      <div class="item-date">${formatDate(m.created_at)}</div>
+    </div>
+  `).join("");
+}
+
+
+
+
+
+
+
+
+
+async function resolve(id) {
   const input  = document.getElementById(`input-${id}`);
   const msgEl  = document.getElementById(`msg-${id}`);
   const mapped = input.value.trim();
 
-  msgEl.className = "msg";
+  msgEl.className = "item-msg";
   msgEl.textContent = "";
 
   if (!mapped) {
-    msgEl.className = "msg error";
+    msgEl.className = "item-msg error";
     msgEl.textContent = "Please enter a generic name.";
     return;
   }
@@ -117,24 +175,40 @@ async function resolve(id, drugName) {
       headers: Auth.headers(),
       body:    JSON.stringify({ mapped })
     });
+
     const data = await res.json();
 
     if (!res.ok) {
-      msgEl.className = "msg error";
+      msgEl.className = "item-msg error";
       msgEl.textContent = data.error || "Failed to save.";
       return;
     }
 
+    // Remove from pending cache and DOM
+    pendingData = pendingData.filter(d => d.id !== id);
+    document.getElementById(`row-${id}`)?.remove();
 
-    // Remove the resolved row from pending and reload resolved table
-    const row = document.getElementById(`row-${id}`);
-    if (row) row.remove();
+    // Update the pending count on the card
+    document.getElementById("count-pending").textContent = pendingData.length;
 
-    loadResolved();
-    updateStatusAfterResolve();
+    // Re-fetch resolved data so the resolved panel reflects the new entry
+    const resolvedRes = await fetch(`${API_BASE}/admin/mappings/resolved`, {
+      headers: Auth.headers()
+    });
+    resolvedData = await resolvedRes.json();
+    document.getElementById("count-resolved").textContent = resolvedData.length;
+
+    // If resolved panel is open, re-render it
+    if (openPanel === "resolved") renderResolved();
+
+    // If pending list is now empty, show the empty state
+    if (pendingData.length === 0) {
+      document.getElementById("pendingList").innerHTML =
+        `<div class="list-empty">No pending drugs. All caught up.</div>`;
+    }
 
   } catch (err) {
-    msgEl.className = "msg error";
+    msgEl.className = "item-msg error";
     msgEl.textContent = "Could not reach server.";
   }
 }
@@ -143,20 +217,15 @@ async function resolve(id, drugName) {
 
 
 
-function updateStatus(pendingCount) {
-  const el = document.getElementById("status");
-  if (!el) return;
-  el.textContent = pendingCount === 0
-    ? "All drugs resolved."
-    : `${pendingCount} drug${pendingCount > 1 ? "s" : ""} waiting to be mapped.`;
+
+
+
+function formatDate(isoStr) {
+  if (!isoStr) return "—";
+  return new Date(isoStr).toLocaleDateString("en-US", {
+    month: "short", day: "numeric", year: "numeric"
+  });
 }
-
-function updateStatusAfterResolve() {
-  const remaining = document.querySelectorAll("#pendingBody tr[id^='row-']").length;
-  updateStatus(remaining);
-}
-
-
 
 function escHtml(str) {
   if (!str) return "";
