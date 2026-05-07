@@ -41,26 +41,6 @@ function closeCamera() {
 
 
 
-// function capture(){
-
-//   //take the same size of video
-//   canvas.width = video.videoWidth;
-//   canvas.height = video.videoHeight;
-
-//   //draw the imge from video
-//   ctx.drawImage(video, 0, 0,canvas.width, canvas.height);
-
-//   video.style.display ="none";
-//   canvas.style.display ="block";
-
-//     //get the img
-//   capturedImage = canvas.toDataURL("image/png");
-//   console.log(capturedImage);
-//   readOCR(capturedImage);
-
-// }
-
-
 async function openCamera() {
   let stream;
   try {
@@ -85,14 +65,15 @@ async function openCamera() {
 
 
 
-
-
 function capture() {
+  
+  //only read content inside the frame
   const frame = document.querySelector(".scan-frame");
 
   const videoRect = video.getBoundingClientRect();
   const frameRect = frame.getBoundingClientRect();
 
+  //for size
   const scaleX = video.videoWidth / videoRect.width;
   const scaleY = video.videoHeight / videoRect.height;
 
@@ -113,35 +94,43 @@ function capture() {
 }
 
 
-
+ let scanCount =1;
 async function readOCR(image) {
 
   try {
 
+    //send the img to read it by Tesseract
     const result = await Tesseract.recognize(
       image,
       "eng"
     );
 
+    //set all data coming from Tess
     let text = result.data.text;
 
     console.log("RAW OCR:", text);
 
-    
+    //clean 1
     text = text
       .replace(/[^a-zA-Z0-9\s]/g, "")
       .trim();
 
-    
+    //read the firt line
     const firstLine = text.split("\n")[0];
 
-    
+    //clean 2
     const drugName = firstLine.trim();
 
-    console.log("Drug Name:", drugName);
 
-   
-    document.querySelector("#drugInput").value = drugName;
+
+    //retrive the drug name into the input
+   document.getElementById(`drug${scanCount}`).value = drugName;
+    scanCount++;
+
+
+
+    // console.log("Drug Name:", drugName);
+    // document.querySelector("#drugInput").value = drugName;
 
   } catch (error) {
 

@@ -1,6 +1,6 @@
 const addBtn = document.getElementById("add-btn");
 const conta = document.querySelector(".drugs-container");
-let count =3 ;
+const count =3 ;
 
 addBtn.addEventListener("click",()=>{
 
