@@ -42,98 +42,211 @@ db.query("SELECT 1", (err, result) => {
 
 
 
-
+                  //############ array of drugs ########
 app.post("/check", async (req, res) => {
-  const { drug1, drug2 } = req.body;
+  const { drugs } = req.body;
 
-  if (!drug1 || !drug2) {
+  if (!drugs || !Array.isArray(drugs) || drugs.length < 2) {
     return res.status(400).json({
-      error: "drug1 and drug2 are required"
+      error: "Please provide at least two drugs"
     });
   }
 
   try {
+    const normalizedDrugs = [];
 
+    for (const drug of drugs) {
+      const normalized = await normalizeDrug(drug, db);
 
-    const normalizedDrug1 = await normalizeDrug(drug1, db);
-    const normalizedDrug2 = await normalizeDrug(drug2, db);
+      normalizedDrugs.push({
+        original: drug,
+        normalized: normalized
+      });
+    }
 
-    console.log("Normalized:", normalizedDrug1, normalizedDrug2);
+    const results = [];
 
-    const data = await checkInteraction(normalizedDrug1, normalizedDrug2);
+    for (let i = 0; i < normalizedDrugs.length; i++) {
+      for (let j = i + 1; j < normalizedDrugs.length; j++) {
+        const drugA = normalizedDrugs[i];
+        const drugB = normalizedDrugs[j];
 
-    // Detect "drug not found in database" from the interaction API response.
+        const data = await checkInteraction(drugA.normalized, drugB.normalized);
 
-    if (data.message && data.message.includes("not found in database")) {
-      // Figure out which drug the API rejected by checking
-      // which normalized name appears in the message.
-      const failedDrugs = [];
-      
-      if (data.message.toLowerCase().includes(normalizedDrug1.toLowerCase())) {
-        failedDrugs.push({ original: drug1, normalized: normalizedDrug1 });
-      }
+        if (data.message && data.message.includes("not found in database")) {
+          const failedDrugs = [];
 
-      if (data.message.toLowerCase().includes(normalizedDrug2.toLowerCase())) {
-        failedDrugs.push({ original: drug2, normalized: normalizedDrug2 });
-      }
-
-      
-      if (failedDrugs.length === 0) {
-        failedDrugs.push(
-          { original: drug1, normalized: normalizedDrug1 },
-          { original: drug2, normalized: normalizedDrug2 }
-        );
-      }
-
-      for (const failed of failedDrugs) {
-        db.query(
-          `INSERT INTO unresolved_drugs (drug_name, status)
-           VALUES (?, 'pending')
-           ON DUPLICATE KEY UPDATE attempted_at = NOW()`,
-          [failed.original],
-          (err) => {
-            if (err) console.error("[DB] Failed to log unresolved drug:", err.message);
-            else console.log(`[Mapping] Logged unresolved drug: "${failed.original}"`);
+          if (data.message.toLowerCase().includes(drugA.normalized.toLowerCase())) {
+            failedDrugs.push(drugA);
           }
-        );
+
+          if (data.message.toLowerCase().includes(drugB.normalized.toLowerCase())) {
+            failedDrugs.push(drugB);
+          }
+
+          if (failedDrugs.length === 0) {
+            failedDrugs.push(drugA, drugB);
+          }
+
+          for (const failed of failedDrugs) {
+            db.query(
+              `INSERT INTO unresolved_drugs (drug_name, status)
+               VALUES (?, 'pending')
+               ON DUPLICATE KEY UPDATE attempted_at = NOW()`,
+              [failed.original],
+              (err) => {
+                if (err) {
+                  console.error("[DB] Failed to log unresolved drug:", err.message);
+                }
+              }
+            );
+          }
+        }
+
+        if (data.interaction) {
+          const interaction = data.interaction;
+
+          const sql = `
+            INSERT INTO interaction_checks
+            (drug1, drug2, severity, description, management, clinical_significance)
+            VALUES (?, ?, ?, ?, ?, ?)
+          `;
+
+          db.query(sql, [
+            drugA.normalized,
+            drugB.normalized,
+            interaction.severity,
+            interaction.description,
+            interaction.management,
+            interaction.clinical_significance
+          ], (error) => {
+            if (error) {
+              console.log("Error during insert info of interaction:", error);
+            }
+          });
+        }
+
+        results.push({
+          drug1: drugA,
+          drug2: drugB,
+          result: data
+        });
       }
     }
 
-
-
-    //shumokh i added that to insert interaction info
-    const interaction = data.interaction;
-
-        if (!interaction) {
-          return res.json(data);
-        }
-    const sql = `INSERT INTO interaction_checks
-     (drug1, drug2 ,severity, description, management, clinical_significance) VALUES (?,?,?,?,?,?)`;
-
-     
-    db.query(sql, [
-      normalizedDrug1,
-      normalizedDrug2,
-      data.interaction.severity,
-      data.interaction.description,
-      data.interaction.management,
-      data.interaction.clinical_significance
-    ], (error) => {
-      if (error) {
-        console.log("Error during insert inf of interaction");
-      }
+    res.json({
+      count: results.length,
+      results: results
     });
-
-    res.json(data);
 
   } catch (error) {
     console.error("ERROR:", error.message);
+
     res.status(500).json({
       error: "Failed to fetch interaction data"
     });
   }
-
 });
+
+
+
+
+
+  //###############################
+
+// app.post("/check", async (req, res) => {
+//   const { drug1, drug2 } = req.body;
+
+
+//   // if (!drug1 || !drug2) {
+//   //   return res.status(400).json({
+//   //     error: "drug1 and drug2 are required"
+//   //   });
+//   // }
+
+//   try {
+//       // to changed to make check multiy drugs
+
+//     const normalizedDrug1 = await normalizeDrug(drug1, db);
+//     const normalizedDrug2 = await normalizeDrug(drug2, db);
+
+//     console.log("Normalized:", normalizedDrug1, normalizedDrug2);
+
+//     const data = await checkInteraction(normalizedDrug1, normalizedDrug2);
+
+//     // Detect "drug not found in database" from the interaction API response.
+
+//     if (data.message && data.message.includes("not found in database")) {
+//       // Figure out which drug the API rejected by checking
+//       // which normalized name appears in the message.
+//       const failedDrugs = [];
+      
+//       if (data.message.toLowerCase().includes(normalizedDrug1.toLowerCase())) {
+//         failedDrugs.push({ original: drug1, normalized: normalizedDrug1 });
+//       }
+
+//       if (data.message.toLowerCase().includes(normalizedDrug2.toLowerCase())) {
+//         failedDrugs.push({ original: drug2, normalized: normalizedDrug2 });
+//       }
+
+      
+//       if (failedDrugs.length === 0) {
+//         failedDrugs.push(
+//           { original: drug1, normalized: normalizedDrug1 },
+//           { original: drug2, normalized: normalizedDrug2 }
+//         );
+//       }
+
+
+//       for (const failed of failedDrugs) {
+//         db.query(
+//           `INSERT INTO unresolved_drugs (drug_name, status)
+//            VALUES (?, 'pending')
+//            ON DUPLICATE KEY UPDATE attempted_at = NOW()`,
+//           [failed.original],
+//           (err) => {
+//             if (err) console.error("[DB] Failed to log unresolved drug:", err.message);
+//             else console.log(`[Mapping] Logged unresolved drug: "${failed.original}"`);
+//           }
+//         );
+//       }
+//     }
+
+
+
+//     //shumokh i added that to insert interaction info
+//     const interaction = data.interaction;
+
+//         if (!interaction) {
+//           return res.json(data);
+//         }
+//     const sql = `INSERT INTO interaction_checks
+//      (drug1, drug2 ,severity, description, management, clinical_significance) VALUES (?,?,?,?,?,?)`;
+
+     
+//     db.query(sql, [
+//       normalizedDrug1,
+//       normalizedDrug2,
+//       data.interaction.severity,
+//       data.interaction.description,
+//       data.interaction.management,
+//       data.interaction.clinical_significance
+//     ], (error) => {
+//       if (error) {
+//         console.log("Error during insert inf of interaction");
+//       }
+//     });
+
+//     res.json(data);
+
+//   } catch (error) {
+//     console.error("ERROR:", error.message);
+//     res.status(500).json({
+//       error: "Failed to fetch interaction data"
+//     });
+//   }
+
+// });
 
 
 
