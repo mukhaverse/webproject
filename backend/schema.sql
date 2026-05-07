@@ -24,18 +24,19 @@ INSERT INTO testimonials (name, message) VALUES
 
 CREATE TABLE interaction_checks (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  drug1 VARCHAR(100) NOT NULL,
-  drug2 VARCHAR(100) NOT NULL,
-  has_interaction BOOLEAN,
-  severity VARCHAR(20),
+  drug1 VARCHAR(100),
+  drug2 VARCHAR(100),
+  severity VARCHAR(50),
   description TEXT,
+  management TEXT,
+  clinical_significance TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO interaction_checks (drug1, drug2, has_interaction, severity, description) VALUES
-('drug A', 'drug B', TRUE, 'high', 'this is a test interaction description showing a high severity case'),
-('drug C', 'drug D', FALSE, 'low', 'this is another test description where no interaction is found'),
-('drug E', 'drug F', TRUE, 'medium', 'this is a medium severity interaction example for testing purposes');
+INSERT INTO interaction_checks (drug1, drug2, has_interaction, severity, description, management,clinical_significance) VALUES
+('drug A', 'drug B', TRUE, 'high', 'this is a test interaction description showing a high severity case','TESSST MANG','TESST CLIC'),
+('drug C', 'drug D', FALSE, 'low', 'this is another test description where no interaction is found','TESSST MANG','TESST CLIC'),
+('drug E', 'drug F', TRUE, 'medium', 'this is a medium severity interaction example for testing purposes','TESSST MANG','TESST CLIC');
 
 
 

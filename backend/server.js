@@ -99,15 +99,25 @@ app.post("/check", async (req, res) => {
       }
     }
 
-    //shumokh i added that to insert interaction info
-    const sql = `INSERT INTO interaction_checks
-     (drug1, drug2 ,severity, description) VALUES (?,?,?,?)`;
 
+
+    //shumokh i added that to insert interaction info
+    const interaction = data.interaction;
+
+        if (!interaction) {
+          return res.json(data);
+        }
+    const sql = `INSERT INTO interaction_checks
+     (drug1, drug2 ,severity, description, management, clinical_significance) VALUES (?,?,?,?,?,?)`;
+
+     
     db.query(sql, [
       normalizedDrug1,
       normalizedDrug2,
-      data.severity,
-      data.description
+      data.interaction.severity,
+      data.interaction.description,
+      data.interaction.management,
+      data.interaction.clinical_significance
     ], (error) => {
       if (error) {
         console.log("Error during insert inf of interaction");
@@ -132,7 +142,8 @@ app.post("/check", async (req, res) => {
 app.get("/interaction", async (req, res) => {
 
   db.query(
-    `SELECT id, drug1, drug2 ,severity ,description ,created_at FROM interaction_checks 
+    `SELECT id, drug1, drug2 ,severity ,description , management, clinical_significance, created_at 
+    FROM interaction_checks 
      ORDER BY created_at DESC `,
     (err, results) => {
       if (err) {
