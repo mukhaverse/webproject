@@ -39,6 +39,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // On page load: position the pill under the active tab immediately
   movePill(activeTab);
+  window.addEventListener("resize", () => {
+  const currentActive = document.querySelector(".nav-tab.active");
+  movePill(currentActive);
+  });
 
   // On hover: slide the pill to the hovered tab
   // On hover out: slide back to the active tab
