@@ -54,7 +54,7 @@ async function openCamera() {
 
     video.srcObject = stream;
     //remove the hidd
-    cameraBox.style.display = "block";
+    cameraBox.style.display = "flex";
 
     console.log("Camera opened");
   } catch (error) {

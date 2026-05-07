@@ -103,7 +103,7 @@ body {
   top: 0px;
   right: 0px;
   width: 170px;
-  height: 80px;
+  height: 72px;
   background: #e5e5e5;
   z-index: 3;  
   clip-path: polygon(18% 0, 100% 100%, 30% 95%);
@@ -209,7 +209,7 @@ table {
 }
 
 /* Responsive Design */
-@media (max-width: 1000px) {
+@media (max-width: 1044px) {
   .sheet-top-crease { top: 0px; }
 
   .sheet-inner {

@@ -21,5 +21,7 @@ counters.forEach(counter => {
     }
   };
 
+  setTimeout(() => {
   updateCounter();
+}, 1500);
 });
