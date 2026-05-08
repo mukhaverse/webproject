@@ -89,12 +89,22 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
 
         list.prepend(item);
+        updateCount();
 
         nameInput.value = "";
         messageInput.value = "";
 
         closeModal();
     });
+
+
+    const count = document.getElementById("count");
+    function updateCount() {
+
+    const total = document.querySelectorAll(".item").length;
+
+    count.textContent = `${total} reviews`;
+}
 
 
 
@@ -129,6 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 list.appendChild(item);
             });
+            updateCount();
 
         } catch (err) {
             console.error("Failed to load testimonials:", err);

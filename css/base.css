@@ -1,18 +1,14 @@
-/* ============================================================
-   HOW TO USE
-   color: var(--clr-base-soft);
-   ============================================================ */
 
 :root {
-  --clr-primary:        #e5e5e5;
+  --clr-primary: #e5e5e5;
   
-  --clr-primary-dim:    #312e81;
+  --clr-primary-dim:   #312e81;
   --clr-primary-soft:   #8a94b8;
   --clr-primary-ghost:  #f4f7fa;
 
-  --clr-dark:        #1e1b4b;
-  --clr-dark-dim:    #4b5563;
-  --clr-dark-soft:   #e5e5e5;
+  --clr-dark:    #1e1b4b;
+  --clr-dark-dim:  #4b5563;
+  --clr-dark-soft: #e5e5e5;
   --clr-light:  #ffffff;
 
 
