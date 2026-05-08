@@ -1,14 +1,45 @@
 const express = require("express");
 const cors = require("cors");
-const io = require("socket.io")(PORT);
+const { Server } = require("socket.io");
 require("dotenv").config();
-
-
 const db = require("./db");
 
-io.on("connection", (socket) =>{
- console.log(socket.id);
-})
+
+                              //  ###### SOOCCKETT #######
+
+// let socketConnected = new Set();
+
+// io.on("connection",(socket) => {
+
+//   // "on" 
+//   socket.on("Send-message",(data) => {
+//     io.emit("receive-message",data );
+//     console.log(data+"IS RECEIVED");
+//   })
+
+
+
+
+// });
+
+
+
+// function onConnected(socket){
+//  console.log("SOOCKET CONNECTED");
+//   socketConnected.add(socket.id);
+//   //treger for each conn
+//   io.emit('Clients-total', socketConnected.size);
+
+
+
+  // socket.on("disconnect" ,() => {
+  // console.log("SOOCKET DISS-CONNECTED");
+  // socketConnected.delete(socket.id);
+  // io.emit('Clients-total', socketConnected.size);
+  // })
+
+// }
+
 
 // import service
 const { checkInteraction } = require("./services/interactionApi");
@@ -406,8 +437,28 @@ app.get("/testimonials", (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
+  console.log(`listening at port ${PORT}`);
+});
 
-  console.log("listening at port 3000")
 
-})
+                                      //  ###### SOOCCKETT #######
+const io = new Server(server);                                      
+io.on("connection", (socket) => {
+  console.log("Socket connected:", socket.id);
+
+  socket.on("join-chat", (chatId) => {
+    socket.join(chatId);
+    console.log(`Socket ${socket.id} joined chat ${chatId}`);
+  });
+
+  socket.on("send-message", (data) => {
+    console.log("Message received:", data);
+
+    io.to(data.chatId).emit("receive-message", data);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("Socket disconnected:", socket.id);
+  });
+});
