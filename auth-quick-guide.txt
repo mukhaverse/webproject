@@ -1,0 +1,180 @@
+auth stuff quick guide by mukha 
+
+all right so if you're building a feature and you're wondering whether you need auth stuff or not, you probably do if:
+
+  the feature belongs to a specific user
+  it should only work when logged in
+  it saves user data
+  it's admin-only
+  it shouldn't be public
+
+
+
+
+
+
+
+
+for frontend stuff----------------------------------=
+
+get current logged in user
+
+
+const user = Auth.getUser();
+
+
+you'll probably use this a lot for:
+
+  showing username
+  checking role
+  profile stuff
+  personalized UI
+
+
+example:
+
+const user = Auth.getUser();
+
+if (user) {
+  console.log(user.name);
+}
+
+
+
+
+
+check if they're even logged in
+
+
+Auth.isLoggedIn()
+
+
+example:
+
+
+if (!Auth.isLoggedIn()) {
+  window.location.href = "/HTML/login.html";
+}
+
+
+
+------------------------------------------------------------
+
+
+authenticated fetch requests
+
+if your fetching a protected route use:
+
+
+headers: Auth.headers()
+
+
+example:
+
+fetch("/messages", {
+  method: "GET",
+  headers: Auth.headers()
+});
+
+otherwise the backend won't know who's making the request
+
+
+
+--------------------------------------------------------------------
+
+now backend stuff
+
+
+
+protect routes (you can skip them, I don't think everything needs protection)
+
+if route should only work for logged in users then use :
+
+requireAuth
+
+
+example:
+
+router.post("/messages", requireAuth, async (req, res) => {
+
+});
+
+
+
+
+access current logged in user-------------
+
+after using requireAuth, you get:
+
+req.user
+
+
+most useful things:
+
+req.user.id
+req.user.role
+
+
+example:
+
+router.post("/favorites", requireAuth, async (req, res) => {
+
+  const userId = req.user.id;
+
+});
+
+
+that's how you connect data to the logged in user
+
+
+
+
+
+
+admin only stuff----------------------------------
+
+if feature should only be accessible by admins:
+
+requireAuth
+requireAdmin
+
+
+example:
+
+
+router.delete(
+  "/users/:id",
+  requireAuth,
+  requireAdmin,
+  async (req, res) => {
+
+  }
+);
+
+
+and yes requireAuth has to come first
+
+
+
+
+
+
+
+last quick summary ------------------------------------
+
+frontend:
+
+Auth.getUser()
+Auth.isLoggedIn()
+Auth.headers()
+Auth.logout()
+
+
+
+backend:
+
+requireAuth
+requireAdmin
+req.user
+req.user.id
+req.user.role
