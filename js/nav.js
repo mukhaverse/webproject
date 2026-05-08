@@ -1,14 +1,10 @@
-
-
 document.addEventListener("DOMContentLoaded", () => {
 
+  // ── Desktop pill animation ──
+  const tabs      = document.querySelectorAll(".nav-tabs .nav-tab");
+  const tabBg     = document.getElementById("tabBg");
+  const activeTab = document.querySelector(".nav-tabs .nav-tab.active");
 
-
-  const tabs     = document.querySelectorAll(".nav-tab");
-  const tabBg    = document.getElementById("tabBg");
-  const activeTab = document.querySelector(".nav-tab.active");
-
-  // Move the background pill to sit behind `el`
   function movePill(el) {
     if (!tabBg || !el) return;
     tabBg.style.width  = el.offsetWidth  + "px";
@@ -17,21 +13,63 @@ document.addEventListener("DOMContentLoaded", () => {
     tabBg.style.top    = el.offsetTop    + "px";
   }
 
-  // On page load: position the pill under the active tab immediately
   movePill(activeTab);
+
   window.addEventListener("resize", () => {
-  const currentActive = document.querySelector(".nav-tab.active");
-  movePill(currentActive);
+    const currentActive = document.querySelector(".nav-tabs .nav-tab.active");
+    movePill(currentActive);
   });
 
-  // On hover: slide the pill to the hovered tab
-  // On hover out: slide back to the active tab
   tabs.forEach(tab => {
     tab.addEventListener("mouseenter", () => movePill(tab));
-    tab.addEventListener("mouseleave", () => movePill(activeTab));
+    tab.addEventListener("mouseleave", () => {
+      const currentActive = document.querySelector(".nav-tabs .nav-tab.active");
+      movePill(currentActive);
+    });
   });
 
+  // ── Hamburger / Sidebar ──
+  const hamburger = document.getElementById("navHamburger");
+  const sidebar   = document.getElementById("navSidebar");
+  const overlay   = document.getElementById("navSidebarOverlay");
+  const closeBtn  = document.getElementById("navSidebarClose");
 
-  
+  function openSidebar() {
+    sidebar.classList.add("open");
+    overlay.classList.add("visible");
+    hamburger.classList.add("open");
+    hamburger.setAttribute("aria-expanded", "true");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeSidebar() {
+    sidebar.classList.remove("open");
+    overlay.classList.remove("visible");
+    hamburger.classList.remove("open");
+    hamburger.setAttribute("aria-expanded", "false");
+    document.body.style.overflow = "";
+  }
+
+  if (hamburger) {
+    hamburger.addEventListener("click", () => {
+      const isOpen = sidebar.classList.contains("open");
+      isOpen ? closeSidebar() : openSidebar();
+    });
+  }
+
+  if (closeBtn)  closeBtn.addEventListener("click", closeSidebar);
+  if (overlay)   overlay.addEventListener("click", closeSidebar);
+
+  // Close sidebar on escape key
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeSidebar();
+  });
+
+  // Close sidebar when a sidebar tab link is clicked
+  if (sidebar) {
+    sidebar.querySelectorAll(".nav-tab").forEach(tab => {
+      tab.addEventListener("click", closeSidebar);
+    });
+  }
 
 });

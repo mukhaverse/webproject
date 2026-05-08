@@ -28,30 +28,82 @@
         <div class="panel"></div>
     </div>
 
+
+
+
     <header>
-    <div class="nav-wrap">
-    <nav class="nav">
-        <div class="nav-brand">
-            <div class="nav-logo">
+        <div class="nav-wrap">
+            <nav class="nav">
+ 
+                
+                <div class="nav-brand">
+                    <div class="nav-logo">
+                        <img src="../assets/medixa.svg" alt="medixa logo">
+                    </div>
+                </div>
+ 
+             
+                <div class="nav-tabs" id="navTabs">
+                    <div class="nav-tab-bg" id="tabBg"></div>
+                    <a href="../index.html" class="nav-tab active" data-page="home">Home</a>
+                    <a href="html/interactionCheck.html" class="nav-tab" data-page="checker">Check Interactions</a>
+                    <a href="html/about.html" class="nav-tab" data-page="about">About Us</a>
+                    <a href="html/contact.html" class="nav-tab" data-page="contact">Contact Us</a>
+                </div>
+ 
+               
+                <div class="nav-right">
+                    <a href="#" class="nav-signin" id="navSignin">Sign In</a>
+                </div>
+ 
+                
+
+
+                <button
+                    class="nav-hamburger"
+                    id="navHamburger"
+                    aria-label="Open menu"
+                    aria-expanded="false"
+                    aria-controls="navSidebar"
+                >
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+ 
+            </nav>
+        </div>
+    </header>
+ 
+    
+    <div class="nav-sidebar-overlay" id="navSidebarOverlay" aria-hidden="true"></div>
+ 
+    <aside class="nav-sidebar" id="navSidebar" aria-label="Mobile navigation">
+ 
+        <div class="nav-sidebar-header">
+            <div class="nav-sidebar-logo">
                 <img src="../assets/medixa.svg" alt="medixa logo">
             </div>
-    
+            <button class="nav-sidebar-close" id="navSidebarClose" aria-label="Close menu">×</button>
         </div>
+ 
 
-        <div class="nav-tabs" id="navTabs">
-        <div class="nav-tab-bg" id="tabBg"></div>
-        <a href="../index.html" class="nav-tab active" data-page="home">Home</a>
-        <a href="html/interactionCheck.html" class="nav-tab " data-page="checker">Check Interactions</a>
-        <a href="html/about.html" class="nav-tab" data-page="about">About Us</a>
-        <a href="html/contact.html" class="nav-tab" data-page="contact">Contact Us</a>
+        <div class="nav-sidebar-tabs" id="navSidebarTabs">
+            <a href="../index.html" class="nav-tab active" data-page="home">Home</a>
+            <a href="html/interactionCheck.html" class="nav-tab" data-page="checker">Check Interactions</a>
+            <a href="html/about.html" class="nav-tab" data-page="about">About Us</a>
+            <a href="html/contact.html" class="nav-tab" data-page="contact">Contact Us</a>
         </div>
+ 
+ 
+        <div class="nav-sidebar-bottom">
+            <a href="#" class="nav-signin" id="navSigninMobile">Sign In</a>
+        </div>
+ 
+    </aside>
 
-        <div class="nav-right">
-        <a href="#" class="nav-signin">Sign In</a>
-        </div>
-    </nav>
-    </div>
-</header>
+
+
 
 
  <main >
