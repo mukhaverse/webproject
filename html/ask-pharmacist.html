@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ask a Pharmacist</title>
+  <link rel="stylesheet" href="../css/chat.css">
+</head>
+<body>
+  <main class="pharma-shell user-shell" data-page="user">
+    <aside class="pharma-sidebar">
+      <div class="sidebar-content">
+        <h1>Ask a<br>Pharmacist</h1>
+        <nav class="sidebar-links" aria-label="Ask a pharmacist navigation">
+          <a href="ask-pharmacist.html?view=new" data-link-view="new">New Chat</a>
+          <a href="ask-pharmacist.html?view=history" data-link-view="history">Chat History</a>
+        </nav>
+      </div>
+    </aside>
+
+    <section class="pharma-panel" id="appPanel" aria-live="polite">
+      <p class="loading-state">Loading...</p>
+    </section>
+  </main>
+
+  <script src="../js/auth.js"></script>
+  <script src="../js/chat.js"></script>
+</body>
+</html>
