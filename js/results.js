@@ -3,17 +3,27 @@
 
 
 
-// SCHEDULE RENDERING
-const scheduleData = [
-  { drug: "Drug 1", time: "04 am", color: "blue" },
-  { drug: "Drug 2", time: "03 am", color: "pink" },
-  { drug: "Drug 3", time: "05 am", color: "yellow" },
-  { drug: "Drug 2", time: "06 am", color: "pink" },
+// LOAD RESULT FROM INTERACTION PAGE
+const savedResult =
+  JSON.parse(localStorage.getItem("interactionResult"));
 
-  { drug: "Drug 1", time: "10 pm", color: "blue" },
-  { drug: "Drug 2", time: "11 pm", color: "pink" },
-  { drug: "Drug 3", time: "09 pm", color: "yellow" }
-];
+
+
+
+// SCHEDULE RENDERING
+const scheduleData =
+  savedResult?.scheduleRecommendation?.scheduleData;
+
+if (!scheduleData || scheduleData.length === 0) {
+  console.error("Backend did not return schedule data");
+
+  const scheduleSection =
+    document.querySelector(".schedule-section");
+
+  if (scheduleSection) {
+    scheduleSection.style.display = "none";
+  }
+}
 
 function getHourIndex(time) {
   const hour = parseInt(time.split(" ")[0], 10);
@@ -63,9 +73,13 @@ function renderSchedule(data) {
 
 function colorTimes(data) {
   const colors = {
-    blue: "#36a5e8",
     pink: "#ff5b83",
-    yellow: "#ffc64d"
+    yellow: "#ffc64d",
+    blue: "#36a5e8",
+    orange: "#ff9f40",
+    green: "#2ecc71",
+    purple: "#9b5de5",
+    cyan: "#00bcd4"
   };
 
   data.forEach(item => {
@@ -77,33 +91,64 @@ function colorTimes(data) {
   });
 }
 
-renderSchedule(scheduleData);
-colorTimes(scheduleData);
 
 
 
-
-// TEMP: hide schedule section until backend schedule logic is ready
+// DYNAMIC SCHEDULE FROM BACKEND
 const scheduleSection = document.querySelector(".schedule-section");
+const scheduleCard = document.querySelector(".schedule-card");
+
 if (scheduleSection) {
   scheduleSection.style.display = "none";
 }
 
+const scheduleRecommendation =
+  savedResult?.scheduleRecommendation;
 
+if (scheduleRecommendation?.show && scheduleSection) {
+  scheduleSection.style.display = "block";
 
+  let scheduleMessage =
+    document.getElementById("scheduleMessage");
 
-// LOAD RESULT FROM INTERACTION PAGE
-const savedResult = JSON.parse(localStorage.getItem("interactionResult"));
+  if (!scheduleMessage) {
+    scheduleMessage = document.createElement("p");
+    scheduleMessage.id = "scheduleMessage";
+    scheduleMessage.style.marginBottom = "20px";
+    scheduleMessage.textContent =
+      scheduleRecommendation.message || "";
+
+    scheduleSection.insertBefore(scheduleMessage, scheduleCard);
+  }
+
+  if (!scheduleRecommendation.canSchedule) {
+    if (scheduleCard) {
+      scheduleCard.style.display = "none";
+    }
+  } else {
+    if (scheduleCard) {
+      scheduleCard.style.display = "block";
+    }
+
+    if (scheduleData && scheduleData.length > 0) {
+      renderSchedule(scheduleData);
+      colorTimes(scheduleData);
+      renderLegend(scheduleData);
+    }
+  }
+}
 
 
 
 
 // DYNAMIC CHARTS
 if (savedResult && savedResult.results?.length > 0) {
-  const interactionData = savedResult.results[0].result?.interaction;
+  const interactionData =
+    savedResult.results[0].result?.interaction;
 
   if (interactionData) {
-    const severity = interactionData.severity?.toLowerCase() || "minor";
+    const severity =
+      interactionData.severity?.toLowerCase() || "minor";
 
     let severityData = [0, 0, 0, 0];
 
@@ -121,7 +166,8 @@ if (savedResult && savedResult.results?.length > 0) {
         severityData = [0, 0, 0, 100];
     }
 
-    const riskCanvas = document.querySelector(".risk");
+    const riskCanvas =
+      document.querySelector(".risk");
 
     if (riskCanvas) {
       new Chart(riskCanvas, {
@@ -199,10 +245,12 @@ if (savedResult && savedResult.results?.length > 0) {
       other = 5;
     }
 
-    const sideEffectsCanvas = document.querySelector(".effect-chart");
+    const sideEffectsCanvas =
+      document.querySelector(".effect-chart");
 
     if (sideEffectsCanvas) {
-      const sideEffectsCtx = sideEffectsCanvas.getContext("2d");
+      const sideEffectsCtx =
+        sideEffectsCanvas.getContext("2d");
 
       new Chart(sideEffectsCtx, {
         type: "line",
@@ -253,8 +301,10 @@ if (savedResult && savedResult.results?.length > 0) {
 
 
 
+
 // DYNAMIC RESULT CARDS
-const cardSection = document.querySelector(".card-sect");
+const cardSection =
+  document.querySelector(".card-sect");
 
 if (
   savedResult &&
@@ -263,22 +313,27 @@ if (
   cardSection
 ) {
   savedResult.results.forEach((item, index) => {
-    const interaction = item.result?.interaction;
+    const interaction =
+      item.result?.interaction;
 
     if (!interaction) return;
 
-    const card = document.createElement("article");
+    const card =
+      document.createElement("article");
+
     card.className = "resul-card";
     card.setAttribute("aria-labelledby", `card${index + 1}`);
 
-    const createdDate = interaction.created_at
-      ? new Date(interaction.created_at)
-      : new Date();
+    const createdDate =
+      interaction.created_at
+        ? new Date(interaction.created_at)
+        : new Date();
 
-    const dateText = createdDate.toLocaleDateString("en-US", {
-      day: "2-digit",
-      month: "short"
-    });
+    const dateText =
+      createdDate.toLocaleDateString("en-US", {
+        day: "2-digit",
+        month: "short"
+      });
 
     card.innerHTML = `
       <div class="status-div">
@@ -303,5 +358,33 @@ if (
     `;
 
     cardSection.appendChild(card);
+  });
+}
+
+
+function renderLegend(data) {
+  const legendContainer =
+    document.querySelector(".schedule-legend");
+
+  if (!legendContainer) return;
+
+  legendContainer.innerHTML = "";
+
+  const added = new Set();
+
+  data.forEach(item => {
+    if (added.has(item.drug)) return;
+
+    added.add(item.drug);
+
+    const legendItem =
+      document.createElement("span");
+
+    legendItem.innerHTML = `
+      <i class="legend-line ${item.color}-dose"></i>
+      ${item.drug}
+    `;
+
+    legendContainer.appendChild(legendItem);
   });
 }

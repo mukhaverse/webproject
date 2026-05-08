@@ -78,6 +78,110 @@ db.query("SELECT 1", (err, result) => {
 });
 
 
+//schedule recommendation logic
+function getSeverityRank(severity) {
+  const value = String(severity || "").toLowerCase();
+
+  if (value.includes("contraindicated")) return 4;
+  if (value.includes("major")) return 3;
+  if (value.includes("moderate")) return 2;
+  if (value.includes("minor")) return 1;
+
+  return 0;
+}
+
+function getHighestSeverity(results) {
+  let highest = {
+    severity: "none",
+    rank: 0
+  };
+
+  results.forEach(item => {
+    const severity = item.result?.interaction?.severity;
+    const rank = getSeverityRank(severity);
+
+    if (rank > highest.rank) {
+      highest = {
+        severity,
+        rank
+      };
+    }
+  });
+
+  return highest;
+}
+
+function getGapHours(rank) {
+  if (rank === 1) return 2; // minor
+  if (rank === 2) return 4; // moderate
+  if (rank === 3) return 6; // major
+
+  return 0;
+}
+
+function formatHour(hour) {
+  const normalized = ((hour % 24) + 24) % 24;
+  const suffix = normalized < 12 ? "am" : "pm";
+  const hour12 = normalized % 12 === 0 ? 12 : normalized % 12;
+
+  return `${hour12.toString().padStart(2, "0")} ${suffix}`;
+}
+
+function getDrugColors(count) {
+  const colors = [
+    "pink",
+    "yellow",
+    "blue",
+    "orange",
+    "green",
+    "purple",
+    "cyan"
+  ];
+
+  return colors.slice(0, count);
+}
+
+function buildScheduleRecommendation(normalizedDrugs, results) {
+  const highest = getHighestSeverity(results);
+
+  if (highest.rank === 0) {
+    return {
+      show: false
+    };
+  }
+
+  if (highest.rank === 4) {
+    return {
+      show: true,
+      canSchedule: false,
+      message: "These medications should not be scheduled together. Please consult your doctor."
+    };
+  }
+
+  const gap = getGapHours(highest.rank);
+  const colors = getDrugColors(normalizedDrugs.length);
+  const startHour = 8;
+
+  const scheduleData = normalizedDrugs.map((drug, index) => {
+    const time = formatHour(startHour + index * gap);
+
+    return {
+      drug: drug.normalized,
+      time,
+      color: colors[index] || "green"
+    };
+  });
+
+  return {
+    show: true,
+    canSchedule: true,
+    message: `Suggested schedule based on ${highest.severity} interaction. Keep at least ${gap} hours between medications.`,
+    gapHours: gap,
+    scheduleData
+  };
+}
+
+
 
                   //############ array of drugs ########
 app.post("/check", async (req, res) => {
@@ -171,9 +275,16 @@ app.post("/check", async (req, res) => {
       }
     }
 
+    const scheduleRecommendation =
+      buildScheduleRecommendation(
+        normalizedDrugs,
+        results
+      );
+
     res.json({
       count: results.length,
-      results: results
+      results: results,
+      scheduleRecommendation
     });
 
   } catch (error) {
