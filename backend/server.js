@@ -1,9 +1,14 @@
 const express = require("express");
 const cors = require("cors");
+const io = require("socket.io")(PORT);
 require("dotenv").config();
 
 
 const db = require("./db");
+
+io.on("connection", (socket) =>{
+ console.log(socket.id);
+})
 
 // import service
 const { checkInteraction } = require("./services/interactionApi");
