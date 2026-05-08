@@ -6,6 +6,8 @@
     margin: 0;
     padding: 0;
 
+     font-family: 'Barlow', sans-serif;
+
     display: flex;
 }
 
@@ -231,13 +233,10 @@ font-size: 1.2rem;
 
 
 
-
-
-
 @media (max-width: 768px) {
 
     .testimonials {
-        height: auto; 
+        height: auto;
     }
 
     .testimonials-layout {
@@ -245,15 +244,18 @@ font-size: 1.2rem;
     }
 
     .left {
+        order: 1;
         padding: 30px;
     }
 
     .right {
+        order: 2;
         padding: 30px;
-        max-height: 400px; 
+        max-height: 400px;
     }
 
     .modal-box {
         margin: 25% 20px;
     }
+
 }
