@@ -348,6 +348,27 @@ function updateNavAuth() {
 
 
 
+  const navTabs = document.getElementById("navTabs");
+
+  if (user && navTabs && !document.querySelector(".nav-role-link")) {
+    const roleLink = document.createElement("a");
+    roleLink.className = "nav-tab nav-role-link";
+
+    if (user.role === "admin") {
+      roleLink.href = "/HTML/chat-management.html";
+      roleLink.textContent = "Chat Management";
+      roleLink.dataset.page = "chat-management";
+    } else {
+      roleLink.href = "/HTML/ask-pharmacist.html";
+      roleLink.textContent = "Ask a Pharmacist";
+      roleLink.dataset.page = "ask-pharmacist";
+    }
+
+    navTabs.appendChild(roleLink);
+  }
+
+
+
 }
 
 

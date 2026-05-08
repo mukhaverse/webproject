@@ -1,25 +1,27 @@
 
-/* colors & fonts will be edited to match base at the end dw !*/
 .nav-wrap {
-  /* background: #e8ecf4; */
-  padding: 15px 30px 10px;
+  background: #fff;
+  padding: 5px;
   position: sticky;
   top: 0;
   z-index: 10;
 }
 
 .nav {
-  max-width: 1160px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
   background: #fff;
-  border: 1px solid #f4f7fa;
-  border-radius: 18px;
-  padding: 0 10px 0 22px;
-  height: 58px;
+  border: none;
+  border-radius: 0;
+  padding: 0 30px;
+  height: 70px;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 4px 24px rgba(60,80,140,0.08), 0 1px 4px rgba(0,0,0,0.04);
+
+  box-shadow: none;
 }
 
 .nav-brand {
@@ -110,6 +112,54 @@
 }
 .nav-signin:hover { 
     background: #8a94b8; 
+}
+
+@media (max-width: 768px) {
+
+  .nav {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+    height: auto;
+    padding: 20px;
+  }
+
+  .nav-brand {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .nav-logo {
+    justify-content: center;
+  }
+
+  .nav-tabs {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .nav-tab {
+    width: 100%;
+    text-align: center;
+  }
+
+  .nav-right {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .nav-signin {
+    width: 100%;
+    text-align: center;
+  }
+
+  .nav-tab-bg {
+    display: none;
+  }
+
 }
 
 /* --RESPONNSIVE */
