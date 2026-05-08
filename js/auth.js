@@ -318,54 +318,54 @@ function updateNavAuth() {
 
   
 
- if (user.role === "admin") {
- 
-    if (!document.querySelector(".nav-admin-links")) {
- 
-      const wrapper = document.createElement("span");
-      wrapper.className = "nav-admin-links";
- 
-      const mappingsLink = document.createElement("a");
-      mappingsLink.href = "/HTML/drug-mappings.html";
-      mappingsLink.textContent = "Drug Mappings";
-      mappingsLink.style.cssText = [
-        "font-size:11px",
-        "background:#312e81",
-        "color:rgba(255,255,255,0.85)",
-        "padding:3px 10px",
-        "border-radius:20px",
-        "text-decoration:none",
-        "margin-left:8px",
-        "letter-spacing:0.5px"
-      ].join(";");
- 
-      wrapper.appendChild(mappingsLink);
-      signinEl.parentElement.appendChild(wrapper);
- 
-    }
- 
-  }
-
-
-
   const navTabs = document.getElementById("navTabs");
 
-  if (user && navTabs && !document.querySelector(".nav-role-link")) {
-    const roleLink = document.createElement("a");
-    roleLink.className = "nav-tab nav-role-link";
+if (user && navTabs) {
 
-    if (user.role === "admin") {
-      roleLink.href = "/HTML/chat-management.html";
-      roleLink.textContent = "Chat Management";
-      roleLink.dataset.page = "chat-management";
-    } else {
+  if (user.role === "admin") {
+
+    if (!document.querySelector(".chat-management-link")) {
+
+      const chatLink = document.createElement("a");
+      chatLink.className = "nav-tab nav-role-link chat-management-link";
+      chatLink.href = "/HTML/chat-management.html";
+      chatLink.textContent = "Chat Management";
+      chatLink.dataset.page = "chat-management";
+
+      navTabs.appendChild(chatLink);
+
+    }
+
+    if (!document.querySelector(".drug-management-link")) {
+
+      const drugLink = document.createElement("a");
+      drugLink.className = "nav-tab nav-role-link drug-management-link";
+      drugLink.href = "/HTML/drug-mappings.html";
+      drugLink.textContent = "Admin Panel";
+      drugLink.dataset.page = "drug-mappings";
+
+      navTabs.appendChild(drugLink);
+
+    }
+
+  } else {
+
+    if (!document.querySelector(".nav-role-link")) {
+
+      const roleLink = document.createElement("a");
+      roleLink.className = "nav-tab nav-role-link";
+
       roleLink.href = "/HTML/ask-pharmacist.html";
       roleLink.textContent = "Ask a Pharmacist";
       roleLink.dataset.page = "ask-pharmacist";
+
+      navTabs.appendChild(roleLink);
+
     }
 
-    navTabs.appendChild(roleLink);
   }
+
+}
 
 
 
@@ -373,4 +373,3 @@ function updateNavAuth() {
 
 
 document.addEventListener("DOMContentLoaded", updateNavAuth);
-
