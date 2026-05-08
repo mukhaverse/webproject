@@ -1,13 +1,9 @@
-//GSAP ANIMATION....
+// GSAP ANIMATION....
 
 
 
 
-
-
-
-
-//SCHEDULE RENDERING
+// SCHEDULE RENDERING
 const scheduleData = [
   { drug: "Drug 1", time: "04 am", color: "blue" },
   { drug: "Drug 2", time: "03 am", color: "pink" },
@@ -27,6 +23,8 @@ function getHourIndex(time) {
 function renderSchedule(data) {
   const amSchedule = document.getElementById("amSchedule");
   const pmSchedule = document.getElementById("pmSchedule");
+
+  if (!amSchedule || !pmSchedule) return;
 
   amSchedule.innerHTML = "";
   pmSchedule.innerHTML = "";
@@ -81,3 +79,229 @@ function colorTimes(data) {
 
 renderSchedule(scheduleData);
 colorTimes(scheduleData);
+
+
+
+
+// TEMP: hide schedule section until backend schedule logic is ready
+const scheduleSection = document.querySelector(".schedule-section");
+if (scheduleSection) {
+  scheduleSection.style.display = "none";
+}
+
+
+
+
+// LOAD RESULT FROM INTERACTION PAGE
+const savedResult = JSON.parse(localStorage.getItem("interactionResult"));
+
+
+
+
+// DYNAMIC CHARTS
+if (savedResult && savedResult.results?.length > 0) {
+  const interactionData = savedResult.results[0].result?.interaction;
+
+  if (interactionData) {
+    const severity = interactionData.severity?.toLowerCase() || "minor";
+
+    let severityData = [0, 0, 0, 0];
+
+    switch (severity) {
+      case "contraindicated":
+        severityData = [100, 0, 0, 0];
+        break;
+      case "major":
+        severityData = [0, 100, 0, 0];
+        break;
+      case "moderate":
+        severityData = [0, 0, 100, 0];
+        break;
+      default:
+        severityData = [0, 0, 0, 100];
+    }
+
+    const riskCanvas = document.querySelector(".risk");
+
+    if (riskCanvas) {
+      new Chart(riskCanvas, {
+        type: "doughnut",
+        data: {
+          labels: [
+            "Contraindicated",
+            "Major",
+            "Moderate",
+            "Minor"
+          ],
+          datasets: [
+            {
+              data: severityData,
+              backgroundColor: [
+                "#36A2EB",
+                "#FF5B83",
+                "#FF9F40",
+                "#FFCD56"
+              ],
+              borderWidth: 0
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          cutout: "55%",
+          plugins: {
+            legend: {
+              display: true
+            }
+          }
+        }
+      });
+    }
+
+    const descriptionText =
+      interactionData.description?.toLowerCase() || "";
+
+    let bleeding = 1;
+    let toxicity = 1;
+    let drowsiness = 1;
+    let heartRisk = 1;
+    let other = 1;
+
+    if (
+      descriptionText.includes("bleeding") ||
+      descriptionText.includes("hemorrhage")
+    ) {
+      bleeding = 9;
+    }
+
+    if (
+      descriptionText.includes("toxicity") ||
+      descriptionText.includes("toxic")
+    ) {
+      toxicity = 8;
+    }
+
+    if (
+      descriptionText.includes("drowsiness") ||
+      descriptionText.includes("sedation")
+    ) {
+      drowsiness = 7;
+    }
+
+    if (
+      descriptionText.includes("heart") ||
+      descriptionText.includes("cardiac")
+    ) {
+      heartRisk = 8;
+    }
+
+    if (descriptionText.includes("interaction")) {
+      other = 5;
+    }
+
+    const sideEffectsCanvas = document.querySelector(".effect-chart");
+
+    if (sideEffectsCanvas) {
+      const sideEffectsCtx = sideEffectsCanvas.getContext("2d");
+
+      new Chart(sideEffectsCtx, {
+        type: "line",
+        data: {
+          labels: [
+            "Bleeding",
+            "Toxicity",
+            "Drowsiness",
+            "Heart Risk",
+            "Other"
+          ],
+          datasets: [
+            {
+              label: "Risk Level",
+              data: [
+                bleeding,
+                toxicity,
+                drowsiness,
+                heartRisk,
+                other
+              ],
+              borderColor: "#6C8EF5",
+              backgroundColor: "rgba(108,142,245,0.25)",
+              fill: true,
+              tension: 0.4
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 10
+            }
+          }
+        }
+      });
+    }
+  }
+}
+
+
+
+// DYNAMIC RESULT CARDS
+const cardSection = document.querySelector(".card-sect");
+
+if (
+  savedResult &&
+  savedResult.results &&
+  savedResult.results.length > 0 &&
+  cardSection
+) {
+  savedResult.results.forEach((item, index) => {
+    const interaction = item.result?.interaction;
+
+    if (!interaction) return;
+
+    const card = document.createElement("article");
+    card.className = "resul-card";
+    card.setAttribute("aria-labelledby", `card${index + 1}`);
+
+    const createdDate = interaction.created_at
+      ? new Date(interaction.created_at)
+      : new Date();
+
+    const dateText = createdDate.toLocaleDateString("en-US", {
+      day: "2-digit",
+      month: "short"
+    });
+
+    card.innerHTML = `
+      <div class="status-div">
+        <time class="date">${dateText}</time>
+        <span class="badge">STATUS</span>
+      </div>
+
+      <div class="info-div">
+        <h2 id="card${index + 1}">${interaction.severity || "Unknown"}</h2>
+        <p class="uni-id">ID: ${interaction.id || "N/A"}</p>
+        <p>${interaction.description || "No description available."}</p>
+      </div>
+
+      <div class="drugs-result">
+        <span class="drug-select">
+          ${item.drug1?.normalized || item.drug1?.original || "Drug 1"}
+        </span>
+        <span class="drug-select">
+          ${item.drug2?.normalized || item.drug2?.original || "Drug 2"}
+        </span>
+      </div>
+    `;
+
+    cardSection.appendChild(card);
+  });
+}
