@@ -111,13 +111,6 @@ function getHighestSeverity(results) {
   return highest;
 }
 
-function getGapHours(rank) {
-  if (rank === 1) return 2; // minor
-  if (rank === 2) return 4; // moderate
-  if (rank === 3) return 6; // major
-
-  return 0;
-}
 
 function formatHour(hour) {
   const normalized = ((hour % 24) + 24) % 24;
@@ -141,6 +134,52 @@ function getDrugColors(count) {
   return colors.slice(0, count);
 }
 
+
+
+function getScheduleRule(rank) {
+  if (rank === 1) {
+    return {
+      canSchedule: true,
+      gapHours: 2,
+      message:
+        "Minor interaction: spacing medications by 1–4 hours is usually enough because the issue is often absorption-based."
+    };
+  }
+
+  if (rank === 2) {
+    return {
+      canSchedule: true,
+      gapHours: 4,
+      message:
+        "Moderate interaction: spacing medications by 2–4 hours may help when the issue is absorption or binding-related."
+    };
+  }
+
+  if (rank === 3) {
+    return {
+      canSchedule: false,
+      gapHours: null,
+      message:
+        "Major interaction: no fixed time interval can reliably make this combination safe. Timing alone does not resolve this interaction."
+    };
+  }
+
+  if (rank === 4) {
+    return {
+      canSchedule: false,
+      gapHours: null,
+      message:
+        "Contraindicated interaction: no safe interval exists. This medication combination should be avoided entirely."
+    };
+  }
+
+  return {
+    canSchedule: false,
+    gapHours: null,
+    message: "No schedule recommendation available."
+  };
+}
+
 function buildScheduleRecommendation(normalizedDrugs, results) {
   const highest = getHighestSeverity(results);
 
@@ -150,20 +189,24 @@ function buildScheduleRecommendation(normalizedDrugs, results) {
     };
   }
 
-  if (highest.rank === 4) {
+  const rule = getScheduleRule(highest.rank);
+
+  if (!rule.canSchedule) {
     return {
       show: true,
       canSchedule: false,
-      message: "These medications should not be scheduled together. Please consult your doctor."
+      severity: highest.severity,
+      message: rule.message
     };
   }
 
-  const gap = getGapHours(highest.rank);
   const colors = getDrugColors(normalizedDrugs.length);
   const startHour = 8;
 
   const scheduleData = normalizedDrugs.map((drug, index) => {
-    const time = formatHour(startHour + index * gap);
+    const time = formatHour(
+      startHour + index * rule.gapHours
+    );
 
     return {
       drug: drug.normalized,
@@ -175,8 +218,9 @@ function buildScheduleRecommendation(normalizedDrugs, results) {
   return {
     show: true,
     canSchedule: true,
-    message: `Suggested schedule based on ${highest.severity} interaction. Keep at least ${gap} hours between medications.`,
-    gapHours: gap,
+    severity: highest.severity,
+    message: rule.message,
+    gapHours: rule.gapHours,
     scheduleData
   };
 }
