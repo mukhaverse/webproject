@@ -333,3 +333,158 @@ display: none;
     font-size: 0.78rem;
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+#mobileMenu {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  pointer-events: none;
+}
+
+#mobileMenu.active {
+  display: block;
+  pointer-events: all;
+}
+
+.mm-panel {
+  position: absolute;
+  inset: 0;
+  background: #1e1b4b;
+  display: flex;
+  flex-direction: column;
+  padding: 36px 32px 48px;
+
+  
+}
+
+
+.mm-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 56px;
+}
+
+.mm-logo {
+  height: 26px;
+  filter: brightness(0) invert(1);
+}
+
+.mm-close {
+  background: none;
+  border: 1px solid rgba(255,255,255,0.25);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.mm-links {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mm-link {
+  color: rgba(255,255,255,0.55);
+  text-decoration: none;
+  font-size: clamp(36px, 10vw, 56px);
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  transition: color 0.15s;
+}
+
+.mm-link:hover {
+  color: #ffffff;
+}
+
+
+.mm-bottom {
+  margin-top: auto;
+}
+
+.mm-signin {
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 10px 22px;
+  border-radius: 8px;
+  display: inline-block;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.mm-signin:hover {
+  color: white;
+  border-color: rgba(255,255,255,0.5);
+}
+
+
+
+
+
+
+
+.nav-hamburger {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+}
+
+@media (max-width: 768px) {
+  .nav-hamburger {
+    display: flex;
+  }
+}
+
+.nav-hamburger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: #1e1b4b;
+  border-radius: 2px;
+  transition: transform 0.3s, opacity 0.3s;
+  transform-origin: center;
+}
+
+.nav-hamburger.is-open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.nav-hamburger.is-open span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.nav-hamburger.is-open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+
+
+.nav-sidebar,
+.nav-sidebar-overlay {
+  display: none !important;
+}
