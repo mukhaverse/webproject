@@ -122,10 +122,13 @@ if (scheduleRecommendation?.show && scheduleSection) {
   }
 
   if (!scheduleRecommendation.canSchedule) {
+
     if (scheduleCard) {
       scheduleCard.style.display = "none";
     }
+
   } else {
+
     if (scheduleCard) {
       scheduleCard.style.display = "block";
     }
