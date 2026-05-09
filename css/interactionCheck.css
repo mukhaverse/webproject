@@ -60,7 +60,6 @@ h1 {
    color: var( --clr-dark-dim);
 }
 
-
 label {
   display: block;
   font-size: 12px;
@@ -69,8 +68,6 @@ label {
   margin-bottom: 8px;
   letter-spacing: 1px;
 }
-
-
 input {
   width: 70%;
   height: 52px;
@@ -184,6 +181,40 @@ input {
   width: 18rem;
   height: 15rem;
   margin: 1rem 0 0 1rem;
+}
+
+.drug-field {
+  position: relative;
+}
+
+.list-div {
+  position: absolute;
+  top: 90%;
+  left: 0;
+  width: 70%;
+  background: #ffffff;
+  border: 1px solid #dcdcdc;
+  border-radius: 12px;
+  margin-top: 6px;
+  padding: 6px 0;
+  list-style: none;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  max-height: 220px;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.list-div li {
+  padding: 12px 16px;
+  cursor: pointer;
+  color: #374151;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.list-div li:hover {
+  background: #f3f4f6;
+  color: #111827;
 }
 
 /* ----PSEUDO CLASS--- */
