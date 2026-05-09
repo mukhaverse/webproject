@@ -333,6 +333,11 @@ function renderChatRoom({ chat, mode, backHref }) {
   `;
 
   bindMessageForm(mode, chat.id);
+
+      // ### sockket ###
+  if (window.joinChat) {
+  window.joinChat(chat.id);
+}
 }
 
 function getBackText(mode) {
@@ -388,7 +393,15 @@ function bindMessageForm(mode, chatId) {
       }
 
       message = await apiSendMessage(chatId, text, 'pharmacist');
-      appendMessage(message);
+
+           // ### sockket ###
+       if (window.sendSocketMessage) {
+            window.sendSocketMessage({
+        ...message,
+        chatId
+  });
+}
+      // appendMessage(message);
       input.value = '';
     } catch (error) {
       console.error(error);
@@ -410,6 +423,7 @@ function appendMessage(message) {
   list.insertAdjacentHTML('beforeend', messageTemplate(message));
   list.scrollTop = list.scrollHeight;
 }
+window.appendMessage = appendMessage;
 
 function formatDate(value) {
   const date = new Date(value);
