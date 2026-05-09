@@ -142,7 +142,7 @@ function getScheduleRule(rank) {
       canSchedule: true,
       gapHours: 2,
       message:
-        "Minor interaction: spacing medications by 1–4 hours is usually enough because the issue is often absorption-based."
+        "Spacing medications by 1–4 hours is usually enough because the issue is often absorption-based."
     };
   }
 
@@ -151,7 +151,7 @@ function getScheduleRule(rank) {
       canSchedule: true,
       gapHours: 4,
       message:
-        "Moderate interaction: spacing medications by 2–4 hours may help when the issue is absorption or binding-related."
+        "Spacing medications by 2–4 hours may help when the issue is absorption or binding-related."
     };
   }
 
@@ -160,7 +160,7 @@ function getScheduleRule(rank) {
       canSchedule: false,
       gapHours: null,
       message:
-        "Major interaction: no fixed time interval can reliably make this combination safe. Timing alone does not resolve this interaction."
+        "No fixed time interval can reliably make this combination safe. Timing alone does not resolve this interaction."
     };
   }
 
@@ -169,7 +169,7 @@ function getScheduleRule(rank) {
       canSchedule: false,
       gapHours: null,
       message:
-        "Contraindicated interaction: no safe interval exists. This medication combination should be avoided entirely."
+        "No safe interval exists. This medication combination should be avoided entirely."
     };
   }
 
