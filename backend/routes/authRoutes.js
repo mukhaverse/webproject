@@ -27,9 +27,13 @@ const signToken = (user) =>
 router.post("/signup", async (req, res) => {
   const { name, email, password } = req.body;
 
-  // validate that all fields r present
+
   if (!name || !email || !password)
     return res.status(400).json({ error: "All fields are required" });
+
+    const NAME_REGEX = /^[A-Za-zÀ-ÿ\u0600-\u06FF\s'-]{2,50}$/;
+    if (!NAME_REGEX.test(name.trim()))
+      return res.status(400).json({ error: "Name must be 2–50 letters only." });
 
   if (!EMAIL_REGEX.test(email))
     return res.status(400).json({ error: "Please enter a valid email address" });
