@@ -107,6 +107,12 @@ function initLoginForm() {
       return showMsg(msgEl, "error", "Please fill in all fields.");
     }
 
+    const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!EMAIL_REGEX.test(email)) {
+      return showMsg(msgEl, "error", "Please enter a valid email address.");
+    }
+
     setLoading(submitBtn, true);
     msgEl.classList.remove("visible");
 
@@ -164,10 +170,20 @@ function initSignupForm() {
       return showMsg(msgEl, "error", "Please fill in all fields.");
     }
 
+    const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const NAME_REGEX  = /^[A-Za-zÀ-ÿ\u0600-\u06FF\s'-]{2,50}$/;
+
+    if (!NAME_REGEX.test(name)) {
+      return showMsg(msgEl, "error", "Name must be 2–50 letters only.");
+    }
+
+    if (!EMAIL_REGEX.test(email)) {
+      return showMsg(msgEl, "error", "Please enter a valid email address.");
+    }
+
     if (password.length < 6) {
       return showMsg(msgEl, "error", "Password must be at least 6 characters.");
     }
-
     setLoading(submitBtn, true);
     msgEl.classList.remove("visible");
 
@@ -202,10 +218,9 @@ function initSignupForm() {
 }
 
 
-/**
- * Applies auth state to a single sign-in element.
- * Handles both the desktop #navSignin and mobile #navSigninMobile.
- */
+
+
+
 function applyAuthToSigninEl(signinEl, user) {
   if (!signinEl) return;
 
@@ -235,10 +250,7 @@ function applyAuthToSigninEl(signinEl, user) {
 }
 
 
-/**
- * Adds role-specific tabs to a given tabs container.
- * Works for both the desktop #navTabs and mobile #navSidebarTabs.
- */
+
 function addRoleTabs(navTabs, user) {
   if (!user || !navTabs) return;
 

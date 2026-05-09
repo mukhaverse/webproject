@@ -73,9 +73,11 @@
               type="text"
               id="name"
               name="name"
-              placeholder="Sarah Ahmed"
+              placeholder=" Your Name"
               autocomplete="name"
               required
+              maxlength="50"
+              pattern="[A-Za-zÀ-ÿ\u0600-\u06FF\s'-]{2,50}"
             >
           </div>
 
@@ -95,13 +97,14 @@
             <label for="password">Password</label>
             <div class="password-wrapper">
               <input
-                type="password"
-                id="password"
-                name="password"
-                placeholder="At least 6 characters"
-                autocomplete="new-password"
-                required
-              >
+              type="password"
+              id="password"
+              name="password"
+              placeholder="At least 6 characters"
+              autocomplete="new-password"
+              required
+              minlength="6"
+            >
               
             </div>
           </div>
