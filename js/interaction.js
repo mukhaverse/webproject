@@ -28,7 +28,7 @@ function addAutocomplete(input) {
     try {
 
       const response = await fetch(
-        `http://localhost:3000/search?q=${val}`
+        `https://medixa.onrender.com/search?q=${val}`
       );
 
       const data = await response.json();
@@ -133,7 +133,7 @@ checkBtn.addEventListener("click", async (e) => {
   try {
 
     const response = await fetch(
-      "http://localhost:3000/check",
+      "https://medixa.onrender.com/check",
       {
         method: "POST",
 

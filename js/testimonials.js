@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // send to backend
         try {
-            await fetch("http://localhost:3000/testimonials", {
+            await fetch("https://medixa.onrender.com/testimonials", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -114,7 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function loadTestimonials() {
         try {
-            const res = await fetch("http://localhost:3000/testimonials");
+            const res = await fetch("https://medixa.onrender.com/testimonials");
             const data = await res.json();
 
             data.forEach(t => {
