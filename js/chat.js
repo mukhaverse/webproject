@@ -366,6 +366,33 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
+// async function init() {
+//   try {
+//     if (!requireLogin()) return;
+//     if (!guardRole()) return;
+
+//     setActiveLink();
+
+//     if (window.socket && state.pageType === "admin") {
+//       socket.emit("join-admin");
+//     }
+
+//     state.conversations = await apiGetConversations();
+
+//     if (state.chatId) {
+//       await renderSelectedChat();
+//       return;
+//     }
+
+//     renderList();
+
+//   } catch (error) {
+//     console.error(error);
+//     if (state.panel) {
+//       state.panel.innerHTML = `<p class="empty-state">Could not load chat data.</p>`;
+//     }
+//   }
+// }
 async function init() {
   try {
     if (!requireLogin()) return;
@@ -375,6 +402,11 @@ async function init() {
 
     if (window.socket && state.pageType === "admin") {
       socket.emit("join-admin");
+    }
+
+    if (state.pageType === "user" && state.view === "new") {
+      renderList();
+      return;
     }
 
     state.conversations = await apiGetConversations();

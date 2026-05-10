@@ -75,185 +75,185 @@ app.use("/user", userRoutes);
 
                       // get current user conversations
 
-app.get("/chat/conversations", requireAuth, async (req, res) => {
-  try {
-    const userId = req.user.id;
+// app.get("/chat/conversations", requireAuth, async (req, res) => {
+//   try {
+//     const userId = req.user.id;
 
-    const [rows] = await db.promise().query(
-      `SELECT
-         cc.id,
-         cc.user_id,
-         cc.created_at,
-         cc.updated_at,
-         (
-           SELECT body
-           FROM chat_messages
-           WHERE conversation_id = cc.id
-           ORDER BY sent_at DESC
-           LIMIT 1
-         ) AS last_message
-       FROM chat_conversations cc
-       WHERE cc.user_id = ?
-       ORDER BY cc.updated_at DESC`,
-      [userId]
-    );
+//     const [rows] = await db.promise().query(
+//       `SELECT
+//          cc.id,
+//          cc.user_id,
+//          cc.created_at,
+//          cc.updated_at,
+//          (
+//            SELECT body
+//            FROM chat_messages
+//            WHERE conversation_id = cc.id
+//            ORDER BY sent_at DESC
+//            LIMIT 1
+//          ) AS last_message
+//        FROM chat_conversations cc
+//        WHERE cc.user_id = ?
+//        ORDER BY cc.updated_at DESC`,
+//       [userId]
+//     );
 
-    res.json(rows);
-  } catch (err) {
-    console.error("[CHAT] conversations error:", err.message);
-    res.status(500).json({ error: "Failed to load conversations" });
-  }
-});
-
-
-              // start new chat with first message
-
-app.post("/chat/start", requireAuth, async (req, res) => {
-  const userId = req.user.id;
-  const { body } = req.body;
-
-  if (!body || !body.trim()) {
-    return res.status(400).json({ error: "Message body is required" });
-  }
-
-  const conn = await db.promise().getConnection();
-
-  try {
-    await conn.beginTransaction();
-
-    const [chatResult] = await conn.query(
-      "INSERT INTO chat_conversations (user_id) VALUES (?)",
-      [userId]
-    );
-
-    const conversationId = chatResult.insertId;
-
-    const [msgResult] = await conn.query(
-      `INSERT INTO chat_messages
-       (conversation_id, sender_id, sender_role, body)
-       VALUES (?, ?, 'user', ?)`,
-      [conversationId, userId, body.trim()]
-    );
-
-    await conn.query(
-      "UPDATE chat_conversations SET updated_at = NOW() WHERE id = ?",
-      [conversationId]
-    );
-
-    await conn.commit();
-
-    res.status(201).json({
-      conversationId,
-      message: {
-        id: msgResult.insertId,
-        conversation_id: conversationId,
-        sender_id: userId,
-        sender_role: "user",
-        body: body.trim(),
-        sent_at: new Date().toISOString()
-      }
-    });
-
-  } catch (err) {
-    await conn.rollback();
-    console.error("[CHAT] start error:", err.message);
-    res.status(500).json({ error: "Failed to start chat" });
-  } finally {
-    conn.release();
-  }
-});
+//     res.json(rows);
+//   } catch (err) {
+//     console.error("[CHAT] conversations error:", err.message);
+//     res.status(500).json({ error: "Failed to load conversations" });
+//   }
+// });
 
 
+//               // start new chat with first message
 
-          // get messages for user conversation
+// app.post("/chat/start", requireAuth, async (req, res) => {
+//   const userId = req.user.id;
+//   const { body } = req.body;
 
-app.get("/chat/conversations/:id/messages", requireAuth, async (req, res) => {
-  const conversationId = parseInt(req.params.id, 10);
-  const userId = req.user.id;
+//   if (!body || !body.trim()) {
+//     return res.status(400).json({ error: "Message body is required" });
+//   }
 
-  if (isNaN(conversationId)) {
-    return res.status(400).json({ error: "Invalid conversation ID" });
-  }
+//   const conn = await db.promise().getConnection();
 
-  try {
-    const [[chat]] = await db.promise().query(
-      "SELECT id, user_id, created_at, updated_at FROM chat_conversations WHERE id = ? AND user_id = ?",
-      [conversationId, userId]
-    );
+//   try {
+//     await conn.beginTransaction();
 
-    if (!chat) {
-      return res.status(404).json({ error: "Conversation not found" });
-    }
+//     const [chatResult] = await conn.query(
+//       "INSERT INTO chat_conversations (user_id) VALUES (?)",
+//       [userId]
+//     );
 
-    const [messages] = await db.promise().query(
-      `SELECT id, conversation_id, sender_id, sender_role, body, sent_at
-       FROM chat_messages
-       WHERE conversation_id = ?
-       ORDER BY sent_at ASC`,
-      [conversationId]
-    );
+//     const conversationId = chatResult.insertId;
 
-    res.json({ chat, messages });
+//     const [msgResult] = await conn.query(
+//       `INSERT INTO chat_messages
+//        (conversation_id, sender_id, sender_role, body)
+//        VALUES (?, ?, 'user', ?)`,
+//       [conversationId, userId, body.trim()]
+//     );
 
-  } catch (err) {
-    console.error("[CHAT] get messages error:", err.message);
-    res.status(500).json({ error: "Failed to load messages" });
-  }
-});
+//     await conn.query(
+//       "UPDATE chat_conversations SET updated_at = NOW() WHERE id = ?",
+//       [conversationId]
+//     );
+
+//     await conn.commit();
+
+//     res.status(201).json({
+//       conversationId,
+//       message: {
+//         id: msgResult.insertId,
+//         conversation_id: conversationId,
+//         sender_id: userId,
+//         sender_role: "user",
+//         body: body.trim(),
+//         sent_at: new Date().toISOString()
+//       }
+//     });
+
+//   } catch (err) {
+//     await conn.rollback();
+//     console.error("[CHAT] start error:", err.message);
+//     res.status(500).json({ error: "Failed to start chat" });
+//   } finally {
+//     conn.release();
+//   }
+// });
 
 
 
-          // send user message in existing chat
+//           // get messages for user conversation
 
-app.post("/chat/conversations/:id/messages", requireAuth, async (req, res) => {
-  const conversationId = parseInt(req.params.id, 10);
-  const userId = req.user.id;
-  const { body } = req.body;
+// app.get("/chat/conversations/:id/messages", requireAuth, async (req, res) => {
+//   const conversationId = parseInt(req.params.id, 10);
+//   const userId = req.user.id;
 
-  if (isNaN(conversationId)) {
-    return res.status(400).json({ error: "Invalid conversation ID" });
-  }
+//   if (isNaN(conversationId)) {
+//     return res.status(400).json({ error: "Invalid conversation ID" });
+//   }
 
-  if (!body || !body.trim()) {
-    return res.status(400).json({ error: "Message body is required" });
-  }
+//   try {
+//     const [[chat]] = await db.promise().query(
+//       "SELECT id, user_id, created_at, updated_at FROM chat_conversations WHERE id = ? AND user_id = ?",
+//       [conversationId, userId]
+//     );
 
-  try {
-    const [[chat]] = await db.promise().query(
-      "SELECT id FROM chat_conversations WHERE id = ? AND user_id = ?",
-      [conversationId, userId]
-    );
+//     if (!chat) {
+//       return res.status(404).json({ error: "Conversation not found" });
+//     }
 
-    if (!chat) {
-      return res.status(404).json({ error: "Conversation not found" });
-    }
+//     const [messages] = await db.promise().query(
+//       `SELECT id, conversation_id, sender_id, sender_role, body, sent_at
+//        FROM chat_messages
+//        WHERE conversation_id = ?
+//        ORDER BY sent_at ASC`,
+//       [conversationId]
+//     );
 
-    const [result] = await db.promise().query(
-      `INSERT INTO chat_messages
-       (conversation_id, sender_id, sender_role, body)
-       VALUES (?, ?, 'user', ?)`,
-      [conversationId, userId, body.trim()]
-    );
+//     res.json({ chat, messages });
 
-    await db.promise().query(
-      "UPDATE chat_conversations SET updated_at = NOW() WHERE id = ?",
-      [conversationId]
-    );
+//   } catch (err) {
+//     console.error("[CHAT] get messages error:", err.message);
+//     res.status(500).json({ error: "Failed to load messages" });
+//   }
+// });
 
-    res.status(201).json({
-      id: result.insertId,
-      conversation_id: conversationId,
-      sender_id: userId,
-      sender_role: "user",
-      body: body.trim(),
-      sent_at: new Date().toISOString()
-    });
 
-  } catch (err) {
-    console.error("[CHAT] send message error:", err.message);
-    res.status(500).json({ error: "Failed to send message" });
-  }
-});
+
+//           // send user message in existing chat
+
+// app.post("/chat/conversations/:id/messages", requireAuth, async (req, res) => {
+//   const conversationId = parseInt(req.params.id, 10);
+//   const userId = req.user.id;
+//   const { body } = req.body;
+
+//   if (isNaN(conversationId)) {
+//     return res.status(400).json({ error: "Invalid conversation ID" });
+//   }
+
+//   if (!body || !body.trim()) {
+//     return res.status(400).json({ error: "Message body is required" });
+//   }
+
+//   try {
+//     const [[chat]] = await db.promise().query(
+//       "SELECT id FROM chat_conversations WHERE id = ? AND user_id = ?",
+//       [conversationId, userId]
+//     );
+
+//     if (!chat) {
+//       return res.status(404).json({ error: "Conversation not found" });
+//     }
+
+//     const [result] = await db.promise().query(
+//       `INSERT INTO chat_messages
+//        (conversation_id, sender_id, sender_role, body)
+//        VALUES (?, ?, 'user', ?)`,
+//       [conversationId, userId, body.trim()]
+//     );
+
+//     await db.promise().query(
+//       "UPDATE chat_conversations SET updated_at = NOW() WHERE id = ?",
+//       [conversationId]
+//     );
+
+//     res.status(201).json({
+//       id: result.insertId,
+//       conversation_id: conversationId,
+//       sender_id: userId,
+//       sender_role: "user",
+//       body: body.trim(),
+//       sent_at: new Date().toISOString()
+//     });
+
+//   } catch (err) {
+//     console.error("[CHAT] send message error:", err.message);
+//     res.status(500).json({ error: "Failed to send message" });
+//   }
+// });
 
 
 
