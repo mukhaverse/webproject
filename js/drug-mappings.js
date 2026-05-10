@@ -14,6 +14,7 @@ let resolvedData = null;
 
 document.addEventListener("DOMContentLoaded", () => {
   loadCounts();
+  loadAdminInfo();
 });
 
 
@@ -43,6 +44,23 @@ async function loadCounts() {
 }
 
 
+
+function loadAdminInfo() {
+
+  const user = Auth.getUser();
+
+  if (!user) return;
+
+  document.getElementById("admin-name").textContent =
+    user.name || "—";
+
+  document.getElementById("admin-email").textContent =
+    user.email || "—";
+
+  document.getElementById("admin-created").textContent =
+    formatDate(user.created_at);
+
+}
 
 
 
