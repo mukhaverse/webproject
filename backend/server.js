@@ -65,6 +65,198 @@ app.use("/admin", adminRoutes);
 
 
 
+                                // ####### user endpoint for messages #####
+                 
+                                
+                      // get current user conversations
+
+app.get("/chat/conversations", requireAuth, async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const [rows] = await db.promise().query(
+      `SELECT
+         cc.id,
+         cc.user_id,
+         cc.created_at,
+         cc.updated_at,
+         (
+           SELECT body
+           FROM chat_messages
+           WHERE conversation_id = cc.id
+           ORDER BY sent_at DESC
+           LIMIT 1
+         ) AS last_message
+       FROM chat_conversations cc
+       WHERE cc.user_id = ?
+       ORDER BY cc.updated_at DESC`,
+      [userId]
+    );
+
+    res.json(rows);
+  } catch (err) {
+    console.error("[CHAT] conversations error:", err.message);
+    res.status(500).json({ error: "Failed to load conversations" });
+  }
+});
+
+
+              // start new chat with first message
+
+app.post("/chat/start", requireAuth, async (req, res) => {
+  const userId = req.user.id;
+  const { body } = req.body;
+
+  if (!body || !body.trim()) {
+    return res.status(400).json({ error: "Message body is required" });
+  }
+
+  const conn = await db.promise().getConnection();
+
+  try {
+    await conn.beginTransaction();
+
+    const [chatResult] = await conn.query(
+      "INSERT INTO chat_conversations (user_id) VALUES (?)",
+      [userId]
+    );
+
+    const conversationId = chatResult.insertId;
+
+    const [msgResult] = await conn.query(
+      `INSERT INTO chat_messages
+       (conversation_id, sender_id, sender_role, body)
+       VALUES (?, ?, 'user', ?)`,
+      [conversationId, userId, body.trim()]
+    );
+
+    await conn.query(
+      "UPDATE chat_conversations SET updated_at = NOW() WHERE id = ?",
+      [conversationId]
+    );
+
+    await conn.commit();
+
+    res.status(201).json({
+      conversationId,
+      message: {
+        id: msgResult.insertId,
+        conversation_id: conversationId,
+        sender_id: userId,
+        sender_role: "user",
+        body: body.trim(),
+        sent_at: new Date().toISOString()
+      }
+    });
+
+  } catch (err) {
+    await conn.rollback();
+    console.error("[CHAT] start error:", err.message);
+    res.status(500).json({ error: "Failed to start chat" });
+  } finally {
+    conn.release();
+  }
+});
+
+
+
+          // get messages for user conversation
+
+app.get("/chat/conversations/:id/messages", requireAuth, async (req, res) => {
+  const conversationId = parseInt(req.params.id, 10);
+  const userId = req.user.id;
+
+  if (isNaN(conversationId)) {
+    return res.status(400).json({ error: "Invalid conversation ID" });
+  }
+
+  try {
+    const [[chat]] = await db.promise().query(
+      "SELECT id, user_id, created_at, updated_at FROM chat_conversations WHERE id = ? AND user_id = ?",
+      [conversationId, userId]
+    );
+
+    if (!chat) {
+      return res.status(404).json({ error: "Conversation not found" });
+    }
+
+    const [messages] = await db.promise().query(
+      `SELECT id, conversation_id, sender_id, sender_role, body, sent_at
+       FROM chat_messages
+       WHERE conversation_id = ?
+       ORDER BY sent_at ASC`,
+      [conversationId]
+    );
+
+    res.json({ chat, messages });
+
+  } catch (err) {
+    console.error("[CHAT] get messages error:", err.message);
+    res.status(500).json({ error: "Failed to load messages" });
+  }
+});
+
+
+
+          // send user message in existing chat
+
+app.post("/chat/conversations/:id/messages", requireAuth, async (req, res) => {
+  const conversationId = parseInt(req.params.id, 10);
+  const userId = req.user.id;
+  const { body } = req.body;
+
+  if (isNaN(conversationId)) {
+    return res.status(400).json({ error: "Invalid conversation ID" });
+  }
+
+  if (!body || !body.trim()) {
+    return res.status(400).json({ error: "Message body is required" });
+  }
+
+  try {
+    const [[chat]] = await db.promise().query(
+      "SELECT id FROM chat_conversations WHERE id = ? AND user_id = ?",
+      [conversationId, userId]
+    );
+
+    if (!chat) {
+      return res.status(404).json({ error: "Conversation not found" });
+    }
+
+    const [result] = await db.promise().query(
+      `INSERT INTO chat_messages
+       (conversation_id, sender_id, sender_role, body)
+       VALUES (?, ?, 'user', ?)`,
+      [conversationId, userId, body.trim()]
+    );
+
+    await db.promise().query(
+      "UPDATE chat_conversations SET updated_at = NOW() WHERE id = ?",
+      [conversationId]
+    );
+
+    res.status(201).json({
+      id: result.insertId,
+      conversation_id: conversationId,
+      sender_id: userId,
+      sender_role: "user",
+      body: body.trim(),
+      sent_at: new Date().toISOString()
+    });
+
+  } catch (err) {
+    console.error("[CHAT] send message error:", err.message);
+    res.status(500).json({ error: "Failed to send message" });
+  }
+});
+
+
+
+
+
+
+
+
 
 app.get("/", (req, res) => {
   res.send("You're at MEDIXA server root!")
@@ -598,19 +790,48 @@ const server = app.listen(PORT, () => {
 
 
                                       //  ###### SOOCCKETT #######
-const io = new Server(server);                                      
+const io = new Server(server);
+
 io.on("connection", (socket) => {
   console.log("Socket connected:", socket.id);
 
+  socket.on("join-admin", () => {
+    socket.join("admins");
+  });
+
   socket.on("join-chat", (chatId) => {
-    socket.join(chatId);
+    if (!chatId) {
+      console.log("chatId is required");
+      return;
+    }
+
+    socket.join(String(chatId));
     console.log(`Socket ${socket.id} joined chat ${chatId}`);
   });
 
   socket.on("send-message", (data) => {
-    console.log("Message received:", data);
+    if (!data) {
+      console.log("message data is required");
+      return;
+    }
 
-    io.to(data.chatId).emit("receive-message", data);
+    if (!data.chatId) {
+      console.log("chatId is required");
+      return;
+    }
+
+    if (!data.body || data.body.trim() === "") {
+      console.log("message body is required");
+      return;
+    }
+
+    if (!data.senderRole) {
+      console.log("senderRole is required");
+      return;
+    }
+
+    io.to(String(data.chatId)).emit("receive-message", data);
+    io.to("admins").emit("conversation-updated");
   });
 
   socket.on("disconnect", () => {
