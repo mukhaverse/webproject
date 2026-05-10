@@ -45,7 +45,7 @@ const db = require("./db");
 const { checkInteraction } = require("./services/interactionApi");
 const { normalizeDrug } = require("./services/rxnormApi");
 const { requireAuth } = require("./middleware/auth");
-const authRoutes  = require("./routes/authRoutes");
+const authRoutes  = require("./routes/authRoutes"); 
 const adminRoutes = require("./routes/adminRoutes");
 
 const app = express();
