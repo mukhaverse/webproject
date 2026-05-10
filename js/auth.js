@@ -226,7 +226,7 @@ function applyAuthToSigninEl(signinEl, user) {
 
   if (!user) {
     signinEl.textContent = "Sign In";
-    signinEl.href = "/HTML/login.html";
+    signinEl.href = "/html/login.html";
     return;
   }
 
@@ -259,7 +259,7 @@ function addRoleTabs(navTabs, user) {
     if (!navTabs.querySelector(".chat-management-link")) {
       const chatLink = document.createElement("a");
       chatLink.className = "nav-tab nav-role-link chat-management-link";
-      chatLink.href = "/HTML/chat-management.html";
+      chatLink.href = "/html/chat-management.html";
       chatLink.textContent = "Chat Management";
       chatLink.dataset.page = "chat-management";
       navTabs.appendChild(chatLink);
@@ -268,7 +268,7 @@ function addRoleTabs(navTabs, user) {
     if (!navTabs.querySelector(".drug-management-link")) {
       const drugLink = document.createElement("a");
       drugLink.className = "nav-tab nav-role-link drug-management-link";
-      drugLink.href = "/HTML/drug-mappings.html";
+      drugLink.href = "/html/drug-mappings.html";
       drugLink.textContent = "Admin Panel";
       drugLink.dataset.page = "drug-mappings";
       navTabs.appendChild(drugLink);
@@ -279,7 +279,7 @@ function addRoleTabs(navTabs, user) {
     if (!navTabs.querySelector(".nav-role-link")) {
       const roleLink = document.createElement("a");
       roleLink.className = "nav-tab nav-role-link";
-      roleLink.href = "/HTML/ask-pharmacist.html";
+      roleLink.href = "/html/ask-pharmacist.html";
       roleLink.textContent = "Ask a Pharmacist";
       roleLink.dataset.page = "ask-pharmacist";
       navTabs.appendChild(roleLink);
