@@ -1,9 +1,55 @@
-
-
 document.addEventListener("DOMContentLoaded", () => {
 
+  const user = (typeof Auth !== "undefined") ? Auth.getUser() : null;
 
-  
+
+
+  if (user && user.role === "user") {
+    
+    const navTabs = document.getElementById("navTabs");
+    if (navTabs && !navTabs.querySelector('[data-page="profile"]')) {
+      const profileTab = document.createElement("a");
+      profileTab.href = "html/profile.html";
+      profileTab.className = "nav-tab";
+      profileTab.dataset.page = "profile";
+      profileTab.textContent = "Profile";
+
+
+      if (window.location.pathname.includes("/html/")) {
+        profileTab.href = "profile.html";
+      }
+
+      navTabs.appendChild(profileTab);
+
+    }
+
+
+
+
+
+    
+    const sidebarTabs = document.getElementById("navSidebarTabs");
+    if (sidebarTabs && !sidebarTabs.querySelector('[data-page="profile"]')) {
+      
+      const profileSideTab = document.createElement("a");
+      profileSideTab.href  = "html/profile.html";
+      profileSideTab.className  = "nav-tab";
+      profileSideTab.dataset.page = "profile";
+      profileSideTab.textContent  = "Profile";
+
+
+      if (window.location.pathname.includes("/html/")) {
+        profileSideTab.href = "profile.html";
+      }
+
+      sidebarTabs.appendChild(profileSideTab);
+
+    }
+
+  }
+
+
+
   const tabBg  = document.getElementById("tabBg");
   const tabs   = document.querySelectorAll(".nav-tabs .nav-tab");
   const active = document.querySelector(".nav-tabs .nav-tab.active");
@@ -15,7 +61,6 @@ document.addEventListener("DOMContentLoaded", () => {
     tabBg.style.opacity = "1";
   }
 
-
   if (active) moveTabBg(active);
   tabs.forEach(tab => {
     tab.addEventListener("mouseenter", () => moveTabBg(tab));
@@ -24,8 +69,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-  
-
 
 
 
@@ -33,7 +76,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const hamburger = document.getElementById("navHamburger");
   if (!hamburger) return;
 
-
+  const profileLink = user && user.role === "user"
+    ? `<a href="${window.location.pathname.includes("/html/") ? "profile.html" : "html/profile.html"}" class="mm-link">Profile</a>`
+    : "";
 
   const menu = document.createElement("div");
   menu.id = "mobileMenu";
@@ -48,6 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <a href="html/interactionCheck.html" class="mm-link">Check Interactions</a>
         <a href="html/about.html" class="mm-link">About Us</a>
         <a href="html/contact.html" class="mm-link">Contact Us</a>
+        ${profileLink}
       </nav>
       <div class="mm-bottom">
         <a href="#" class="mm-signin">Sign In</a>
@@ -61,8 +107,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const links    = menu.querySelectorAll(".mm-link, .mm-signin");
   let isOpen     = false;
 
-
   gsap.set(panel, { y: "100%" });
+
+
+
+
 
   function openMenu() {
     if (isOpen) return;
@@ -82,6 +131,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+
 
 
 
@@ -106,9 +156,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  
   hamburger.addEventListener("click", openMenu);
   closeBtn.addEventListener("click", closeMenu);
   document.addEventListener("keydown", e => e.key === "Escape" && closeMenu());
 
+
+  
 });
