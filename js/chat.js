@@ -1,5 +1,5 @@
 const LOGIN_URL = "/html/login.html";
-const CHAT_API_BASE = window.location.origin;
+const API_BASE = "https://medixa.onrender.com";
 
 const state = {
   currentUser: null,
@@ -44,7 +44,7 @@ function guardRole() {
 }
 
 async function fetchJSON(url, options = {}) {
-  const res = await fetch(`${CHAT_API_BASE}${url}`, {
+  const res = await fetch(`${API_BASE}${url}`, {
     ...options,
     headers: {
       ...Auth.headers(),

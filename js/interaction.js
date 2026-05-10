@@ -26,11 +26,7 @@ function addAutocomplete(input) {
 
     try {
       const response = await fetch(
-<<<<<<< HEAD
-        `https://medixa.onrender.com/search?q=${val}`
-=======
         `http://localhost:3000/search?q=${encodeURIComponent(val)}`
->>>>>>> 276da5e (jwt key)
       );
 
       const data = await response.json();
