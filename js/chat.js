@@ -1,5 +1,5 @@
 const CHAT_DATA_URL = '../data/chat-data.json';
-const LOGIN_URL = '/HTML/login.html';
+const LOGIN_URL = '/html/login.html';
 const MOCK_STORAGE_KEY = 'medixa_mock_chat_store';
 
 const state = {
