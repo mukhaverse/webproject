@@ -1,4 +1,4 @@
-/* nav.js — desktop tab indicator + mobile full-screen sidebar */
+
 
 document.addEventListener("DOMContentLoaded", () => {
 

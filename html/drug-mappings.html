@@ -99,13 +99,45 @@
 
         
 
-        <button class="task-card task-card--muted d2">
-          <div class="task-card-top">
-           <!-- <img src="../assets/black-tie-brands-solid-full.svg"> -->
+        <div class="task-card task-card--muted d2 admin-card">
+
+          <div class="admin-top">
+            <div class="admin-avatar">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M4 21C4 17.6863 7.13401 15 11 15H13C16.866 15 20 17.6863 20 21" stroke="currentColor" stroke-width="1.8"/>
+              </svg>
+            </div>
+
+            <div>
+              <div class="task-label">Admin Account</div>
+              <div class="task-desc">System administrator access</div>
+            </div>
           </div>
-          <div class="task-label"> Account</div>
-          <div class="task-desc">Admin Account Info</div>
-        </button>
+
+          <div class="admin-info">
+            <div class="admin-row">
+              <span>Name</span>
+              <strong id="admin-name">—</strong>
+            </div>
+
+            <div class="admin-row">
+              <span>Email</span>
+              <strong id="admin-email">—</strong>
+            </div>
+
+            <div class="admin-row">
+              <span>Role</span>
+              <strong>Admin</strong>
+            </div>
+
+            <div class="admin-row">
+              <span>Account Created</span>
+              <strong id="admin-created">—</strong>
+            </div>
+          </div>
+
+        </div>
 
 
 
@@ -141,25 +173,17 @@
           <div class="task-card-top">
             <span class="task-count">—</span>
           </div>
-          <div class="task-label">Active Chats</div>
-          <div class="task-desc">Ongoing conversations with users</div>
 
-          
+          <div class="task-label">Unread Messages</div>
+          <div class="task-desc">
+            Conversations that still need admin attention
+          </div>
 
         </button>
 
 
         
 
-
-        <button class="task-card d6 task-card--muted">
-
-          <div class="task-card-top">
-            <span class="task-count">—</span>
-          </div>
-          <div class="task-label">Messages</div>
-          <div class="task-desc">Messages History</div>
-        </button>
 
 
 
