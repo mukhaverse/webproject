@@ -44,7 +44,7 @@ const db = require("./db");
 // import service
 const { checkInteraction } = require("./services/interactionApi");
 const { normalizeDrug } = require("./services/rxnormApi");
-
+const { requireAuth } = require("./middleware/auth");
 const authRoutes  = require("./routes/authRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 
@@ -67,7 +67,7 @@ app.use("/admin", adminRoutes);
 
                                 // ####### user endpoint for messages #####
                  
-                                
+
                       // get current user conversations
 
 app.get("/chat/conversations", requireAuth, async (req, res) => {
