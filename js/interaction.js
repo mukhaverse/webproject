@@ -5,30 +5,32 @@ const conta = document.querySelector(".drugs-container");
 const checkBtn = document.getElementById("check-but");
 
 
-// ########## autocomplete function ##########
+// ########## apply autocomplete to inputs ##########
 
 function addAutocomplete(input) {
-
   input.addEventListener("input", async () => {
-
     const val = input.value.trim();
 
-    const list = input.parentElement.querySelector(".list-div");
+    let list = input.parentElement.querySelector(".list-div");
+
+    if (!list) {
       list = document.createElement("ul");
       list.classList.add("list-div");
+      input.parentElement.appendChild(list);
+    }
 
-  input.parentElement.appendChild(list);
-
-    // if input empty
     if (val === "") {
       list.innerHTML = "";
       return;
     }
 
     try {
-
       const response = await fetch(
+<<<<<<< HEAD
         `https://medixa.onrender.com/search?q=${val}`
+=======
+        `http://localhost:3000/search?q=${encodeURIComponent(val)}`
+>>>>>>> 276da5e (jwt key)
       );
 
       const data = await response.json();
@@ -36,123 +38,111 @@ function addAutocomplete(input) {
       list.innerHTML = "";
 
       data.forEach((drug) => {
-
         const li = document.createElement("li");
 
         li.textContent = drug.name;
 
         li.addEventListener("click", () => {
-
           input.value = drug.name;
-
           list.innerHTML = "";
-
         });
 
         list.appendChild(li);
-
       });
 
     } catch (error) {
-
       console.log("Error during autocomplete");
-
+      list.innerHTML = "";
     }
-
   });
-
 }
 
 
-// ########## activate autocomplete for existing inputs ##########
-
-const allInputs =
-  document.querySelectorAll(".drugs-container input");
+// activate autocomplete for drug1 and drug2
+const allInputs = document.querySelectorAll(".drugs-container input");
 
 allInputs.forEach(addAutocomplete);
-
-
 
 
 // ########## add new drug input ##########
 
 addBtn.addEventListener("click", () => {
-
   const drugField = document.createElement("div");
-
   drugField.classList.add("drug-field");
 
   drugField.innerHTML = `
-    <label for="drug${count}">
-      Search Drug ${count}
-    </label>
-
+    <label for="drug${count}">Search Drug ${count}</label>
     <input
       type="text"
       id="drug${count}"
       placeholder="Enter drug name"
     >
-
-    <ul class="list-div"></ul>
   `;
 
   conta.appendChild(drugField);
 
-  // activate autocomplete for new input
-  const newInput =
-    drugField.querySelector("input");
-
+  const newInput = drugField.querySelector("input");
   addAutocomplete(newInput);
 
   count++;
-
 });
-
-
 
 
 // ########## check interaction ##########
 
 checkBtn.addEventListener("click", async (e) => {
-
   e.preventDefault();
 
-  const drug1 =
-    document.getElementById("drug1").value.trim();
+  const inputs = document.querySelectorAll(".drugs-container input");
 
-  const drug2 =
-    document.getElementById("drug2").value.trim();
+  const drugs = [];
 
-  if (!drug1 || !drug2) {
+  inputs.forEach((input) => {
+    const value = input.value.trim();
 
-    alert("Please enter both drugs");
+    if (value !== "") {
+      drugs.push(value);
+    }
+  });
 
+  if (drugs.length < 2) {
+    alert("Please enter at least two drugs");
     return;
   }
 
   try {
 
-    const response = await fetch(
-      "https://medixa.onrender.com/check",
-      {
-        method: "POST",
 
-        headers: {
-          "Content-Type": "application/json"
-        },
+    // const response = await fetch(
+    //   "https://medixa.onrender.com/check",
+    //   {
+    //     method: "POST",
 
-        body: JSON.stringify({
-          drugs: [drug1, drug2]
-        })
-      }
-    );
+    //     headers: {
+    //       "Content-Type": "application/json"
+    //     },
+
+    //     body: JSON.stringify({
+    //       drugs: [drug1, drug2]
+    //     })
+    //   }
+    // );
+
+    const response = await fetch("http://localhost:3000/check", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        drugs: drugs
+      })
+    });
+
 
     const data = await response.json();
 
     if (!response.ok) {
-
       alert(data.error || "Something went wrong");
-
       return;
     }
 
@@ -164,11 +154,7 @@ checkBtn.addEventListener("click", async (e) => {
     window.location.href = "results.html";
 
   } catch (error) {
-
     console.error(error);
-
     alert("Failed to fetch interaction data");
-
   }
-
 });
