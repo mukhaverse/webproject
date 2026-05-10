@@ -88,21 +88,43 @@ h1 {
     grid-column-start: 3;
 }
 
+
+/* 
 .d3 {
-    grid-row: span 2 / span 2;
+   
     grid-column-start: 4;
     grid-row-start: 2;
 }
 
 .d4 {
-    grid-column-start: 3;
+     grid-column: span 2 / span 2;
+    grid-row-start: 2;
+} */
+
+.d4 {
+
+    grid-column-start: 4;
     grid-row-start: 2;
 }
 
-.d5 {
-    grid-column-start: 2;
+.d3 {
+     grid-column: span 2 / span 2;
     grid-row-start: 2;
 }
+
+
+
+
+.d5 {
+    grid-column-start: 1;
+    grid-row-start: 2;
+}
+
+
+
+
+
+
 
 /* .d6 {
     grid-column-start: 2;
