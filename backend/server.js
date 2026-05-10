@@ -45,8 +45,10 @@ const db = require("./db");
 const { checkInteraction } = require("./services/interactionApi");
 const { normalizeDrug } = require("./services/rxnormApi");
 const { requireAuth } = require("./middleware/auth");
+const jwt = require("jsonwebtoken");
 const authRoutes  = require("./routes/authRoutes"); 
 const adminRoutes = require("./routes/adminRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 const app = express();
 
@@ -62,6 +64,9 @@ app.use(express.static(path.join(__dirname, "..")));
 app.use("/auth", authRoutes);
 
 app.use("/admin", adminRoutes);
+
+
+app.use("/user", userRoutes);
 
 
 
@@ -423,6 +428,18 @@ function buildScheduleRecommendation(normalizedDrugs, results) {
 app.post("/check", async (req, res) => {
   const { drugs } = req.body;
 
+ 
+
+
+  const token = req.headers.authorization?.split(" ")[1];
+  let userId = null;
+  if (token) {
+    try { userId = jwt.verify(token, process.env.JWT_SECRET).id; }
+    catch {}
+  }
+
+
+
   if (!drugs || !Array.isArray(drugs) || drugs.length < 2) {
     return res.status(400).json({
       error: "Please provide at least two drugs"
@@ -442,6 +459,7 @@ app.post("/check", async (req, res) => {
     }
 
     const results = [];
+    let checkId = null;
 
     for (let i = 0; i < normalizedDrugs.length; i++) {
       for (let j = i + 1; j < normalizedDrugs.length; j++) {
@@ -485,22 +503,21 @@ app.post("/check", async (req, res) => {
 
           const sql = `
             INSERT INTO interaction_checks
-            (drug1, drug2, severity, description, management, clinical_significance)
-            VALUES (?, ?, ?, ?, ?, ?)
+            (drug1, drug2, severity, description, management, clinical_significance, user_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
           `;
 
-          db.query(sql, [
+          const [insertResult] = await db.promise().query(sql, [
             drugA.normalized,
             drugB.normalized,
             interaction.severity,
             interaction.description,
             interaction.management,
-            interaction.clinical_significance
-          ], (error) => {
-            if (error) {
-              console.log("Error during insert info of interaction:", error);
-            }
-          });
+            interaction.clinical_significance,
+            userId
+          ]);
+
+          checkId = insertResult.insertId;
         }
 
         results.push({
@@ -516,6 +533,13 @@ app.post("/check", async (req, res) => {
         normalizedDrugs,
         results
       );
+
+    if (scheduleRecommendation.show && checkId) {
+      await db.promise().query(
+        `INSERT INTO schedules (interaction_check_id, schedule_json) VALUES (?, ?)`,
+        [checkId, JSON.stringify(scheduleRecommendation)]
+      );
+    }
 
     res.json({
       count: results.length,

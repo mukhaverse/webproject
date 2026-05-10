@@ -1,4 +1,4 @@
-// ── Auth Guard ──────────────────────────────────────────────
+
 (function () {
   const user = Auth.getUser();
   if (!user) {
@@ -7,11 +7,10 @@
 })();
 
 
-// ── State ────────────────────────────────────────────────────
+
 const openSchedules = new Set();
 
 
-// ── Init ─────────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
   loadProfile();
   loadHistory();
@@ -24,20 +23,35 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-// ── Profile Card ─────────────────────────────────────────────
-function loadProfile() {
+
+
+
+
+
+
+async function loadProfile() {
   const user = Auth.getUser();
   if (!user) return;
 
   document.getElementById("profileName").textContent  = user.name  || "—";
   document.getElementById("profileEmail").textContent = user.email || "—";
-  document.getElementById("profileSince").textContent = user.created_at
-    ? formatDate(user.created_at)
-    : "—";
+
+  try {
+    const res  = await fetch(`${API_BASE}/auth/me`, { headers: Auth.headers() });
+    const full = await res.json();
+    document.getElementById("profileSince").textContent = full.created_at
+      ? formatDate(full.created_at)
+      : "—";
+  } catch {
+    document.getElementById("profileSince").textContent = "—";
+  }
 }
 
 
-// ── History List ─────────────────────────────────────────────
+
+
+
+
 async function loadHistory() {
   const container = document.getElementById("historyList");
 
@@ -70,11 +84,14 @@ async function loadHistory() {
 }
 
 
-// ── Card Builder ──────────────────────────────────────────────
+
+
+
+
 function buildCard(item) {
-  const drugs      = formatDrugNames(item.drug1, item.drug2);
-  const badge      = buildBadge(item.severity);
-  const date       = formatDate(item.created_at);
+  const drugs  = formatDrugNames(item.drug1, item.drug2);
+  const badge = buildBadge(item.severity);
+  const date  = formatDate(item.created_at);
   const hasSchedule = item.has_schedule;
 
   const scheduleBtn = hasSchedule
@@ -108,7 +125,12 @@ function buildCard(item) {
 }
 
 
-// ── Schedule Toggle (GSAP) ────────────────────────────────────
+
+
+
+
+
+
 async function toggleSchedule(id) {
   const panel  = document.getElementById(`panel-${id}`);
   const toggle = document.getElementById(`toggle-${id}`);
@@ -118,7 +140,7 @@ async function toggleSchedule(id) {
   const isOpen = openSchedules.has(id);
 
   if (isOpen) {
-    // Close
+
     gsap.to(panel, {
       height: 0,
       duration: 0.3,
@@ -131,7 +153,7 @@ async function toggleSchedule(id) {
     return;
   }
 
-  // Open — fetch schedule if not yet loaded
+
   toggle.classList.add("open");
   openSchedules.add(id);
 
@@ -142,10 +164,9 @@ async function toggleSchedule(id) {
     await fetchAndRenderSchedule(id);
   }
 
-  // Animate open to natural height
-  const inner  = document.getElementById(`panel-inner-${id}`);
-  const height = inner ? inner.scrollHeight + 42 : "auto"; // 42 = padding top + bottom
 
+  const inner  = document.getElementById(`panel-inner-${id}`);
+  const height = inner ? inner.scrollHeight + 42 : "auto"; 
   gsap.fromTo(panel,
     { height: 0 },
     { height: height, duration: 0.35, ease: "power2.out" }
@@ -153,7 +174,11 @@ async function toggleSchedule(id) {
 }
 
 
-// ── Schedule Fetch & Render ───────────────────────────────────
+
+
+
+
+
 async function fetchAndRenderSchedule(id) {
   const contentEl = document.getElementById(`schedule-content-${id}`);
   if (!contentEl) return;
@@ -206,13 +231,18 @@ async function fetchAndRenderSchedule(id) {
 }
 
 
-// ── Helpers ───────────────────────────────────────────────────
+
+
+
+
 function formatDrugNames(drug1, drug2) {
   if (!drug1 && !drug2) return "Unknown drugs";
   if (!drug2) return drug1;
   if (!drug1) return drug2;
   return `${drug1} + ${drug2}`;
 }
+
+
 
 function buildBadge(severity) {
   if (!severity) return `<span class="severity-badge none">No data</span>`;
@@ -228,12 +258,16 @@ function buildBadge(severity) {
   return `<span class="severity-badge ${cls}">${escHtml(severity)}</span>`;
 }
 
+
+
 function formatDate(isoStr) {
   if (!isoStr) return "—";
   return new Date(isoStr).toLocaleDateString("en-US", {
     month: "short", day: "numeric", year: "numeric"
   });
 }
+
+
 
 function escHtml(str) {
   if (!str) return "";
@@ -244,3 +278,5 @@ function escHtml(str) {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
 }
+
+

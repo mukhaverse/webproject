@@ -26,7 +26,7 @@ function addAutocomplete(input) {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/search?q=${encodeURIComponent(val)}`
+        `https://medixa.onrender.com/search?q=${val}`
       );
 
       const data = await response.json();
@@ -124,15 +124,15 @@ checkBtn.addEventListener("click", async (e) => {
     //   }
     // );
 
-    const response = await fetch("http://localhost:3000/check", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        drugs: drugs
-      })
-    });
+    const token = localStorage.getItem("token");
+const response = await fetch("https://medixa.onrender.com/check", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    ...(token ? { "Authorization": `Bearer ${token}` } : {})
+  },
+  body: JSON.stringify({ drugs })
+});
 
 
     const data = await response.json();
