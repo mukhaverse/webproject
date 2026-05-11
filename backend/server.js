@@ -162,53 +162,66 @@ app.post("/chat/start", requireAuth, async (req, res) => {
 
           // get messages for user conversation
 
-app.get("/chat/conversations/:id/messages", requireAuth, async (req, res) => {
-  const conversationId = parseInt(req.params.id, 10);
-  const userId = req.user.id;
+router.get("/chat/conversations/:id/messages", requireAuth,async (req, res) => {
+  const convId = parseInt(req.params.id, 10);
 
-  if (isNaN(conversationId)) {
+  if (isNaN(convId)) {
     return res.status(400).json({ error: "Invalid conversation ID" });
   }
 
   try {
 
+    // mark messages as read
+    await db.promise().query(
+      `UPDATE chat_messages
+       SET is_read = 1
+       WHERE conversation_id = ? AND sender_role = 'user'`,
+      [convId]
+    );
+
+    // get chat info + user name
     const [[chat]] = await db.promise().query(
-      `SELECT 
-        cc.id,
-        cc.user_id,
-        cc.created_at,
-        cc.updated_at,
-        u.name AS user_name
-      FROM chat_conversations cc
-      JOIN users u ON u.id = cc.user_id
-      WHERE cc.id = ? AND cc.user_id = ?`,
-      [conversationId, userId]
+      `SELECT
+         cc.id,
+         cc.user_id,
+         cc.created_at,
+         cc.updated_at,
+         u.name AS user_name
+       FROM chat_conversations cc
+       JOIN users u ON u.id = cc.user_id
+       WHERE cc.id = ?`,
+      [convId]
     );
 
     if (!chat) {
       return res.status(404).json({ error: "Conversation not found" });
     }
 
+    // get messages
     const [messages] = await db.promise().query(
-      `SELECT 
-        id,
-        conversation_id,
-        sender_id,
-        sender_role,
-        body,
-        sent_at
-      FROM chat_messages
-      WHERE conversation_id = ?
-      ORDER BY sent_at ASC`,
-      [conversationId]
+      `SELECT
+         cm.id,
+         cm.body,
+         cm.sender_role,
+         cm.is_read,
+         cm.sent_at,
+         u.name AS sender_name
+       FROM chat_messages cm
+       JOIN users u ON u.id = cm.sender_id
+       WHERE cm.conversation_id = ?
+       ORDER BY cm.sent_at ASC`,
+      [convId]
     );
 
-    res.json({ chat, messages });
+    return res.json({
+      chat,
+      messages
+    });
 
   } catch (err) {
-    console.error("[CHAT] get messages error:", err.message);
+    console.error("[Admin] /chat/messages GET error:", err.message);
 
-    res.status(500).json({
+    return res.status(500).json({
       error: "Failed to load messages"
     });
   }
@@ -438,8 +451,9 @@ function buildScheduleRecommendation(normalizedDrugs, results) {
 
 
                   //############ array of drugs ########
-app.post("/check", async (req, res) => {
+app.post("/check", requireAuth,async (req, res) => {
   const { drugs } = req.body;
+  const userId = req.user.id;
 
   if (!drugs || !Array.isArray(drugs) || drugs.length < 2) {
     return res.status(400).json({
@@ -501,24 +515,21 @@ app.post("/check", async (req, res) => {
         if (data.interaction) {
           const interaction = data.interaction;
 
-          const sql = `
-            INSERT INTO interaction_checks
-            (drug1, drug2, severity, description, management, clinical_significance)
-            VALUES (?, ?, ?, ?, ?, ?)
-          `;
+                const sql = `
+                INSERT INTO interaction_checks
+                (user_id, drug1, drug2, severity, description, management, clinical_significance)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+              `;
 
-          db.query(sql, [
-            drugA.normalized,
-            drugB.normalized,
-            interaction.severity,
-            interaction.description,
-            interaction.management,
-            interaction.clinical_significance
-          ], (error) => {
-            if (error) {
-              console.log("Error during insert info of interaction:", error);
-            }
-          });
+              db.query(sql, [
+                userId,
+                drugA.normalized,
+                drugB.normalized,
+                interaction.severity,
+                interaction.description,
+                interaction.management,
+                interaction.clinical_significance
+              ]);
         }
 
         results.push({
