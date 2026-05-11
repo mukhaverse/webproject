@@ -451,7 +451,7 @@ function buildScheduleRecommendation(normalizedDrugs, results) {
 
 
                   //############ array of drugs ########
-app.post("/check",async (req, res) => {
+app.post("/check", requireAuth, async (req, res) => {
   const { drugs } = req.body;
   const userId = req.user.id;
 
