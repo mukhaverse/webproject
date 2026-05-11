@@ -453,7 +453,7 @@ function buildScheduleRecommendation(normalizedDrugs, results) {
                   //############ array of drugs ########
 app.post("/check", async (req, res) => {
   console.log("CHECK BODY:", JSON.stringify(req.body));
-  
+
   const { drugs } = req.body;
 
   if (!drugs || !Array.isArray(drugs) || drugs.length < 2) {
@@ -480,24 +480,36 @@ app.post("/check", async (req, res) => {
 
     console.log("Drug IDs:", ids);
 
-    // Step 2: Check interaction
-    const interactionRes = await fetch(
-      "https://drug-interaction-checker.p.rapidapi.com/interactions/check",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-RapidAPI-Key": process.env.RAPIDAPI_KEY,
-          "X-RapidAPI-Host": process.env.RAPIDAPI_HOST
-        },
-        body: JSON.stringify({ drugs: ids })
+    // Step 2: Check all pairs
+    const pairs = [];
+    for (let i = 0; i < ids.length; i++) {
+      for (let j = i + 1; j < ids.length; j++) {
+        pairs.push({ id1: ids[i], id2: ids[j], name1: drugs[i], name2: drugs[j] });
       }
+    }
+
+    const pairResults = await Promise.all(
+      pairs.map(pair =>
+        fetch("https://drug-interaction-checker.p.rapidapi.com/interactions/check", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-RapidAPI-Key": process.env.RAPIDAPI_KEY,
+            "X-RapidAPI-Host": process.env.RAPIDAPI_HOST
+          },
+          body: JSON.stringify({ drug1: pair.id1, drug2: pair.id2 })
+        }).then(r => r.json())
+      )
     );
 
-    const data = await interactionRes.json();
-    console.log("Interaction result:", data);
+    const results = pairs.map((pair, i) => ({
+      drug1: pair.name1,
+      drug2: pair.name2,
+      result: pairResults[i]
+    }));
 
-    res.json(data);
+    console.log("Interaction results:", JSON.stringify(results));
+    res.json({ results });
 
   } catch (error) {
     console.error("ERROR:", error.message);
