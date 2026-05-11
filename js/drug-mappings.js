@@ -23,25 +23,55 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
+// async function loadCounts() {
+//   try {
+//     const [pendingRes, resolvedRes] = await Promise.all([
+//       fetch(`${API_BASE}/admin/mappings/pending`,  { headers: Auth.headers() }),
+//       fetch(`${API_BASE}/admin/mappings/resolved`, { headers: Auth.headers() })
+//     ]);
+
+//     pendingData  = await pendingRes.json();
+//     resolvedData = await resolvedRes.json();
+
+//     document.getElementById("count-pending").textContent  = pendingData.length;
+//     document.getElementById("count-resolved").textContent = resolvedData.length;
+
+//   } catch (err) {
+//     console.error("Failed to load counts:", err.message);
+//     document.getElementById("count-pending").textContent  = "!";
+//     document.getElementById("count-resolved").textContent = "!";
+//   }
+// }
+
+
+
 async function loadCounts() {
   try {
-    const [pendingRes, resolvedRes] = await Promise.all([
+    const [pendingRes, resolvedRes, statsRes] = await Promise.all([
       fetch(`${API_BASE}/admin/mappings/pending`,  { headers: Auth.headers() }),
-      fetch(`${API_BASE}/admin/mappings/resolved`, { headers: Auth.headers() })
+      fetch(`${API_BASE}/admin/mappings/resolved`, { headers: Auth.headers() }),
+      fetch(`${API_BASE}/admin/stats`,             { headers: Auth.headers() })
     ]);
 
     pendingData  = await pendingRes.json();
     resolvedData = await resolvedRes.json();
+    const stats  = await statsRes.json();
 
     document.getElementById("count-pending").textContent  = pendingData.length;
     document.getElementById("count-resolved").textContent = resolvedData.length;
+    document.getElementById("count-unread").textContent   = stats.unreadMessages ?? "!";
 
   } catch (err) {
     console.error("Failed to load counts:", err.message);
     document.getElementById("count-pending").textContent  = "!";
     document.getElementById("count-resolved").textContent = "!";
+    document.getElementById("count-unread").textContent   = "!";
   }
 }
+
+
+
+
 
 
 
