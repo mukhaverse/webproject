@@ -1,344 +1,257 @@
-const savedResult = JSON.parse(localStorage.getItem("interactionResult"));
+let count = 3;
 
-const scheduleRecommendation = savedResult?.scheduleRecommendation;
-const scheduleData = scheduleRecommendation?.scheduleData || [];
+const addBtn = document.getElementById("add-btn");
+const conta = document.querySelector(".drugs-container");
+const checkBtn = document.getElementById("check-but");
 
-const scheduleSection = document.querySelector(".schedule-section");
-const scheduleCard = document.querySelector(".schedule-card");
+// ########## apply autocomplete to inputs ##########
 
-if (scheduleSection) {
-  scheduleSection.style.display = "none";
-}
+function addAutocomplete(input) {
+  input.addEventListener("input", async () => {
+    const val = input.value.trim();
 
-function getHourIndex(time) {
-  const hour = parseInt(time.split(" ")[0], 10);
-  return hour === 12 ? 1 : hour + 1;
-}
+    let list = input.parentElement.querySelector(".list-div");
 
-function renderSchedule(data) {
-  const amSchedule = document.getElementById("amSchedule");
-  const pmSchedule = document.getElementById("pmSchedule");
+    if (!list) {
+      list = document.createElement("ul");
+      list.classList.add("list-div");
+      input.parentElement.appendChild(list);
+    }
 
-  if (!amSchedule || !pmSchedule) return;
+    if (val === "") {
+      list.innerHTML = "";
+      return;
+    }
 
-  amSchedule.innerHTML = "";
-  pmSchedule.innerHTML = "";
+    try {
+      const response = await fetch(
+        `https://medixa.onrender.com/search?q=${encodeURIComponent(val)}`
+      );
 
-  for (let i = 1; i <= 12; i++) {
-    const amSlot = document.createElement("div");
-    amSlot.className = "hour-slot";
-    amSlot.dataset.index = i;
-    amSchedule.appendChild(amSlot);
+      const text = await response.text();
 
-    const pmSlot = document.createElement("div");
-    pmSlot.className = "hour-slot";
-    pmSlot.dataset.index = i;
-    pmSchedule.appendChild(pmSlot);
-  }
-
-  data.forEach((item) => {
-    const index = getHourIndex(item.time);
-    const container = item.time.includes("am") ? amSchedule : pmSchedule;
-    const slot = container.querySelector(`.hour-slot[data-index="${index}"]`);
-
-    if (!slot) return;
-
-    slot.classList.add(`${item.color}-slot`);
-
-    const wrapper = document.createElement("div");
-    wrapper.className = "dose-wrapper";
-
-    const dose = document.createElement("span");
-    dose.className = `dose ${item.color}-dose`;
-
-    wrapper.appendChild(dose);
-    slot.appendChild(wrapper);
-  });
-}
-
-function colorTimes(data) {
-  const colors = {
-    pink: "#ff5b83",
-    yellow: "#ffc64d",
-    blue: "#36a5e8",
-    orange: "#ff9f40",
-    green: "#2ecc71",
-    purple: "#9b5de5",
-    cyan: "#00bcd4"
-  };
-
-  data.forEach((item) => {
-    document.querySelectorAll(".time").forEach((t) => {
-      if (t.dataset.time === item.time) {
-        t.style.color = colors[item.color];
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        console.error("Search returned non-JSON:", text);
+        list.innerHTML = "";
+        return;
       }
-    });
+
+      list.innerHTML = "";
+
+      data.forEach((drug) => {
+        const li = document.createElement("li");
+        li.textContent = drug.name;
+        li.addEventListener("click", () => {
+          input.value = drug.name;
+          list.innerHTML = "";
+        });
+        list.appendChild(li);
+      });
+    } catch (error) {
+      console.log("Error during autocomplete:", error);
+      list.innerHTML = "";
+    }
   });
 }
 
-function renderLegend(data) {
-  const legendContainer = document.querySelector(".schedule-legend");
-  if (!legendContainer) return;
+// activate autocomplete for existing inputs
+const allInputs = document.querySelectorAll(".drugs-container input");
+allInputs.forEach(addAutocomplete);
 
-  legendContainer.innerHTML = "";
+// ########## add new drug input ##########
 
-  const added = new Set();
+addBtn.addEventListener("click", () => {
+  const drugField = document.createElement("div");
+  drugField.classList.add("drug-field");
 
-  data.forEach((item) => {
-    if (added.has(item.drug)) return;
+  drugField.innerHTML = `
+    <label for="drug${count}">Search Drug ${count}</label>
+    <input
+      type="text"
+      id="drug${count}"
+      placeholder="Enter drug name"
+    >
+  `;
 
-    added.add(item.drug);
+  conta.appendChild(drugField);
 
-    const legendItem = document.createElement("span");
-    legendItem.innerHTML = `
-      <i class="legend-line ${item.color}-dose"></i>
-      ${item.drug}
+  const newInput = drugField.querySelector("input");
+  addAutocomplete(newInput);
+
+  count++;
+});
+
+// ########## no interaction overlay ##########
+
+function showNoInteractionOverlay() {
+  let overlay = document.getElementById("no-interaction-overlay");
+
+  if (!overlay) {
+    overlay = document.createElement("div");
+    overlay.id = "no-interaction-overlay";
+    overlay.style.cssText = `
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      animation: fadeIn 0.3s ease forwards;
     `;
 
-    legendContainer.appendChild(legendItem);
-  });
-}
-
-if (scheduleRecommendation?.show && scheduleSection) {
-  scheduleSection.style.display = "block";
-
-  let scheduleMessage = document.getElementById("scheduleMessage");
-
-  if (!scheduleMessage) {
-    scheduleMessage = document.createElement("p");
-    scheduleMessage.id = "scheduleMessage";
-    scheduleMessage.style.marginBottom = "20px";
-    scheduleSection.insertBefore(scheduleMessage, scheduleCard);
-  }
-
-  scheduleMessage.textContent = scheduleRecommendation.message || "";
-
-  if (scheduleCard) {
-    scheduleCard.style.display = "block";
-  }
-
-  if (scheduleData.length > 0) {
-    renderSchedule(scheduleData);
-    colorTimes(scheduleData);
-    renderLegend(scheduleData);
-  } else {
-    renderSchedule([]);
-  }
-}
-
-// ########## CHARTS ##########
-
-const results = savedResult?.results || [];
-const firstInteractionFound = results.find(r => r.result?.interaction_found && r.result?.interaction);
-const firstInteraction = firstInteractionFound?.result?.interaction;
-
-if (firstInteraction) {
-  const severity = firstInteraction.severity?.toLowerCase() || "minor";
-
-  let severityData = [0, 0, 0, 0];
-
-  switch (severity) {
-    case "contraindicated":
-      severityData = [100, 0, 0, 0];
-      break;
-    case "major":
-      severityData = [0, 100, 0, 0];
-      break;
-    case "moderate":
-      severityData = [0, 0, 100, 0];
-      break;
-    default:
-      severityData = [0, 0, 0, 100];
-  }
-
-  const riskCanvas = document.querySelector(".risk");
-
-  if (riskCanvas && typeof Chart !== "undefined") {
-    new Chart(riskCanvas, {
-      type: "doughnut",
-      data: {
-        labels: ["Contraindicated", "Major", "Moderate", "Minor"],
-        datasets: [
-          {
-            data: severityData,
-            backgroundColor: ["#36A2EB", "#FF5B83", "#FF9F40", "#FFCD56"],
-            borderWidth: 0
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        cutout: "55%"
-      }
-    });
-  }
-
-  const descriptionText = firstInteraction.description?.toLowerCase() || "";
-  const sideEffectsCanvas = document.querySelector(".effect-chart");
-
-  if (sideEffectsCanvas && typeof Chart !== "undefined") {
-    new Chart(sideEffectsCanvas, {
-      type: "line",
-      data: {
-        labels: ["Bleeding", "Toxicity", "Drowsiness", "Heart Risk", "Other"],
-        datasets: [
-          {
-            label: "Risk Level",
-            data: [
-              descriptionText.includes("bleeding") ? 9 : 1,
-              descriptionText.includes("toxic") ? 8 : 1,
-              descriptionText.includes("drowsiness") ? 7 : 1,
-              descriptionText.includes("heart") ? 8 : 1,
-              descriptionText.includes("interaction") ? 5 : 1
-            ],
-            borderColor: "#6C8EF5",
-            backgroundColor: "rgba(108,142,245,0.25)",
-            fill: true,
-            tension: 0.4
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false }
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            max: 10
-          }
+    overlay.innerHTML = `
+      <style>
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
         }
-      }
+        @keyframes slideUp {
+          from { opacity: 0; transform: translateY(40px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulse {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.06); }
+        }
+        .no-int-box {
+          background: white;
+          border-radius: 24px;
+          padding: 50px 40px;
+          text-align: center;
+          max-width: 380px;
+          width: 90%;
+          animation: slideUp 0.4s ease forwards;
+        }
+        .no-int-icon {
+          width: 85px;
+          height: 85px;
+          background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0 auto 22px;
+          font-size: 38px;
+          animation: pulse 2.5s ease infinite;
+        }
+        .no-int-title {
+          font-size: 1.4rem;
+          font-weight: 700;
+          color: #2e7d32;
+          margin-bottom: 10px;
+        }
+        .no-int-sub {
+          font-size: 0.9rem;
+          color: #6b7280;
+          line-height: 1.6;
+          margin-bottom: 28px;
+        }
+        .no-int-close {
+          background: #2e7d32;
+          color: white;
+          border: none;
+          padding: 12px 32px;
+          border-radius: 50px;
+          font-size: 0.95rem;
+          cursor: pointer;
+          transition: background 0.2s;
+        }
+        .no-int-close:hover {
+          background: #1b5e20;
+        }
+      </style>
+
+      <div class="no-int-box">
+        <div class="no-int-icon">✅</div>
+        <p class="no-int-title">No Interaction Found</p>
+        <p class="no-int-sub">
+          These medications appear to be safe to take together.
+          No known interactions were detected between them.
+        </p>
+        <button class="no-int-close" id="closeNoInt">Got it</button>
+      </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    document.getElementById("closeNoInt").addEventListener("click", () => {
+      overlay.remove();
+    });
+
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) overlay.remove();
     });
   }
 }
 
-// ########## ONE INTERACTION DETAILS AS 4 CARDS ##########
-// ########## ONE INTERACTION DETAILS AS 4 CARDS ##########
+// ########## check interaction ##########
 
-const cardSection = document.querySelector(".card-sect");
+checkBtn.addEventListener("click", async (e) => {
+  e.preventDefault();
 
-if (cardSection) {
-  cardSection.innerHTML = "";
-}
+  const inputs = document.querySelectorAll(".drugs-container input");
+  const drugs = [];
 
-const interactionsFound = results.filter(r => r.result?.interaction_found && r.result?.interaction);
-
-if (interactionsFound.length === 0 && cardSection) {
-  // No interaction overlay
-  const overlay = document.createElement("div");
-  overlay.style.cssText = `
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 60px 40px;
-    text-align: center;
-    animation: fadeInUp 0.6s ease forwards;
-  `;
-
-  overlay.innerHTML = `
-    <style>
-      @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(30px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-      @keyframes pulse {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.05); }
-      }
-      .no-interaction-icon {
-        width: 90px;
-        height: 90px;
-        background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 24px;
-        animation: pulse 2.5s ease infinite;
-        font-size: 40px;
-      }
-      .no-interaction-title {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #2e7d32;
-        margin-bottom: 12px;
-      }
-      .no-interaction-sub {
-        font-size: 0.95rem;
-        color: #6b7280;
-        max-width: 320px;
-        line-height: 1.6;
-      }
-    </style>
-
-    <div class="no-interaction-icon">✅</div>
-    <p class="no-interaction-title">No Interaction Found</p>
-    <p class="no-interaction-sub">
-      These medications appear to be safe to take together. 
-      No known interactions were detected between them.
-    </p>
-  `;
-
-  cardSection.appendChild(overlay);
-
-} else if (cardSection) {
-  interactionsFound.forEach((r) => {
-    const interaction = r.result.interaction;
-
-    const cards = [
-      {
-        title: interaction.severity || "Unknown",
-        value:
-          interaction.severity === "major"
-            ? "High-risk interaction requiring close monitoring."
-            : interaction.severity === "moderate"
-            ? "Moderate interaction that may require caution."
-            : interaction.severity === "minor"
-            ? "Minor interaction with limited clinical effect."
-            : "Interaction severity information."
-      },
-      {
-        title: "Description",
-        value: interaction.description || "No description available."
-      },
-      {
-        title: "Management",
-        value: interaction.management || "No management available."
-      },
-      {
-        title: "Clinical Significance",
-        value: interaction.clinical_significance || "No clinical significance available."
-      }
-    ];
-
-    cards.forEach((item) => {
-      const card = document.createElement("article");
-      card.className = "result-card";
-
-      card.innerHTML = `
-        <div class="status-div">
-          <span class="badge">ID: ${interaction.id || "N/A"}</span>
-        </div>
-
-        <h2>${item.title}</h2>
-
-        <div class="mini-info-card">
-          <p>${item.value}</p>
-        </div>
-
-        <div class="drugs-result">
-          <span class="drug-select">${r.drug1}</span>
-          <span class="drug-select">${r.drug2}</span>
-        </div>
-      `;
-
-      cardSection.appendChild(card);
-    });
+  inputs.forEach((input) => {
+    const value = input.value.trim();
+    if (value !== "") drugs.push(value);
   });
-}
 
+  if (drugs.length < 2) {
+    alert("Please enter at least two drugs");
+    return;
+  }
 
+  try {
+    const token = localStorage.getItem("medixa_token");
+
+    if (!token) {
+      alert("Please login first");
+      window.location.href = "login.html";
+      return;
+    }
+
+    const response = await fetch("https://medixa.onrender.com/check", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({ drugs })
+    });
+
+    const text = await response.text();
+
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      console.error("Check returned non-JSON:", text);
+      alert("Server error. Check Render logs.");
+      return;
+    }
+
+    if (!response.ok) {
+      alert(data.error || "Something went wrong");
+      return;
+    }
+
+    const hasInteraction = data.results?.some(r => r.result?.interaction_found);
+
+    if (!hasInteraction) {
+      showNoInteractionOverlay();
+      return;
+    }
+
+    localStorage.setItem("interactionResult", JSON.stringify(data));
+    window.location.href = "results.html";
+
+  } catch (error) {
+    console.error(error);
+    alert("Failed to fetch interaction data");
+  }
+});
