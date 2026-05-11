@@ -171,14 +171,6 @@ app.get("/chat/conversations/:id/messages", requireAuth, async (req, res) => {
   }
 
   try {
-    const [[chat]] = await db.promise().query(
-      "SELECT id, user_id, created_at, updated_at FROM chat_conversations WHERE id = ? AND user_id = ?",
-      [conversationId, userId]
-    );
-
-    if (!chat) {
-      return res.status(404).json({ error: "Conversation not found" });
-    }
 
     const [[chat]] = await db.promise().query(
       `SELECT 
@@ -189,7 +181,25 @@ app.get("/chat/conversations/:id/messages", requireAuth, async (req, res) => {
         u.name AS user_name
       FROM chat_conversations cc
       JOIN users u ON u.id = cc.user_id
-      WHERE cc.id = ?`,
+      WHERE cc.id = ? AND cc.user_id = ?`,
+      [conversationId, userId]
+    );
+
+    if (!chat) {
+      return res.status(404).json({ error: "Conversation not found" });
+    }
+
+    const [messages] = await db.promise().query(
+      `SELECT 
+        id,
+        conversation_id,
+        sender_id,
+        sender_role,
+        body,
+        sent_at
+      FROM chat_messages
+      WHERE conversation_id = ?
+      ORDER BY sent_at ASC`,
       [conversationId]
     );
 
@@ -197,7 +207,10 @@ app.get("/chat/conversations/:id/messages", requireAuth, async (req, res) => {
 
   } catch (err) {
     console.error("[CHAT] get messages error:", err.message);
-    res.status(500).json({ error: "Failed to load messages" });
+
+    res.status(500).json({
+      error: "Failed to load messages"
+    });
   }
 });
 
