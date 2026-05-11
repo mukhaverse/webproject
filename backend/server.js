@@ -662,6 +662,39 @@ app.post("/check", requireAuth, async (req, res) => {
 
 
 
+
+app.get("/user/history", requireAuth, async (req, res) => {
+  try {
+    const [rows] = await db.promise().query(
+      `SELECT
+        id,
+        drug1,
+        drug2,
+        severity,
+        description,
+        management,
+        clinical_significance,
+        created_at
+      FROM interaction_checks
+      WHERE user_id = ?
+      ORDER BY created_at DESC`,
+      [req.user.id]
+    );
+
+    return res.json(rows);
+  } catch (err) {
+    console.error("[USER HISTORY] error:", err.message);
+    return res.status(500).json({
+      error: "Failed to load history"
+    });
+  }
+});
+
+
+
+
+
+
                               // #### endpoint for interaction ####
 
 app.get("/interaction", async (req, res) => {
