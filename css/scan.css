@@ -83,25 +83,55 @@
   height: 100%;
   object-fit: cover;
 }
-
 .scan-frame {
   position: absolute;
-  top: 22%;
+  top: 38%;
   left: 50%;
-  transform: translateX(-50%);
-  width: 380px;
-  height: 90px;
-  border: 3px solid white;
-  border-radius: 12px;
+  transform: translate(-50%, -50%);
+  width: 420px;
+  height: 120px;
+  border: 3px solid rgba(255,255,255,0.95);
+  border-radius: 18px;
   z-index: 5;
   pointer-events: none;
+
+  box-shadow:
+    0 0 0 999px rgba(0,0,0,0.35),
+    0 0 18px rgba(255,255,255,0.3);
+}
+
+.scan-frame::before,
+.scan-frame::after {
+  content: "";
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  border-style: solid;
+  border-color: white;
+}
+
+.scan-frame::before {
+  top: -3px;
+  left: -3px;
+  border-width: 5px 0 0 5px;
+  border-radius: 16px 0 0 0;
+}
+
+.scan-frame::after {
+  bottom: -3px;
+  right: -3px;
+  border-width: 0 5px 5px 0;
+  border-radius: 0 0 16px 0;
 }
 
 .scan-frame span {
   position: absolute;
-  bottom: -28px;
+  bottom: -34px;
+  left: 0;
   width: 100%;
   text-align: center;
   color: white;
-  font-size: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
 }
