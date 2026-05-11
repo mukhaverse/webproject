@@ -232,9 +232,16 @@ const interaction =
 if (interaction && cardSection) {
   const cards = [
     {
-      title: "Severity",
-      value: interaction.severity || "Unknown"
-    },
+  title: interaction.severity || "Unknown",
+  value:
+    interaction.severity === "major"
+      ? "High-risk interaction requiring close monitoring."
+      : interaction.severity === "moderate"
+      ? "Moderate interaction that may require caution."
+      : interaction.severity === "minor"
+      ? "Minor interaction with limited clinical effect."
+      : "Interaction severity information."
+},
     {
       title: "Description",
       value: interaction.description || "No description available."
