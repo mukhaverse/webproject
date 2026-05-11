@@ -461,30 +461,11 @@ app.post("/check", async (req, res) => {
   }
 
   try {
-    // Step 1: Search for IDs for all drugs
-    const searchResults = await Promise.all(
-      drugs.map(drug =>
-        fetch(`https://drug-interaction-checker.p.rapidapi.com/drugs/search?q=${encodeURIComponent(drug)}`, {
-          headers: {
-            "X-RapidAPI-Key": process.env.RAPIDAPI_KEY,
-            "X-RapidAPI-Host": process.env.RAPIDAPI_HOST
-          }
-        }).then(r => r.json())
-      )
-    );
-
-    const ids = searchResults.map((result, i) => {
-      if (!result?.length) throw new Error(`Drug not found: ${drugs[i]}`);
-      return result[0].id;
-    });
-
-    console.log("Drug IDs:", ids);
-
-    // Step 2: Check all pairs
+    // Check all pairs directly with drug names
     const pairs = [];
-    for (let i = 0; i < ids.length; i++) {
-      for (let j = i + 1; j < ids.length; j++) {
-        pairs.push({ id1: ids[i], id2: ids[j], name1: drugs[i], name2: drugs[j] });
+    for (let i = 0; i < drugs.length; i++) {
+      for (let j = i + 1; j < drugs.length; j++) {
+        pairs.push({ name1: drugs[i], name2: drugs[j] });
       }
     }
 
@@ -497,7 +478,7 @@ app.post("/check", async (req, res) => {
             "X-RapidAPI-Key": process.env.RAPIDAPI_KEY,
             "X-RapidAPI-Host": process.env.RAPIDAPI_HOST
           },
-          body: JSON.stringify({ drug1: pair.id1, drug2: pair.id2 })
+          body: JSON.stringify({ drug1: pair.name1, drug2: pair.name2 })
         }).then(r => r.json())
       )
     );
