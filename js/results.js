@@ -113,16 +113,17 @@ if (scheduleRecommendation?.show && scheduleSection) {
 
   scheduleMessage.textContent = scheduleRecommendation.message || "";
 
-  if (!scheduleRecommendation.canSchedule) {
-    if (scheduleCard) scheduleCard.style.display = "none";
-  } else {
-    if (scheduleCard) scheduleCard.style.display = "block";
+  // show the schedule card even when canSchedule is false
+  if (scheduleCard) {
+    scheduleCard.style.display = "block";
+  }
 
-    if (scheduleData.length > 0) {
-      renderSchedule(scheduleData);
-      colorTimes(scheduleData);
-      renderLegend(scheduleData);
-    }
+  if (scheduleData.length > 0) {
+    renderSchedule(scheduleData);
+    colorTimes(scheduleData);
+    renderLegend(scheduleData);
+  } else {
+    renderSchedule([]);
   }
 }
 
@@ -174,7 +175,6 @@ if (firstInteraction) {
   }
 
   const descriptionText = firstInteraction.description?.toLowerCase() || "";
-
   const sideEffectsCanvas = document.querySelector(".effect-chart");
 
   if (sideEffectsCanvas && typeof Chart !== "undefined") {
@@ -216,7 +216,6 @@ if (firstInteraction) {
   }
 }
 
-// ########## LATEST 4 RESULT CARDS ##########
 // ########## ONE INTERACTION DETAILS AS 4 CARDS ##########
 
 const cardSection = document.querySelector(".card-sect");
@@ -232,16 +231,16 @@ const interaction =
 if (interaction && cardSection) {
   const cards = [
     {
-  title: interaction.severity || "Unknown",
-  value:
-    interaction.severity === "major"
-      ? "High-risk interaction requiring close monitoring."
-      : interaction.severity === "moderate"
-      ? "Moderate interaction that may require caution."
-      : interaction.severity === "minor"
-      ? "Minor interaction with limited clinical effect."
-      : "Interaction severity information."
-},
+      title: interaction.severity || "Unknown",
+      value:
+        interaction.severity === "major"
+          ? "High-risk interaction requiring close monitoring."
+          : interaction.severity === "moderate"
+          ? "Moderate interaction that may require caution."
+          : interaction.severity === "minor"
+          ? "Minor interaction with limited clinical effect."
+          : "Interaction severity information."
+    },
     {
       title: "Description",
       value: interaction.description || "No description available."

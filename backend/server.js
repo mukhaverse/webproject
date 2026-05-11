@@ -536,18 +536,16 @@ app.post("/check", requireAuth, async (req, res) => {
     user_id,
     drug1,
     drug2,
-    has_interaction,
     severity,
     description,
     management,
     clinical_significance
   )
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+  VALUES (?, ?, ?, ?, ?, ?, ?)`,
   [
     userId,
     drugA.normalized,
     drugB.normalized,
-    1,
     interaction.severity || null,
     interaction.description || null,
     interaction.management || null,
