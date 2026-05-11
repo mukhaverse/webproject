@@ -67,8 +67,8 @@ const Auth = {
 
 
 };
-
 window.Auth = Auth;
+
 
 
 
@@ -254,23 +254,35 @@ function applyAuthToSigninEl(signinEl, user) {
 function addRoleTabs(navTabs, user) {
   if (!user || !navTabs) return;
 
+  const currentPage = window.location.pathname.split("/").pop();
+
   if (user.role === "admin") {
 
     if (!navTabs.querySelector(".chat-management-link")) {
       const chatLink = document.createElement("a");
       chatLink.className = "nav-tab nav-role-link chat-management-link";
-      chatLink.href = "/html/chat-management.html";
+      chatLink.href = "/HTML/chat-management.html";
       chatLink.textContent = "Chat Management";
       chatLink.dataset.page = "chat-management";
+
+      if (currentPage === "chat-management.html") {
+        chatLink.classList.add("active");
+      }
+
       navTabs.appendChild(chatLink);
     }
 
     if (!navTabs.querySelector(".drug-management-link")) {
       const drugLink = document.createElement("a");
       drugLink.className = "nav-tab nav-role-link drug-management-link";
-      drugLink.href = "/html/drug-mappings.html";
+      drugLink.href = "/HTML/drug-mappings.html";
       drugLink.textContent = "Admin Panel";
       drugLink.dataset.page = "drug-mappings";
+
+      if (currentPage === "drug-mappings.html") {
+        drugLink.classList.add("active");
+      }
+
       navTabs.appendChild(drugLink);
     }
 
@@ -279,12 +291,16 @@ function addRoleTabs(navTabs, user) {
     if (!navTabs.querySelector(".nav-role-link")) {
       const roleLink = document.createElement("a");
       roleLink.className = "nav-tab nav-role-link";
-      roleLink.href = "/html/ask-pharmacist.html";
+      roleLink.href = "/HTML/ask-pharmacist.html";
       roleLink.textContent = "Ask a Pharmacist";
       roleLink.dataset.page = "ask-pharmacist";
+
+      if (currentPage === "ask-pharmacist.html") {
+        roleLink.classList.add("active");
+      }
+
       navTabs.appendChild(roleLink);
     }
-
   }
 }
 
@@ -292,13 +308,20 @@ function addRoleTabs(navTabs, user) {
 function updateNavAuth() {
   const user = Auth.getUser();
 
-  // Update both desktop and mobile sign-in buttons
   applyAuthToSigninEl(document.getElementById("navSignin"), user);
   applyAuthToSigninEl(document.getElementById("navSigninMobile"), user);
 
-  // Add role-based tabs to both desktop and mobile tab containers
   addRoleTabs(document.getElementById("navTabs"), user);
   addRoleTabs(document.getElementById("navSidebarTabs"), user);
+
+  const active = document.querySelector(".nav-tabs .nav-tab.active");
+  const tabBg = document.getElementById("tabBg");
+
+  if (active && tabBg) {
+    tabBg.style.left = active.offsetLeft + "px";
+    tabBg.style.width = active.offsetWidth + "px";
+    tabBg.style.opacity = "1";
+  }
 }
 
 
