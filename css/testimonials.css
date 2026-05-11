@@ -252,10 +252,32 @@ font-size: 1.2rem;
         order: 2;
         padding: 30px;
         max-height: 400px;
+        position: relative;
+        padding-bottom: 120px;
+        position: relative;
+        mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
     }
 
     .modal-box {
         margin: 25% 20px;
+    }
+
+    .lest-right {
+        padding-bottom: 10rem;
+    }
+
+    .item {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .avatar {
+        justify-content: flex-start;
+        align-items: flex-start;
+    }
+
+    .text {
+        border-left: .5rem solid #2a2765;
     }
 
 }
