@@ -89,103 +89,107 @@ addBtn.addEventListener("click", () => {
 function showNoInteractionOverlay() {
   let overlay = document.getElementById("no-interaction-overlay");
 
-  if (!overlay) {
-    overlay = document.createElement("div");
-    overlay.id = "no-interaction-overlay";
-    overlay.style.cssText = `
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.45);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      animation: fadeIn 0.3s ease forwards;
-    `;
+  if (overlay) return;
 
-    overlay.innerHTML = `
-      <style>
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        @keyframes slideUp {
-          from { opacity: 0; transform: translateY(40px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes pulse {
-          0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.06); }
-        }
-        .no-int-box {
-          background: white;
-          border-radius: 24px;
-          padding: 50px 40px;
-          text-align: center;
-          max-width: 380px;
-          width: 90%;
-          animation: slideUp 0.4s ease forwards;
-        }
-        .no-int-icon {
-          width: 85px;
-          height: 85px;
-          background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin: 0 auto 22px;
-          font-size: 38px;
-          animation: pulse 2.5s ease infinite;
-        }
-        .no-int-title {
-          font-size: 1.4rem;
-          font-weight: 700;
-          color: #2e7d32;
-          margin-bottom: 10px;
-        }
-        .no-int-sub {
-          font-size: 0.9rem;
-          color: #6b7280;
-          line-height: 1.6;
-          margin-bottom: 28px;
-        }
-        .no-int-close {
-          background: #2e7d32;
-          color: white;
-          border: none;
-          padding: 12px 32px;
-          border-radius: 50px;
-          font-size: 0.95rem;
-          cursor: pointer;
-          transition: background 0.2s;
-        }
-        .no-int-close:hover {
-          background: #1b5e20;
-        }
-      </style>
+  overlay = document.createElement("div");
+  overlay.id = "no-interaction-overlay";
+  overlay.style.cssText = `
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    animation: fadeIn 0.3s ease forwards;
+  `;
 
-      <div class="no-int-box">
-        <div class="no-int-icon">✅</div>
-        <p class="no-int-title">No Interaction Found</p>
-        <p class="no-int-sub">
-          These medications appear to be safe to take together.
-          No known interactions were detected between them.
-        </p>
-        <button class="no-int-close" id="closeNoInt">Got it</button>
-      </div>
-    `;
+  overlay.innerHTML = `
+    <style>
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      @keyframes slideUp {
+        from { opacity: 0; transform: translateY(40px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.06); }
+      }
+      .no-int-box {
+        background: white;
+        border-radius: 24px;
+        padding: 50px 40px;
+        text-align: center;
+        max-width: 380px;
+        width: 90%;
+        animation: slideUp 0.4s ease forwards;
+      }
+      .no-int-icon {
+        width: 85px;
+        height: 85px;
+        background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 22px;
+        font-size: 38px;
+        animation: pulse 2.5s ease infinite;
+      }
+      .no-int-title {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #2e7d32;
+        margin-bottom: 10px;
+      }
+      .no-int-sub {
+        font-size: 0.9rem;
+        color: #6b7280;
+        line-height: 1.6;
+        margin-bottom: 28px;
+      }
+      .no-int-close {
+        background: #2e7d32;
+        color: white;
+        border: none;
+        padding: 12px 32px;
+        border-radius: 50px;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .no-int-close:hover {
+        background: #1b5e20;
+      }
+    </style>
 
-    document.body.appendChild(overlay);
+    <div class="no-int-box">
+      <div class="no-int-icon">✅</div>
+      <p class="no-int-title">No Interaction Found</p>
+      <p class="no-int-sub">
+        These medications appear to be safe to take together.
+        No known interactions were detected between them.
+      </p>
+      <button class="no-int-close" id="closeNoInt">Ok</button>
+    </div>
+  `;
 
-    document.getElementById("closeNoInt").addEventListener("click", () => {
+  document.body.appendChild(overlay);
+
+  document.getElementById("closeNoInt").addEventListener("click", () => {
+    overlay.remove();
+    window.location.href = "index.html";
+  });
+
+  overlay.addEventListener("click", (e) => {
+    if (e.target === overlay) {
       overlay.remove();
-    });
-
-    overlay.addEventListener("click", (e) => {
-      if (e.target === overlay) overlay.remove();
-    });
-  }
+      window.location.href = "index.html";
+    }
+  });
 }
 
 // ########## check interaction ##########
