@@ -180,11 +180,16 @@ app.get("/chat/conversations/:id/messages", requireAuth, async (req, res) => {
       return res.status(404).json({ error: "Conversation not found" });
     }
 
-    const [messages] = await db.promise().query(
-      `SELECT id, conversation_id, sender_id, sender_role, body, sent_at
-       FROM chat_messages
-       WHERE conversation_id = ?
-       ORDER BY sent_at ASC`,
+    const [[chat]] = await db.promise().query(
+      `SELECT 
+        cc.id,
+        cc.user_id,
+        cc.created_at,
+        cc.updated_at,
+        u.name AS user_name
+      FROM chat_conversations cc
+      JOIN users u ON u.id = cc.user_id
+      WHERE cc.id = ?`,
       [conversationId]
     );
 

@@ -179,7 +179,8 @@ async function renderSelectedChat() {
   const chat = {
     id: state.chatId,
     created_at: data.chat?.created_at || new Date().toISOString(),
-    messages: data.messages || []
+    messages: data.messages || [],
+     user_name: data.chat?.user_name || "User"
   };
 
   const mode =
@@ -206,7 +207,7 @@ function renderChatRoom({ chat, mode, backHref }) {
       <aside class="room-side">
         <a class="back-link" href="${backHref}">&lt; Back</a>
         <section class="profile-block">
-          <h2>${isAdmin ? "User" : "Pharmacist"}</h2>
+          <h2>${isAdmin ? chat.user_name : "Pharmacist"}</h2>
           <p>Chat Start At: ${formatTime(chat.created_at)}</p>
         </section>
       </aside>

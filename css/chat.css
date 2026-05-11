@@ -178,7 +178,15 @@ input {
   position: absolute;
   top: 76px;
   left: clamp(36px, 8vw, 88px);
-  font-size: 11px;
+  font-size: 10rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+.back-link a{
+  position: absolute;
+  top: 76px;
+  left: clamp(36px, 8vw, 88px);
+  font-size: 30px;
   font-weight: 500;
   text-decoration: none;
 }
