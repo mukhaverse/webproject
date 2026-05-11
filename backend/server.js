@@ -162,7 +162,7 @@ app.post("/chat/start", requireAuth, async (req, res) => {
 
           // get messages for user conversation
 
-router.get("/chat/conversations/:id/messages", requireAuth,async (req, res) => {
+app.get("/chat/conversations/:id/messages", requireAuth, async (req, res) => {
   const convId = parseInt(req.params.id, 10);
 
   if (isNaN(convId)) {
