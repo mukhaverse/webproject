@@ -452,6 +452,7 @@ function buildScheduleRecommendation(normalizedDrugs, results) {
 
                   //############ array of drugs ########
 app.post("/check", async (req, res) => {
+    console.log("CHECK BODY:", JSON.stringify(req.body));
   const { drug1, drug2 } = req.body;
 
   if (!drug1 || !drug2) {
@@ -497,6 +498,7 @@ app.post("/check", async (req, res) => {
           "X-RapidAPI-Key": process.env.RAPIDAPI_KEY,
           "X-RapidAPI-Host": process.env.RAPIDAPI_HOST
         },
+        
         body: JSON.stringify({ drugs: [id1, id2] })
       }
     );
