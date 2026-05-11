@@ -485,3 +485,31 @@ main h1 {
   font-size: 0.9rem;
   color: #4b5563;
 }
+.result-card {
+  margin-top: 1.5rem;
+  background: #ffffff;
+  border-radius: 1.3rem;
+  padding: 1.2rem;
+  box-shadow: 0 8px 25px rgba(24, 39, 75, 0.08);
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.result-card h2 {
+  font-size: 1.5rem;
+  color: #4b5563;
+}
+
+.mini-info-card {
+  background: #f8fbff;
+  border-radius: 1rem;
+  padding: 0.9rem;
+}
+
+.mini-info-card p {
+  line-height: 1.45;
+  font-size: 0.95rem;
+  color: #4b5563;
+}

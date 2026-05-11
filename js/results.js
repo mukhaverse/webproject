@@ -217,6 +217,7 @@ if (firstInteraction) {
 }
 
 // ########## LATEST 4 RESULT CARDS ##########
+// ########## ONE INTERACTION DETAILS AS 4 CARDS ##########
 
 const cardSection = document.querySelector(".card-sect");
 
@@ -224,45 +225,45 @@ if (cardSection) {
   cardSection.innerHTML = "";
 }
 
-const latestCards =
-  savedResult?.latestInteractions?.length > 0
-    ? savedResult.latestInteractions
-    : [];
+const interaction =
+  savedResult?.latestInteractions?.[0] ||
+  savedResult?.results?.[0]?.result?.interaction;
 
-if (latestCards.length > 0 && cardSection) {
-  latestCards.forEach((interaction) => {
+if (interaction && cardSection) {
+  const cards = [
+    {
+      title: "Severity",
+      value: interaction.severity || "Unknown"
+    },
+    {
+      title: "Description",
+      value: interaction.description || "No description available."
+    },
+    {
+      title: "Management",
+      value: interaction.management || "No management available."
+    },
+    {
+      title: "Clinical Significance",
+      value:
+        interaction.clinical_significance ||
+        "No clinical significance available."
+    }
+  ];
+
+  cards.forEach((item) => {
     const card = document.createElement("article");
     card.className = "result-card";
 
-    const dateText = interaction.created_at
-      ? new Date(interaction.created_at).toLocaleDateString("en-US", {
-          day: "2-digit",
-          month: "short"
-        })
-      : "N/A";
-
     card.innerHTML = `
       <div class="status-div">
-        <time class="date">${dateText}</time>
-        <span class="badge">STATUS</span>
+        <span class="badge">ID: ${interaction.id || "N/A"}</span>
       </div>
 
-      <h2>${interaction.severity || "Unknown"}</h2>
-      <p class="uni-id">ID: ${interaction.id || "N/A"}</p>
+      <h2>${item.title}</h2>
 
       <div class="mini-info-card">
-        <h4>Description</h4>
-        <p>${interaction.description || "No description available."}</p>
-      </div>
-
-      <div class="mini-info-card">
-        <h4>Management</h4>
-        <p>${interaction.management || "No management available."}</p>
-      </div>
-
-      <div class="mini-info-card">
-        <h4>Clinical Significance</h4>
-        <p>${interaction.clinical_significance || "No clinical significance available."}</p>
+        <p>${item.value}</p>
       </div>
 
       <div class="drugs-result">
@@ -274,5 +275,5 @@ if (latestCards.length > 0 && cardSection) {
     cardSection.appendChild(card);
   });
 } else if (cardSection) {
-  cardSection.innerHTML = "<p>No latest interactions found.</p>";
+  cardSection.innerHTML = "<p>No interaction details found.</p>";
 }
