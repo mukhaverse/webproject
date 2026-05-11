@@ -465,3 +465,50 @@ async function init() {
 }
 
 document.addEventListener("DOMContentLoaded", init);
+
+// Called by message.js on conversation-updated socket events.
+// Only active on the list view (not inside an open chat room).
+window.onConversationUpdated = async function () {
+  // Don't do anything if the user is inside a chat room
+  if (!state.panel || !document.getElementById("appPanel")) return;
+  // Also skip the user "new chat" view — nothing to refresh there
+  if (state.pageType === "user" && state.view === "new") return;
+
+  try {
+    const fresh = await apiGetConversations();
+
+    // Find which chat IDs are genuinely new or have a newer last message
+    const prevIds  = new Map(state.conversations.map(c => [c.id, c.updated_at]));
+    const newIds   = new Set();
+
+    fresh.forEach(c => {
+      if (!prevIds.has(c.id) || prevIds.get(c.id) !== c.updated_at) {
+        newIds.add(c.id);
+      }
+    });
+
+    state.conversations = fresh;
+
+    // Re-render the list
+    renderList();
+
+    // Animate only the cards that are new or updated
+    if (newIds.size > 0) {
+      document.querySelectorAll(".chat-card").forEach(card => {
+        // Extract the chat id from the card's href
+        const href   = card.dataset.href || "";
+        const match  = href.match(/[?&]chat=([^&]+)/);
+        const cardId = match ? match[1] : null;
+
+        if (cardId && newIds.has(Number(cardId) || cardId)) {
+          card.classList.add("card-updated");
+          card.addEventListener("animationend", () => {
+            card.classList.remove("card-updated");
+          }, { once: true });
+        }
+      });
+    }
+  } catch (err) {
+    console.error("Failed to refresh conversation list:", err);
+  }
+};

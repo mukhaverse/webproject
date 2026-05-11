@@ -17,6 +17,28 @@ document.addEventListener("DOMContentLoaded", () => {
   loadAdminInfo();
 });
 
+// Called by message.js whenever a conversation-updated socket event fires
+window.onUnreadCountUpdated = async function () {
+  try {
+    const res   = await fetch(`${API_BASE}/admin/stats`, { headers: Auth.headers() });
+    const stats = await res.json();
+    const el    = document.getElementById("count-unread");
+    if (!el) return;
+
+    const newCount = stats.unreadMessages ?? "!";
+    if (String(el.textContent) === String(newCount)) return; // nothing changed
+
+    el.textContent = newCount;
+
+    // brief pop animation so the change is noticeable
+    el.classList.remove("count-pop");
+    void el.offsetWidth; // reflow to restart animation
+    el.classList.add("count-pop");
+  } catch (err) {
+    console.error("Failed to refresh unread count:", err.message);
+  }
+};
+
 
 
 

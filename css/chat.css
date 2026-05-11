@@ -363,3 +363,15 @@ input {
     max-width: 86%;
   }
 }
+
+
+
+/* ── Real-time card update animation ── */
+@keyframes cardUpdated {
+  0%   { opacity: 0.4; transform: translateY(-5px); background-color: #eef1f8; }
+  60%  { opacity: 1;   transform: translateY(0);    background-color: #eef1f8; }
+  100% {                                             background-color: transparent; }
+}
+.chat-card.card-updated {
+  animation: cardUpdated 0.45s ease forwards;
+}

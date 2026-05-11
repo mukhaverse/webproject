@@ -53,7 +53,15 @@ socket.on("receive-message", (message) => {
 
 // update conversations for admin
 socket.on("conversation-updated", () => {
-  console.log("Conversation list updated");
+  // chat-management.html: refresh card list live
+  if (window.onConversationUpdated) {
+    window.onConversationUpdated();
+  }
+
+  // drug-mappings.html: refresh unread count badge live
+  if (window.onUnreadCountUpdated) {
+    window.onUnreadCountUpdated();
+  }
 });
 
 //make functions global
