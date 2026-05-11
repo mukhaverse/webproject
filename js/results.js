@@ -1,11 +1,4 @@
-// LOAD RESULT FROM INTERACTION PAGE
 const savedResult = JSON.parse(localStorage.getItem("interactionResult"));
-
-if (!savedResult) {
-  console.error("No interactionResult found in localStorage");
-}
-
-// ########## SCHEDULE ##########
 
 const scheduleRecommendation = savedResult?.scheduleRecommendation;
 const scheduleData = scheduleRecommendation?.scheduleData || [];
@@ -85,7 +78,6 @@ function colorTimes(data) {
 
 function renderLegend(data) {
   const legendContainer = document.querySelector(".schedule-legend");
-
   if (!legendContainer) return;
 
   legendContainer.innerHTML = "";
@@ -98,7 +90,6 @@ function renderLegend(data) {
     added.add(item.drug);
 
     const legendItem = document.createElement("span");
-
     legendItem.innerHTML = `
       <i class="legend-line ${item.color}-dose"></i>
       ${item.drug}
@@ -123,13 +114,9 @@ if (scheduleRecommendation?.show && scheduleSection) {
   scheduleMessage.textContent = scheduleRecommendation.message || "";
 
   if (!scheduleRecommendation.canSchedule) {
-    if (scheduleCard) {
-      scheduleCard.style.display = "none";
-    }
+    if (scheduleCard) scheduleCard.style.display = "none";
   } else {
-    if (scheduleCard) {
-      scheduleCard.style.display = "block";
-    }
+    if (scheduleCard) scheduleCard.style.display = "block";
 
     if (scheduleData.length > 0) {
       renderSchedule(scheduleData);
@@ -139,7 +126,7 @@ if (scheduleRecommendation?.show && scheduleSection) {
   }
 }
 
-// ########## DYNAMIC CHARTS ##########
+// ########## CHARTS ##########
 
 const firstInteraction =
   savedResult?.results?.[0]?.result?.interaction ||
@@ -181,69 +168,30 @@ if (firstInteraction) {
       },
       options: {
         responsive: true,
-        cutout: "55%",
-        plugins: {
-          legend: {
-            display: true
-          }
-        }
+        cutout: "55%"
       }
     });
   }
 
   const descriptionText = firstInteraction.description?.toLowerCase() || "";
 
-  let bleeding = 1;
-  let toxicity = 1;
-  let drowsiness = 1;
-  let heartRisk = 1;
-  let other = 1;
-
-  if (
-    descriptionText.includes("bleeding") ||
-    descriptionText.includes("hemorrhage")
-  ) {
-    bleeding = 9;
-  }
-
-  if (
-    descriptionText.includes("toxicity") ||
-    descriptionText.includes("toxic")
-  ) {
-    toxicity = 8;
-  }
-
-  if (
-    descriptionText.includes("drowsiness") ||
-    descriptionText.includes("sedation")
-  ) {
-    drowsiness = 7;
-  }
-
-  if (
-    descriptionText.includes("heart") ||
-    descriptionText.includes("cardiac")
-  ) {
-    heartRisk = 8;
-  }
-
-  if (descriptionText.includes("interaction")) {
-    other = 5;
-  }
-
   const sideEffectsCanvas = document.querySelector(".effect-chart");
 
   if (sideEffectsCanvas && typeof Chart !== "undefined") {
-    const sideEffectsCtx = sideEffectsCanvas.getContext("2d");
-
-    new Chart(sideEffectsCtx, {
+    new Chart(sideEffectsCanvas, {
       type: "line",
       data: {
         labels: ["Bleeding", "Toxicity", "Drowsiness", "Heart Risk", "Other"],
         datasets: [
           {
             label: "Risk Level",
-            data: [bleeding, toxicity, drowsiness, heartRisk, other],
+            data: [
+              descriptionText.includes("bleeding") ? 9 : 1,
+              descriptionText.includes("toxic") ? 8 : 1,
+              descriptionText.includes("drowsiness") ? 7 : 1,
+              descriptionText.includes("heart") ? 8 : 1,
+              descriptionText.includes("interaction") ? 5 : 1
+            ],
             borderColor: "#6C8EF5",
             backgroundColor: "rgba(108,142,245,0.25)",
             fill: true,
@@ -255,9 +203,7 @@ if (firstInteraction) {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: {
-            display: false
-          }
+          legend: { display: false }
         },
         scales: {
           y: {
@@ -279,7 +225,7 @@ if (cardSection) {
 }
 
 const latestCards =
-  savedResult?.latestInteractions && savedResult.latestInteractions.length > 0
+  savedResult?.latestInteractions?.length > 0
     ? savedResult.latestInteractions
     : [];
 
@@ -288,14 +234,12 @@ if (latestCards.length > 0 && cardSection) {
     const card = document.createElement("article");
     card.className = "result-card";
 
-    const createdDate = interaction.created_at
-      ? new Date(interaction.created_at)
-      : new Date();
-
-    const dateText = createdDate.toLocaleDateString("en-US", {
-      day: "2-digit",
-      month: "short"
-    });
+    const dateText = interaction.created_at
+      ? new Date(interaction.created_at).toLocaleDateString("en-US", {
+          day: "2-digit",
+          month: "short"
+        })
+      : "N/A";
 
     card.innerHTML = `
       <div class="status-div">
@@ -303,27 +247,22 @@ if (latestCards.length > 0 && cardSection) {
         <span class="badge">STATUS</span>
       </div>
 
-      <div class="info-div">
-        <h2>${interaction.severity || "Unknown"}</h2>
-        <p class="uni-id">ID: ${interaction.id || "N/A"}</p>
+      <h2>${interaction.severity || "Unknown"}</h2>
+      <p class="uni-id">ID: ${interaction.id || "N/A"}</p>
 
-        <p>
-          <strong>Description:</strong>
-          ${interaction.description || "No description available."}
-        </p>
+      <div class="mini-info-card">
+        <h4>Description</h4>
+        <p>${interaction.description || "No description available."}</p>
+      </div>
 
-        <p>
-          <strong>Management:</strong>
-          ${interaction.management || "No management available."}
-        </p>
+      <div class="mini-info-card">
+        <h4>Management</h4>
+        <p>${interaction.management || "No management available."}</p>
+      </div>
 
-        <p>
-          <strong>Clinical:</strong>
-          ${
-            interaction.clinical_significance ||
-            "No clinical significance available."
-          }
-        </p>
+      <div class="mini-info-card">
+        <h4>Clinical Significance</h4>
+        <p>${interaction.clinical_significance || "No clinical significance available."}</p>
       </div>
 
       <div class="drugs-result">
