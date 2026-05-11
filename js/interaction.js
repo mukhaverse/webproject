@@ -4,84 +4,23 @@ const addBtn = document.getElementById("add-btn");
 const conta = document.querySelector(".drugs-container");
 const checkBtn = document.getElementById("check-but");
 
-// ########## apply autocomplete to inputs ##########
-
-function addAutocomplete(input) {
-  input.addEventListener("input", async () => {
-    const val = input.value.trim();
-
-    let list = input.parentElement.querySelector(".list-div");
-
-    if (!list) {
-      list = document.createElement("ul");
-      list.classList.add("list-div");
-      input.parentElement.appendChild(list);
-    }
-
-    if (val === "") {
-      list.innerHTML = "";
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        `https://medixa.onrender.com/search?q=${encodeURIComponent(val)}`
-      );
-
-      const text = await response.text();
-
-      let data;
-      try {
-        data = JSON.parse(text);
-      } catch {
-        console.error("Search returned non-JSON:", text);
-        list.innerHTML = "";
-        return;
-      }
-
-      list.innerHTML = "";
-
-      data.forEach((drug) => {
-        const li = document.createElement("li");
-        li.textContent = drug.name;
-        li.addEventListener("click", () => {
-          input.value = drug.name;
-          list.innerHTML = "";
-        });
-        list.appendChild(li);
-      });
-    } catch (error) {
-      console.log("Error during autocomplete:", error);
-      list.innerHTML = "";
-    }
-  });
-}
-
-// activate autocomplete for existing inputs
-const allInputs = document.querySelectorAll(".drugs-container input");
-allInputs.forEach(addAutocomplete);
-
 // ########## add new drug input ##########
 
-// addBtn.addEventListener("click", () => {
-//   const drugField = document.createElement("div");
-//   drugField.classList.add("drug-field");
+addBtn.addEventListener("click", () => {
+  const drugField = document.createElement("div");
+  drugField.classList.add("drug-field");
 
-//   drugField.innerHTML = `
-//     <label for="drug${count}">Search Drug ${count}</label>
-//     <input type="text" id="drug${count}" placeholder="Enter drug name">
-//     <div>
-//       <ul class="list-div"></ul>
-//     </div>
-//   `;
+  drugField.innerHTML = `
+    <label for="drug${count}">Search Drug ${count}</label>
+    <input type="text" id="drug${count}" placeholder="Enter drug name">
+    <div>
+      <ul class="list-div"></ul>
+    </div>
+  `;
 
-//   conta.appendChild(drugField);
-
-//   const newInput = drugField.querySelector("input");
-//   addAutocomplete(newInput);
-
-//   count++;
-// });
+  conta.appendChild(drugField);
+  count++;
+});
 
 // ########## no interaction overlay ##########
 
