@@ -219,67 +219,37 @@ if (firstInteraction) {
 // ########## ONE INTERACTION DETAILS AS 4 CARDS ##########
 
 const cardSection = document.querySelector(".card-sect");
+if (cardSection) cardSection.innerHTML = "";
 
-if (cardSection) {
-  cardSection.innerHTML = "";
-}
+const results = savedResult?.results || [];
+const interactionsFound = results.filter(r => r.result?.interaction_found && r.result?.interaction);
 
-const interaction =
-  savedResult?.latestInteractions?.[0] ||
-  savedResult?.results?.[0]?.result?.interaction;
+if (interactionsFound.length === 0 && cardSection) {
+  cardSection.innerHTML = "<p>No interactions found between these drugs.</p>";
+} else if (cardSection) {
+  interactionsFound.forEach(r => {
+    const interaction = r.result.interaction;
 
-if (interaction && cardSection) {
-  const cards = [
-    {
-      title: interaction.severity || "Unknown",
-      value:
-        interaction.severity === "major"
-          ? "High-risk interaction requiring close monitoring."
-          : interaction.severity === "moderate"
-          ? "Moderate interaction that may require caution."
-          : interaction.severity === "minor"
-          ? "Minor interaction with limited clinical effect."
-          : "Interaction severity information."
-    },
-    {
-      title: "Description",
-      value: interaction.description || "No description available."
-    },
-    {
-      title: "Management",
-      value: interaction.management || "No management available."
-    },
-    {
-      title: "Clinical Significance",
-      value:
-        interaction.clinical_significance ||
-        "No clinical significance available."
-    }
-  ];
-
-  cards.forEach((item) => {
     const card = document.createElement("article");
     card.className = "result-card";
 
     card.innerHTML = `
       <div class="status-div">
-        <span class="badge">ID: ${interaction.id || "N/A"}</span>
+        <span class="badge">${interaction.severity || "Unknown"}</span>
       </div>
-
-      <h2>${item.title}</h2>
-
+      <h2>${r.drug1} + ${r.drug2}</h2>
       <div class="mini-info-card">
-        <p>${item.value}</p>
+        <p>${interaction.description || "No description available."}</p>
       </div>
-
+      <div class="mini-info-card">
+        <p><strong>Management:</strong> ${interaction.management || "N/A"}</p>
+      </div>
       <div class="drugs-result">
-        <span class="drug-select">${interaction.drug1 || "Drug 1"}</span>
-        <span class="drug-select">${interaction.drug2 || "Drug 2"}</span>
+        <span class="drug-select">${r.drug1}</span>
+        <span class="drug-select">${r.drug2}</span>
       </div>
     `;
 
     cardSection.appendChild(card);
   });
-} else if (cardSection) {
-  cardSection.innerHTML = "<p>No interaction details found.</p>";
 }
