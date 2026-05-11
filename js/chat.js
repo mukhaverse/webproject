@@ -69,14 +69,41 @@ async function apiGetConversations() {
   return fetchJSON("/chat/conversations");
 }
 
+
+
+
+
+
+
+
+// async function apiGetMessages(chatId) {
+//   if (state.pageType === "admin") {
+//     const messages = await fetchJSON(`/admin/chat/conversations/${chatId}/messages`);
+//     return { messages };
+//   }
+
+//   return fetchJSON(`/chat/conversations/${chatId}/messages`);
+// }
+
+
+
+
 async function apiGetMessages(chatId) {
   if (state.pageType === "admin") {
-    const messages = await fetchJSON(`/admin/chat/conversations/${chatId}/messages`);
-    return { messages };
+    return fetchJSON(`/admin/chat/conversations/${chatId}/messages`);
+    // ✅ just return it directly — server already sends { chat, messages }
   }
 
   return fetchJSON(`/chat/conversations/${chatId}/messages`);
 }
+
+
+
+
+
+
+
+
 
 async function apiCreateChat(body) {
   return fetchJSON("/chat/start", {
@@ -84,6 +111,9 @@ async function apiCreateChat(body) {
     body: JSON.stringify({ body })
   });
 }
+
+
+
 
 async function apiSendMessage(chatId, body) {
   if (state.pageType === "admin") {
