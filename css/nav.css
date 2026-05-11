@@ -170,12 +170,6 @@
   pointer-events: all;
 }
 
-
-
-
-
-
-
 .nav-sidebar {
   position: fixed;
   top: 0;
@@ -204,16 +198,10 @@
   align-items: center;
   justify-content: space-between;
   padding: 20px 20px 16px;
-  /* border-bottom: 1px solid #f0f0f555; */
 }
 .nav-sidebar-logo {
-display: none;
+  display: none;
 }
-/* .nav-sidebar-logo img {
-  width: 100%;
-  height: auto;
-  display: block;
-} */
 .nav-sidebar-close {
   width: 34px;
   height: 34px;
@@ -261,7 +249,6 @@ display: none;
 
 .nav-sidebar-bottom {
   padding: 20px 16px;
-  /* border-top: 1px solid #f0f0f555; */
 }
 .nav-sidebar-bottom .nav-signin {
   display: block;
@@ -270,7 +257,6 @@ display: none;
   padding: 12px 22px;
   font-size: 0.9rem;
   box-sizing: border-box;
-  /* background-color: #f4f7fa; */
   border: 2px solid #f4f7fa;
   color: #f4f7fa;
 }
@@ -281,7 +267,6 @@ display: none;
 @media (max-width: 768px) {
   .nav {
     justify-content: space-between;
-    /* padding: 0 16px; */
     height: 65px;
   }
 
@@ -294,13 +279,9 @@ display: none;
     width: auto;
   }
 
-
   .nav-logo {
-  width: 70%;
-
-}
-
-
+    width: 70%;
+  }
 
   .nav-tabs {
     display: none;
@@ -314,9 +295,6 @@ display: none;
     display: flex;
   }
 }
-
-
-
 
 @media (max-width: 992px) and (min-width: 769px) {
   .nav {
@@ -335,14 +313,7 @@ display: none;
 }
 
 
-
-
-
-
-
-
-
-
+/* ── Full-screen mobile menu ── */
 
 #mobileMenu {
   display: none;
@@ -361,19 +332,23 @@ display: none;
   position: absolute;
   inset: 0;
   background: #1e1b4b;
+
+  /* Key fix: use flex column with safe padding so nothing goes off-screen */
   display: flex;
   flex-direction: column;
-  padding: 36px 32px 48px;
-
-  
+  padding: 36px 32px 0;
+  /* Reserve space at the bottom for the sign-in button */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  box-sizing: border-box;
+  overflow: hidden; /* no scrolling */
 }
-
 
 .mm-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 56px;
+  margin-bottom: 40px;
+  flex-shrink: 0;
 }
 
 .mm-logo {
@@ -394,32 +369,35 @@ display: none;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
-
 
 .mm-links {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
+  flex: 0 0 auto; /* don't grow — sit naturally after mm-top */
 }
 
 .mm-link {
   color: rgba(255,255,255,0.55);
   text-decoration: none;
-  font-size: clamp(36px, 10vw, 56px);
+  font-size: clamp(28px, 9vw, 52px);
   font-family: 'Bebas Neue', sans-serif;
   letter-spacing: 0.02em;
   line-height: 1.2;
   transition: color 0.15s;
+  flex-shrink: 0;
 }
 
 .mm-link:hover {
   color: #ffffff;
 }
 
-
+/* ── Sign-in / username button — sits just below the links ── */
 .mm-bottom {
-  margin-top: auto;
+  flex-shrink: 0;
+  padding: 28px 0 0;
 }
 
 .mm-signin {
@@ -432,6 +410,7 @@ display: none;
   border-radius: 8px;
   display: inline-block;
   transition: color 0.2s, border-color 0.2s;
+  cursor: pointer;
 }
 
 .mm-signin:hover {
@@ -440,11 +419,7 @@ display: none;
 }
 
 
-
-
-
-
-
+/* ── Hamburger ── */
 .nav-hamburger {
   background: none;
   border: none;
@@ -483,7 +458,7 @@ display: none;
 }
 
 
-
+/* Hide the old sidebar — the new full-screen menu replaces it */
 .nav-sidebar,
 .nav-sidebar-overlay {
   display: none !important;

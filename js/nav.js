@@ -2,54 +2,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const user = (typeof Auth !== "undefined") ? Auth.getUser() : null;
 
-
+  // ── Determine path prefix based on current location ──
+  const inHtmlFolder = window.location.pathname.includes("/html/");
+  const prefix = inHtmlFolder ? "" : "html/";
+  const rootPrefix = inHtmlFolder ? "../" : "";
 
   if (user && user.role === "user") {
     
     const navTabs = document.getElementById("navTabs");
     if (navTabs && !navTabs.querySelector('[data-page="profile"]')) {
       const profileTab = document.createElement("a");
-      profileTab.href = "html/profile.html";
+      profileTab.href = `${prefix}profile.html`;
       profileTab.className = "nav-tab";
       profileTab.dataset.page = "profile";
       profileTab.textContent = "Profile";
-
-
-      if (window.location.pathname.includes("/html/")) {
-        profileTab.href = "profile.html";
-      }
-
       navTabs.appendChild(profileTab);
-
     }
 
-
-
-
-
-    
     const sidebarTabs = document.getElementById("navSidebarTabs");
     if (sidebarTabs && !sidebarTabs.querySelector('[data-page="profile"]')) {
-      
       const profileSideTab = document.createElement("a");
-      profileSideTab.href  = "html/profile.html";
-      profileSideTab.className  = "nav-tab";
+      profileSideTab.href = `${prefix}profile.html`;
+      profileSideTab.className = "nav-tab";
       profileSideTab.dataset.page = "profile";
-      profileSideTab.textContent  = "Profile";
-
-
-      if (window.location.pathname.includes("/html/")) {
-        profileSideTab.href = "profile.html";
-      }
-
+      profileSideTab.textContent = "Profile";
       sidebarTabs.appendChild(profileSideTab);
-
     }
-
   }
 
-
-
+  // ── Desktop tab sliding background ──
   const tabBg  = document.getElementById("tabBg");
   const tabs   = document.querySelectorAll(".nav-tabs .nav-tab");
   const active = document.querySelector(".nav-tabs .nav-tab.active");
@@ -67,40 +48,65 @@ document.addEventListener("DOMContentLoaded", () => {
     tab.addEventListener("mouseleave", () => active && moveTabBg(active));
   });
 
-
-
-
-
-
-
+  // ── Mobile menu ──
   const hamburger = document.getElementById("navHamburger");
   if (!hamburger) return;
 
+  // Build correct links based on folder depth
   const profileLink = user && user.role === "user"
-    ? `<a href="${window.location.pathname.includes("/html/") ? "profile.html" : "html/profile.html"}" class="mm-link">Profile</a>`
+    ? `<a href="${prefix}profile.html" class="mm-link">Profile</a>`
     : "";
+
+  // Determine sign-in label and href
+  let signinLabel, signinHref, isLoggedIn;
+  if (user) {
+    signinLabel = user.name.split(" ")[0];
+    signinHref  = "#";
+    isLoggedIn  = true;
+  } else {
+    signinLabel = "Sign In";
+    signinHref  = `${prefix}login.html`;
+    isLoggedIn  = false;
+  }
 
   const menu = document.createElement("div");
   menu.id = "mobileMenu";
   menu.innerHTML = `
     <div class="mm-panel">
       <div class="mm-top">
-        <img src="../assets/medixa.svg" alt="Medixa" class="mm-logo">
+        <img src="${rootPrefix}assets/medixa.svg" alt="Medixa" class="mm-logo">
         <button class="mm-close" id="mmClose">×</button>
       </div>
       <nav class="mm-links">
-        <a href="../index.html" class="mm-link">Home</a>
-        <a href="html/interactionCheck.html" class="mm-link">Check Interactions</a>
-        <a href="html/about.html" class="mm-link">About Us</a>
-        <a href="html/contact.html" class="mm-link">Contact Us</a>
+        <a href="${rootPrefix}index.html" class="mm-link">Home</a>
+        <a href="${prefix}interactionCheck.html" class="mm-link">Check Interactions</a>
+        <a href="${prefix}about.html" class="mm-link">About Us</a>
+        <a href="${prefix}contact.html" class="mm-link">Contact Us</a>
         ${profileLink}
       </nav>
       <div class="mm-bottom">
-        <a href="#" class="mm-signin">Sign In</a>
+        <a href="${signinHref}" class="mm-signin" id="mmSignin">${signinLabel}</a>
       </div>
     </div>
   `;
   document.body.appendChild(menu);
+
+  // Wire up logout for logged-in users
+  if (isLoggedIn) {
+    const mmSignin = menu.querySelector("#mmSignin");
+    mmSignin.addEventListener("click", (e) => {
+      e.preventDefault();
+      const panels = document.querySelectorAll(".panel");
+      if (typeof gsap !== "undefined" && panels.length) {
+        gsap.to(panels, {
+          y: "0%", stagger: 0.1, duration: 0.3,
+          onComplete: () => Auth.logout()
+        });
+      } else {
+        Auth.logout();
+      }
+    });
+  }
 
   const panel    = menu.querySelector(".mm-panel");
   const closeBtn = menu.querySelector("#mmClose");
@@ -108,10 +114,6 @@ document.addEventListener("DOMContentLoaded", () => {
   let isOpen     = false;
 
   gsap.set(panel, { y: "100%" });
-
-
-
-
 
   function openMenu() {
     if (isOpen) return;
@@ -131,9 +133,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
-
-
-
 
   function closeMenu() {
     if (!isOpen) return;
@@ -159,7 +158,4 @@ document.addEventListener("DOMContentLoaded", () => {
   hamburger.addEventListener("click", openMenu);
   closeBtn.addEventListener("click", closeMenu);
   document.addEventListener("keydown", e => e.key === "Escape" && closeMenu());
-
-
-  
 });
