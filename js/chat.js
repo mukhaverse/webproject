@@ -239,32 +239,27 @@ function renderChatRoom({ chat, mode, backHref }) {
   const isAdmin = mode.startsWith("admin");
   const canSend = mode === "admin-unread" || mode === "user-new" || mode === "user-history";
 
-  // Render inside the panel only — keeps scripts, nav, and sidebar alive
-  // so the Back link and all event listeners continue to work
-  const panel = document.getElementById("appPanel");
-  if (panel) {
-    panel.innerHTML = `
-      <div class="chat-room">
-        <aside class="room-side">
-          <a class="back-link" href="${backHref}">&lt; Back</a>
-          <section class="profile-block">
-            <h2>${isAdmin ? escapeHtml(chat.user_name) : "Pharmacist"}</h2>
-            <p>Chat Start At: ${formatTime(chat.created_at)}</p>
-          </section>
-        </aside>
-
-        <section class="room-main">
-          <div class="message-list" id="messageList">
-            ${chat.messages.length
-              ? chat.messages.map((message) => messageTemplate(message)).join("")
-              : `<p class="chat-note">Start your chat by sending a message.</p>`}
-          </div>
-
-          ${canSend ? messageFormTemplate(mode) : `<p class="chat-note">You can't send messages.</p>`}
+  document.body.innerHTML = `
+    <main class="chat-room">
+      <aside class="room-side">
+        <a class="back-link" href="${backHref}">&lt; Back</a>
+        <section class="profile-block">
+          <h2>${isAdmin ? chat.user_name : "Pharmacist"}</h2>
+          <p>Chat Start At: ${formatTime(chat.created_at)}</p>
         </section>
-      </div>
-    `;
-  }
+      </aside>
+
+      <section class="room-main">
+        <div class="message-list" id="messageList">
+          ${chat.messages.length
+            ? chat.messages.map((message) => messageTemplate(message)).join("")
+            : `<p class="chat-note">Start your chat by sending a message.</p>`}
+        </div>
+
+        ${canSend ? messageFormTemplate(mode) : `<p class="chat-note">You can’t send messages.</p>`}
+      </section>
+    </main>
+  `;
 
   bindMessageForm(mode, chat.id);
 
