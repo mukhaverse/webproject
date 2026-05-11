@@ -464,72 +464,61 @@ app.post("/check", requireAuth, async (req, res) => {
   try {
     const normalizedDrugs = [];
 
+    // normalize all drugs
     for (const drug of drugs) {
       const normalized = await normalizeDrug(drug, db);
 
       normalizedDrugs.push({
         original: drug,
-        normalized: normalized
+        normalized
       });
     }
 
     const results = [];
 
+    // check every pair
     for (let i = 0; i < normalizedDrugs.length; i++) {
       for (let j = i + 1; j < normalizedDrugs.length; j++) {
+
         const drugA = normalizedDrugs[i];
         const drugB = normalizedDrugs[j];
 
-        const data = await checkInteraction(drugA.normalized, drugB.normalized);
+        const data = await checkInteraction(
+          drugA.normalized,
+          drugB.normalized
+        );
 
-        if (data.message && data.message.includes("not found in database")) {
-          const failedDrugs = [];
-
-          if (data.message.toLowerCase().includes(drugA.normalized.toLowerCase())) {
-            failedDrugs.push(drugA);
-          }
-
-          if (data.message.toLowerCase().includes(drugB.normalized.toLowerCase())) {
-            failedDrugs.push(drugB);
-          }
-
-          if (failedDrugs.length === 0) {
-            failedDrugs.push(drugA, drugB);
-          }
-
-          for (const failed of failedDrugs) {
-            db.query(
-              `INSERT INTO unresolved_drugs (drug_name, status)
-               VALUES (?, 'pending')
-               ON DUPLICATE KEY UPDATE attempted_at = NOW()`,
-              [failed.original],
-              (err) => {
-                if (err) {
-                  console.error("[DB] Failed to log unresolved drug:", err.message);
-                }
-              }
-            );
-          }
-        }
-
+        // save interaction in DB
         if (data.interaction) {
+
           const interaction = data.interaction;
 
-                const sql = `
-                INSERT INTO interaction_checks
-                (user_id, drug1, drug2, severity, description, management, clinical_significance)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-              `;
+          const [insertResult] = await db.promise().query(
+            `INSERT INTO interaction_checks
+            (
+              user_id,
+              drug1,
+              drug2,
+              severity,
+              description,
+              management,
+              clinical_significance
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            [
+              userId,
+              drugA.normalized,
+              drugB.normalized,
+              interaction.severity || null,
+              interaction.description || null,
+              interaction.management || null,
+              interaction.clinical_significance || null
+            ]
+          );
 
-              db.query(sql, [
-                userId,
-                drugA.normalized,
-                drugB.normalized,
-                interaction.severity,
-                interaction.description,
-                interaction.management,
-                interaction.clinical_significance
-              ]);
+          // attach DB id + created_at to returned interaction
+          interaction.id = insertResult.insertId;
+          interaction.created_at = new Date().toISOString();
         }
 
         results.push({
@@ -540,28 +529,53 @@ app.post("/check", requireAuth, async (req, res) => {
       }
     }
 
+    // latest 4 interactions for this user
+    const [latestInteractions] = await db.promise().query(
+      `SELECT
+        id,
+        drug1,
+        drug2,
+        severity,
+        description,
+        management,
+        clinical_significance,
+        created_at
+      FROM interaction_checks
+      WHERE user_id = ?
+      ORDER BY created_at DESC
+      LIMIT 4`,
+      [userId]
+    );
+
+    // schedule recommendation
     const scheduleRecommendation =
       buildScheduleRecommendation(
         normalizedDrugs,
         results
       );
 
-    res.json({
+    return res.json({
       count: results.length,
-      results: results,
+
+      // current interaction results
+      results,
+
+      // latest 4 cards from DB
+      latestInteractions,
+
+      // schedule info
       scheduleRecommendation
     });
 
   } catch (error) {
+
     console.error("ERROR:", error.message);
 
-    res.status(500).json({
+    return res.status(500).json({
       error: "Failed to fetch interaction data"
     });
   }
 });
-
-
 
 
 

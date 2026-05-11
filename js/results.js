@@ -1,28 +1,20 @@
-// GSAP ANIMATION....
-
-
-
-
 // LOAD RESULT FROM INTERACTION PAGE
-const savedResult =
-  JSON.parse(localStorage.getItem("interactionResult"));
+const savedResult = JSON.parse(localStorage.getItem("interactionResult"));
 
+if (!savedResult) {
+  console.error("No interactionResult found in localStorage");
+}
 
+// ########## SCHEDULE ##########
 
+const scheduleRecommendation = savedResult?.scheduleRecommendation;
+const scheduleData = scheduleRecommendation?.scheduleData || [];
 
-// SCHEDULE RENDERING
-const scheduleData =
-  savedResult?.scheduleRecommendation?.scheduleData;
+const scheduleSection = document.querySelector(".schedule-section");
+const scheduleCard = document.querySelector(".schedule-card");
 
-if (!scheduleData || scheduleData.length === 0) {
-  console.error("Backend did not return schedule data");
-
-  const scheduleSection =
-    document.querySelector(".schedule-section");
-
-  if (scheduleSection) {
-    scheduleSection.style.display = "none";
-  }
+if (scheduleSection) {
+  scheduleSection.style.display = "none";
 }
 
 function getHourIndex(time) {
@@ -51,7 +43,7 @@ function renderSchedule(data) {
     pmSchedule.appendChild(pmSlot);
   }
 
-  data.forEach(item => {
+  data.forEach((item) => {
     const index = getHourIndex(item.time);
     const container = item.time.includes("am") ? amSchedule : pmSchedule;
     const slot = container.querySelector(`.hour-slot[data-index="${index}"]`);
@@ -82,8 +74,8 @@ function colorTimes(data) {
     cyan: "#00bcd4"
   };
 
-  data.forEach(item => {
-    document.querySelectorAll(".time").forEach(t => {
+  data.forEach((item) => {
+    document.querySelectorAll(".time").forEach((t) => {
       if (t.dataset.time === item.time) {
         t.style.color = colors[item.color];
       }
@@ -91,283 +83,8 @@ function colorTimes(data) {
   });
 }
 
-
-
-
-// DYNAMIC SCHEDULE FROM BACKEND
-const scheduleSection = document.querySelector(".schedule-section");
-const scheduleCard = document.querySelector(".schedule-card");
-
-if (scheduleSection) {
-  scheduleSection.style.display = "none";
-}
-
-const scheduleRecommendation =
-  savedResult?.scheduleRecommendation;
-
-if (scheduleRecommendation?.show && scheduleSection) {
-  scheduleSection.style.display = "block";
-
-  let scheduleMessage =
-    document.getElementById("scheduleMessage");
-
-  if (!scheduleMessage) {
-    scheduleMessage = document.createElement("p");
-    scheduleMessage.id = "scheduleMessage";
-    scheduleMessage.style.marginBottom = "20px";
-    scheduleMessage.textContent =
-      scheduleRecommendation.message || "";
-
-    scheduleSection.insertBefore(scheduleMessage, scheduleCard);
-  }
-
-  if (!scheduleRecommendation.canSchedule) {
-
-    if (scheduleCard) {
-      scheduleCard.style.display = "none";
-    }
-
-  } else {
-
-    if (scheduleCard) {
-      scheduleCard.style.display = "block";
-    }
-
-    if (scheduleData && scheduleData.length > 0) {
-      renderSchedule(scheduleData);
-      colorTimes(scheduleData);
-      renderLegend(scheduleData);
-    }
-  }
-}
-
-
-
-
-// DYNAMIC CHARTS
-if (savedResult && savedResult.results?.length > 0) {
-  const interactionData =
-    savedResult.results[0].result?.interaction;
-
-  if (interactionData) {
-    const severity =
-      interactionData.severity?.toLowerCase() || "minor";
-
-    let severityData = [0, 0, 0, 0];
-
-    switch (severity) {
-      case "contraindicated":
-        severityData = [100, 0, 0, 0];
-        break;
-      case "major":
-        severityData = [0, 100, 0, 0];
-        break;
-      case "moderate":
-        severityData = [0, 0, 100, 0];
-        break;
-      default:
-        severityData = [0, 0, 0, 100];
-    }
-
-    const riskCanvas =
-      document.querySelector(".risk");
-
-    if (riskCanvas) {
-      new Chart(riskCanvas, {
-        type: "doughnut",
-        data: {
-          labels: [
-            "Contraindicated",
-            "Major",
-            "Moderate",
-            "Minor"
-          ],
-          datasets: [
-            {
-              data: severityData,
-              backgroundColor: [
-                "#36A2EB",
-                "#FF5B83",
-                "#FF9F40",
-                "#FFCD56"
-              ],
-              borderWidth: 0
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          cutout: "55%",
-          plugins: {
-            legend: {
-              display: true
-            }
-          }
-        }
-      });
-    }
-
-    const descriptionText =
-      interactionData.description?.toLowerCase() || "";
-
-    let bleeding = 1;
-    let toxicity = 1;
-    let drowsiness = 1;
-    let heartRisk = 1;
-    let other = 1;
-
-    if (
-      descriptionText.includes("bleeding") ||
-      descriptionText.includes("hemorrhage")
-    ) {
-      bleeding = 9;
-    }
-
-    if (
-      descriptionText.includes("toxicity") ||
-      descriptionText.includes("toxic")
-    ) {
-      toxicity = 8;
-    }
-
-    if (
-      descriptionText.includes("drowsiness") ||
-      descriptionText.includes("sedation")
-    ) {
-      drowsiness = 7;
-    }
-
-    if (
-      descriptionText.includes("heart") ||
-      descriptionText.includes("cardiac")
-    ) {
-      heartRisk = 8;
-    }
-
-    if (descriptionText.includes("interaction")) {
-      other = 5;
-    }
-
-    const sideEffectsCanvas =
-      document.querySelector(".effect-chart");
-
-    if (sideEffectsCanvas) {
-      const sideEffectsCtx =
-        sideEffectsCanvas.getContext("2d");
-
-      new Chart(sideEffectsCtx, {
-        type: "line",
-        data: {
-          labels: [
-            "Bleeding",
-            "Toxicity",
-            "Drowsiness",
-            "Heart Risk",
-            "Other"
-          ],
-          datasets: [
-            {
-              label: "Risk Level",
-              data: [
-                bleeding,
-                toxicity,
-                drowsiness,
-                heartRisk,
-                other
-              ],
-              borderColor: "#6C8EF5",
-              backgroundColor: "rgba(108,142,245,0.25)",
-              fill: true,
-              tension: 0.4
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              display: false
-            }
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              max: 10
-            }
-          }
-        }
-      });
-    }
-  }
-}
-
-
-
-
-// DYNAMIC RESULT CARDS
-const cardSection =
-  document.querySelector(".card-sect");
-
-if (
-  savedResult &&
-  savedResult.results &&
-  savedResult.results.length > 0 &&
-  cardSection
-) {
-  savedResult.results.forEach((item, index) => {
-    const interaction =
-      item.result?.interaction;
-
-    if (!interaction) return;
-
-    const card =
-      document.createElement("article");
-
-    card.className = "result-card";
-    card.setAttribute("aria-labelledby", `card${index + 1}`);
-
-    const createdDate =
-      interaction.created_at
-        ? new Date(interaction.created_at)
-        : new Date();
-
-    const dateText =
-      createdDate.toLocaleDateString("en-US", {
-        day: "2-digit",
-        month: "short"
-      });
-
-    card.innerHTML = `
-      <div class="status-div">
-        <time class="date">${dateText}</time>
-        <span class="badge">STATUS</span>
-      </div>
-
-      <div class="info-div">
-        <h2 id="card${index + 1}">${interaction.severity || "Unknown"}</h2>
-        <p class="uni-id">ID: ${interaction.id || "N/A"}</p>
-        <p>${interaction.description || "No description available."}</p>
-      </div>
-
-      <div class="drugs-result">
-        <span class="drug-select">
-          ${item.drug1?.normalized || item.drug1?.original || "Drug 1"}
-        </span>
-        <span class="drug-select">
-          ${item.drug2?.normalized || item.drug2?.original || "Drug 2"}
-        </span>
-      </div>
-    `;
-
-    cardSection.appendChild(card);
-  });
-}
-
-
 function renderLegend(data) {
-  const legendContainer =
-    document.querySelector(".schedule-legend");
+  const legendContainer = document.querySelector(".schedule-legend");
 
   if (!legendContainer) return;
 
@@ -375,13 +92,12 @@ function renderLegend(data) {
 
   const added = new Set();
 
-  data.forEach(item => {
+  data.forEach((item) => {
     if (added.has(item.drug)) return;
 
     added.add(item.drug);
 
-    const legendItem =
-      document.createElement("span");
+    const legendItem = document.createElement("span");
 
     legendItem.innerHTML = `
       <i class="legend-line ${item.color}-dose"></i>
@@ -390,4 +106,234 @@ function renderLegend(data) {
 
     legendContainer.appendChild(legendItem);
   });
+}
+
+if (scheduleRecommendation?.show && scheduleSection) {
+  scheduleSection.style.display = "block";
+
+  let scheduleMessage = document.getElementById("scheduleMessage");
+
+  if (!scheduleMessage) {
+    scheduleMessage = document.createElement("p");
+    scheduleMessage.id = "scheduleMessage";
+    scheduleMessage.style.marginBottom = "20px";
+    scheduleSection.insertBefore(scheduleMessage, scheduleCard);
+  }
+
+  scheduleMessage.textContent = scheduleRecommendation.message || "";
+
+  if (!scheduleRecommendation.canSchedule) {
+    if (scheduleCard) {
+      scheduleCard.style.display = "none";
+    }
+  } else {
+    if (scheduleCard) {
+      scheduleCard.style.display = "block";
+    }
+
+    if (scheduleData.length > 0) {
+      renderSchedule(scheduleData);
+      colorTimes(scheduleData);
+      renderLegend(scheduleData);
+    }
+  }
+}
+
+// ########## DYNAMIC CHARTS ##########
+
+const firstInteraction =
+  savedResult?.results?.[0]?.result?.interaction ||
+  savedResult?.latestInteractions?.[0];
+
+if (firstInteraction) {
+  const severity = firstInteraction.severity?.toLowerCase() || "minor";
+
+  let severityData = [0, 0, 0, 0];
+
+  switch (severity) {
+    case "contraindicated":
+      severityData = [100, 0, 0, 0];
+      break;
+    case "major":
+      severityData = [0, 100, 0, 0];
+      break;
+    case "moderate":
+      severityData = [0, 0, 100, 0];
+      break;
+    default:
+      severityData = [0, 0, 0, 100];
+  }
+
+  const riskCanvas = document.querySelector(".risk");
+
+  if (riskCanvas && typeof Chart !== "undefined") {
+    new Chart(riskCanvas, {
+      type: "doughnut",
+      data: {
+        labels: ["Contraindicated", "Major", "Moderate", "Minor"],
+        datasets: [
+          {
+            data: severityData,
+            backgroundColor: ["#36A2EB", "#FF5B83", "#FF9F40", "#FFCD56"],
+            borderWidth: 0
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        cutout: "55%",
+        plugins: {
+          legend: {
+            display: true
+          }
+        }
+      }
+    });
+  }
+
+  const descriptionText = firstInteraction.description?.toLowerCase() || "";
+
+  let bleeding = 1;
+  let toxicity = 1;
+  let drowsiness = 1;
+  let heartRisk = 1;
+  let other = 1;
+
+  if (
+    descriptionText.includes("bleeding") ||
+    descriptionText.includes("hemorrhage")
+  ) {
+    bleeding = 9;
+  }
+
+  if (
+    descriptionText.includes("toxicity") ||
+    descriptionText.includes("toxic")
+  ) {
+    toxicity = 8;
+  }
+
+  if (
+    descriptionText.includes("drowsiness") ||
+    descriptionText.includes("sedation")
+  ) {
+    drowsiness = 7;
+  }
+
+  if (
+    descriptionText.includes("heart") ||
+    descriptionText.includes("cardiac")
+  ) {
+    heartRisk = 8;
+  }
+
+  if (descriptionText.includes("interaction")) {
+    other = 5;
+  }
+
+  const sideEffectsCanvas = document.querySelector(".effect-chart");
+
+  if (sideEffectsCanvas && typeof Chart !== "undefined") {
+    const sideEffectsCtx = sideEffectsCanvas.getContext("2d");
+
+    new Chart(sideEffectsCtx, {
+      type: "line",
+      data: {
+        labels: ["Bleeding", "Toxicity", "Drowsiness", "Heart Risk", "Other"],
+        datasets: [
+          {
+            label: "Risk Level",
+            data: [bleeding, toxicity, drowsiness, heartRisk, other],
+            borderColor: "#6C8EF5",
+            backgroundColor: "rgba(108,142,245,0.25)",
+            fill: true,
+            tension: 0.4
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 10
+          }
+        }
+      }
+    });
+  }
+}
+
+// ########## LATEST 4 RESULT CARDS ##########
+
+const cardSection = document.querySelector(".card-sect");
+
+if (cardSection) {
+  cardSection.innerHTML = "";
+}
+
+const latestCards =
+  savedResult?.latestInteractions && savedResult.latestInteractions.length > 0
+    ? savedResult.latestInteractions
+    : [];
+
+if (latestCards.length > 0 && cardSection) {
+  latestCards.forEach((interaction) => {
+    const card = document.createElement("article");
+    card.className = "result-card";
+
+    const createdDate = interaction.created_at
+      ? new Date(interaction.created_at)
+      : new Date();
+
+    const dateText = createdDate.toLocaleDateString("en-US", {
+      day: "2-digit",
+      month: "short"
+    });
+
+    card.innerHTML = `
+      <div class="status-div">
+        <time class="date">${dateText}</time>
+        <span class="badge">STATUS</span>
+      </div>
+
+      <div class="info-div">
+        <h2>${interaction.severity || "Unknown"}</h2>
+        <p class="uni-id">ID: ${interaction.id || "N/A"}</p>
+
+        <p>
+          <strong>Description:</strong>
+          ${interaction.description || "No description available."}
+        </p>
+
+        <p>
+          <strong>Management:</strong>
+          ${interaction.management || "No management available."}
+        </p>
+
+        <p>
+          <strong>Clinical:</strong>
+          ${
+            interaction.clinical_significance ||
+            "No clinical significance available."
+          }
+        </p>
+      </div>
+
+      <div class="drugs-result">
+        <span class="drug-select">${interaction.drug1 || "Drug 1"}</span>
+        <span class="drug-select">${interaction.drug2 || "Drug 2"}</span>
+      </div>
+    `;
+
+    cardSection.appendChild(card);
+  });
+} else if (cardSection) {
+  cardSection.innerHTML = "<p>No latest interactions found.</p>";
 }
