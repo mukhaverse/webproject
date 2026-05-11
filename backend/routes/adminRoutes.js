@@ -341,6 +341,46 @@ router.post("/chat/conversations/start", async (req, res) => {
 //  the sender's name. Also marks all user messages as read.
 // ============================================================
 
+// router.get("/chat/conversations/:id/messages", async (req, res) => {
+//   const convId = parseInt(req.params.id, 10);
+
+//   if (isNaN(convId)) {
+//     return res.status(400).json({ error: "Invalid conversation ID" });
+//   }
+
+//   try {
+//     // Mark user messages in this conversation as read
+//     await db.promise().query(
+//       `UPDATE chat_messages
+//        SET is_read = 1
+//        WHERE conversation_id = ? AND sender_role = 'user'`,
+//       [convId]
+//     );
+
+//     // Fetch messages with sender name
+//     const [rows] = await db.promise().query(
+//       `SELECT
+//          cm.id,
+//          cm.body,
+//          cm.sender_role,
+//          cm.is_read,
+//          cm.sent_at,
+//          u.name AS sender_name
+//        FROM chat_messages cm
+//        JOIN users u ON u.id = cm.sender_id
+//        WHERE cm.conversation_id = ?
+//        ORDER BY cm.sent_at ASC`,
+//       [convId]
+//     );
+
+//     return res.json(rows);
+
+//   } catch (err) {
+//     console.error("[Admin] /chat/messages GET error:", err.message);
+//     return res.status(500).json({ error: "Failed to load messages" });
+//   }
+// });
+
 router.get("/chat/conversations/:id/messages", async (req, res) => {
   const convId = parseInt(req.params.id, 10);
 
@@ -349,7 +389,8 @@ router.get("/chat/conversations/:id/messages", async (req, res) => {
   }
 
   try {
-    // Mark user messages in this conversation as read
+
+    // mark messages as read
     await db.promise().query(
       `UPDATE chat_messages
        SET is_read = 1
@@ -357,8 +398,26 @@ router.get("/chat/conversations/:id/messages", async (req, res) => {
       [convId]
     );
 
-    // Fetch messages with sender name
-    const [rows] = await db.promise().query(
+    // get chat info + user name
+    const [[chat]] = await db.promise().query(
+      `SELECT
+         cc.id,
+         cc.user_id,
+         cc.created_at,
+         cc.updated_at,
+         u.name AS user_name
+       FROM chat_conversations cc
+       JOIN users u ON u.id = cc.user_id
+       WHERE cc.id = ?`,
+      [convId]
+    );
+
+    if (!chat) {
+      return res.status(404).json({ error: "Conversation not found" });
+    }
+
+    // get messages
+    const [messages] = await db.promise().query(
       `SELECT
          cm.id,
          cm.body,
@@ -373,14 +432,19 @@ router.get("/chat/conversations/:id/messages", async (req, res) => {
       [convId]
     );
 
-    return res.json(rows);
+    return res.json({
+      chat,
+      messages
+    });
 
   } catch (err) {
     console.error("[Admin] /chat/messages GET error:", err.message);
-    return res.status(500).json({ error: "Failed to load messages" });
+
+    return res.status(500).json({
+      error: "Failed to load messages"
+    });
   }
 });
-
 
 // ============================================================
 //  CHAT — send a message as admin
