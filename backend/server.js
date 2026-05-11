@@ -464,10 +464,8 @@ app.post("/check", requireAuth, async (req, res) => {
   try {
     const normalizedDrugs = [];
 
-    // normalize all drugs
     for (const drug of drugs) {
       const normalized = await normalizeDrug(drug, db);
-
       normalizedDrugs.push({
         original: drug,
         normalized
@@ -476,10 +474,8 @@ app.post("/check", requireAuth, async (req, res) => {
 
     const results = [];
 
-    // check every pair
     for (let i = 0; i < normalizedDrugs.length; i++) {
       for (let j = i + 1; j < normalizedDrugs.length; j++) {
-
         const drugA = normalizedDrugs[i];
         const drugB = normalizedDrugs[j];
 
@@ -488,9 +484,7 @@ app.post("/check", requireAuth, async (req, res) => {
           drugB.normalized
         );
 
-        // save interaction in DB
         if (data.interaction) {
-
           const interaction = data.interaction;
 
           const [insertResult] = await db.promise().query(
@@ -516,9 +510,10 @@ app.post("/check", requireAuth, async (req, res) => {
             ]
           );
 
-          // attach DB id + created_at to returned interaction
           interaction.id = insertResult.insertId;
           interaction.created_at = new Date().toISOString();
+          interaction.drug1 = drugA.normalized;
+          interaction.drug2 = drugB.normalized;
         }
 
         results.push({
@@ -529,45 +524,36 @@ app.post("/check", requireAuth, async (req, res) => {
       }
     }
 
-    // latest 4 interactions for this user
-   const [insertResult] = await db.promise().query(
-  `INSERT INTO interaction_checks
-  (
-    user_id,
-    drug1,
-    drug2,
-    severity,
-    description,
-    management,
-    clinical_significance
-  )
-  VALUES (?, ?, ?, ?, ?, ?, ?)`,
-  [
-    userId,
-    drugA.normalized,
-    drugB.normalized,
-    interaction.severity || null,
-    interaction.description || null,
-    interaction.management || null,
-    interaction.clinical_significance || null
-  ]
-);
+    const [latestInteractions] = await db.promise().query(
+      `SELECT
+        id,
+        drug1,
+        drug2,
+        severity,
+        description,
+        management,
+        clinical_significance,
+        created_at
+      FROM interaction_checks
+      WHERE user_id = ?
+      ORDER BY created_at DESC
+      LIMIT 4`,
+      [userId]
+    );
+
+    const scheduleRecommendation = buildScheduleRecommendation(
+      normalizedDrugs,
+      results
+    );
 
     return res.json({
       count: results.length,
-
-      // current interaction results
       results,
-
-      // latest 4 cards from DB
       latestInteractions,
-
-      // schedule info
       scheduleRecommendation
     });
 
   } catch (error) {
-
     console.error("ERROR:", error.message);
 
     return res.status(500).json({
