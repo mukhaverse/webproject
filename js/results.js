@@ -216,6 +216,7 @@ if (firstInteraction) {
 }
 
 // ########## ONE INTERACTION DETAILS AS 4 CARDS ##########
+// ########## ONE INTERACTION DETAILS AS 4 CARDS ##########
 
 const cardSection = document.querySelector(".card-sect");
 
@@ -226,7 +227,64 @@ if (cardSection) {
 const interactionsFound = results.filter(r => r.result?.interaction_found && r.result?.interaction);
 
 if (interactionsFound.length === 0 && cardSection) {
-  cardSection.innerHTML = "<p>No interaction details found.</p>";
+  // No interaction overlay
+  const overlay = document.createElement("div");
+  overlay.style.cssText = `
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 40px;
+    text-align: center;
+    animation: fadeInUp 0.6s ease forwards;
+  `;
+
+  overlay.innerHTML = `
+    <style>
+      @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+      }
+      .no-interaction-icon {
+        width: 90px;
+        height: 90px;
+        background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 24px;
+        animation: pulse 2.5s ease infinite;
+        font-size: 40px;
+      }
+      .no-interaction-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #2e7d32;
+        margin-bottom: 12px;
+      }
+      .no-interaction-sub {
+        font-size: 0.95rem;
+        color: #6b7280;
+        max-width: 320px;
+        line-height: 1.6;
+      }
+    </style>
+
+    <div class="no-interaction-icon">✅</div>
+    <p class="no-interaction-title">No Interaction Found</p>
+    <p class="no-interaction-sub">
+      These medications appear to be safe to take together. 
+      No known interactions were detected between them.
+    </p>
+  `;
+
+  cardSection.appendChild(overlay);
+
 } else if (cardSection) {
   interactionsFound.forEach((r) => {
     const interaction = r.result.interaction;
