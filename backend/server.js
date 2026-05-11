@@ -451,118 +451,66 @@ function buildScheduleRecommendation(normalizedDrugs, results) {
 
 
                   //############ array of drugs ########
-app.post("/check", requireAuth, async (req, res) => {
-  const { drugs } = req.body;
-  const userId = req.user.id;
+app.post("/check", async (req, res) => {
+  const { drug1, drug2 } = req.body;
 
-  if (!drugs || !Array.isArray(drugs) || drugs.length < 2) {
-    return res.status(400).json({
-      error: "Please provide at least two drugs"
-    });
+  if (!drug1 || !drug2) {
+    return res.status(400).json({ error: "drug1 and drug2 are required" });
   }
 
   try {
-    const normalizedDrugs = [];
-
-    for (const drug of drugs) {
-      const normalized = await normalizeDrug(drug, db);
-      normalizedDrugs.push({
-        original: drug,
-        normalized
-      });
-    }
-
-    const results = [];
-
-    for (let i = 0; i < normalizedDrugs.length; i++) {
-      for (let j = i + 1; j < normalizedDrugs.length; j++) {
-        const drugA = normalizedDrugs[i];
-        const drugB = normalizedDrugs[j];
-
-        const data = await checkInteraction(
-          drugA.normalized,
-          drugB.normalized
-        );
-
-        if (data.interaction) {
-          const interaction = data.interaction;
-
-          const [insertResult] = await db.promise().query(
-            `INSERT INTO interaction_checks
-            (
-              user_id,
-              drug1,
-              drug2,
-              severity,
-              description,
-              management,
-              clinical_significance
-            )
-            VALUES (?, ?, ?, ?, ?, ?, ?)`,
-            [
-              userId,
-              drugA.normalized,
-              drugB.normalized,
-              interaction.severity || null,
-              interaction.description || null,
-              interaction.management || null,
-              interaction.clinical_significance || null
-            ]
-          );
-
-          interaction.id = insertResult.insertId;
-          interaction.created_at = new Date().toISOString();
-          interaction.drug1 = drugA.normalized;
-          interaction.drug2 = drugB.normalized;
+    // Step 1: Search for IDs
+    const [search1, search2] = await Promise.all([
+      fetch(`https://drug-interaction-checker.p.rapidapi.com/drugs/search?q=${encodeURIComponent(drug1)}`, {
+        headers: {
+          "X-RapidAPI-Key": process.env.RAPIDAPI_KEY,
+          "X-RapidAPI-Host": process.env.RAPIDAPI_HOST
         }
+      }),
+      fetch(`https://drug-interaction-checker.p.rapidapi.com/drugs/search?q=${encodeURIComponent(drug2)}`, {
+        headers: {
+          "X-RapidAPI-Key": process.env.RAPIDAPI_KEY,
+          "X-RapidAPI-Host": process.env.RAPIDAPI_HOST
+        }
+      })
+    ]);
 
-        results.push({
-          drug1: drugA,
-          drug2: drugB,
-          result: data
-        });
-      }
+    const results1 = await search1.json();
+    const results2 = await search2.json();
+
+    if (!results1?.length || !results2?.length) {
+      return res.status(404).json({ error: "One or both drugs not found" });
     }
 
-    const [latestInteractions] = await db.promise().query(
-      `SELECT
-        id,
-        drug1,
-        drug2,
-        severity,
-        description,
-        management,
-        clinical_significance,
-        created_at
-      FROM interaction_checks
-      WHERE user_id = ?
-      ORDER BY created_at DESC
-      LIMIT 4`,
-      [userId]
+    const id1 = results1[0].id;
+    const id2 = results2[0].id;
+
+    console.log(`IDs: ${id1} (${results1[0].name}), ${id2} (${results2[0].name})`);
+
+    // Step 2: Check interaction using IDs
+    const interactionRes = await fetch(
+      "https://drug-interaction-checker.p.rapidapi.com/interactions/check",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-RapidAPI-Key": process.env.RAPIDAPI_KEY,
+          "X-RapidAPI-Host": process.env.RAPIDAPI_HOST
+        },
+        body: JSON.stringify({ drug1: id1, drug2: id2 })
+      }
     );
 
-    const scheduleRecommendation = buildScheduleRecommendation(
-      normalizedDrugs,
-      results
-    );
+    const data = await interactionRes.json();
+    console.log("Interaction result:", data);
 
-    return res.json({
-      count: results.length,
-      results,
-      latestInteractions,
-      scheduleRecommendation
-    });
+    res.json(data);
 
   } catch (error) {
     console.error("ERROR:", error.message);
-
-    return res.status(500).json({
-      error: "Failed to fetch interaction data"
-    });
+    res.status(500).json({ error: "Failed to fetch interaction data" });
   }
 });
-
-
 
   //###############################
 
