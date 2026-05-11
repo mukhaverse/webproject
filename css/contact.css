@@ -275,7 +275,7 @@ body {
 @media (max-width: 900px) {
   .contact-layout {
     grid-template-columns: 1fr;
-    gap: 30px;
+    gap: 60px;
   }
 
   .contact-left {
@@ -307,6 +307,10 @@ body {
 
   .faq-stack {
     margin: 0 auto;
+  }
+
+  .faq-section {
+    margin-top: 70px;
   }
 }
 
