@@ -452,43 +452,35 @@ function buildScheduleRecommendation(normalizedDrugs, results) {
 
                   //############ array of drugs ########
 app.post("/check", async (req, res) => {
-    console.log("CHECK BODY:", JSON.stringify(req.body));
-  const { drug1, drug2 } = req.body;
+  console.log("CHECK BODY:", JSON.stringify(req.body));
+  
+  const { drugs } = req.body;
 
-  if (!drug1 || !drug2) {
-    return res.status(400).json({ error: "drug1 and drug2 are required" });
+  if (!drugs || !Array.isArray(drugs) || drugs.length < 2) {
+    return res.status(400).json({ error: "drugs array with at least 2 items is required" });
   }
 
   try {
-    // Step 1: Search for IDs
-    const [search1, search2] = await Promise.all([
-      fetch(`https://drug-interaction-checker.p.rapidapi.com/drugs/search?q=${encodeURIComponent(drug1)}`, {
-        headers: {
-          "X-RapidAPI-Key": process.env.RAPIDAPI_KEY,
-          "X-RapidAPI-Host": process.env.RAPIDAPI_HOST
-        }
-      }),
-      fetch(`https://drug-interaction-checker.p.rapidapi.com/drugs/search?q=${encodeURIComponent(drug2)}`, {
-        headers: {
-          "X-RapidAPI-Key": process.env.RAPIDAPI_KEY,
-          "X-RapidAPI-Host": process.env.RAPIDAPI_HOST
-        }
-      })
-    ]);
+    // Step 1: Search for IDs for all drugs
+    const searchResults = await Promise.all(
+      drugs.map(drug =>
+        fetch(`https://drug-interaction-checker.p.rapidapi.com/drugs/search?q=${encodeURIComponent(drug)}`, {
+          headers: {
+            "X-RapidAPI-Key": process.env.RAPIDAPI_KEY,
+            "X-RapidAPI-Host": process.env.RAPIDAPI_HOST
+          }
+        }).then(r => r.json())
+      )
+    );
 
-    const results1 = await search1.json();
-    const results2 = await search2.json();
+    const ids = searchResults.map((result, i) => {
+      if (!result?.length) throw new Error(`Drug not found: ${drugs[i]}`);
+      return result[0].id;
+    });
 
-    if (!results1?.length || !results2?.length) {
-      return res.status(404).json({ error: "One or both drugs not found" });
-    }
+    console.log("Drug IDs:", ids);
 
-    const id1 = results1[0].id;
-    const id2 = results2[0].id;
-
-    console.log(`IDs: ${id1} (${results1[0].name}), ${id2} (${results2[0].name})`);
-
-    // Step 2: Check interaction using IDs
+    // Step 2: Check interaction
     const interactionRes = await fetch(
       "https://drug-interaction-checker.p.rapidapi.com/interactions/check",
       {
@@ -498,8 +490,7 @@ app.post("/check", async (req, res) => {
           "X-RapidAPI-Key": process.env.RAPIDAPI_KEY,
           "X-RapidAPI-Host": process.env.RAPIDAPI_HOST
         },
-        
-        body: JSON.stringify({ drugs: [id1, id2] })
+        body: JSON.stringify({ drugs: ids })
       }
     );
 
@@ -510,7 +501,7 @@ app.post("/check", async (req, res) => {
 
   } catch (error) {
     console.error("ERROR:", error.message);
-    res.status(500).json({ error: "Failed to fetch interaction data" });
+    res.status(500).json({ error: error.message });
   }
 });
 
