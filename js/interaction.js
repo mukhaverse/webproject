@@ -63,25 +63,25 @@ allInputs.forEach(addAutocomplete);
 
 // ########## add new drug input ##########
 
-addBtn.addEventListener("click", () => {
-  const drugField = document.createElement("div");
-  drugField.classList.add("drug-field");
+// addBtn.addEventListener("click", () => {
+//   const drugField = document.createElement("div");
+//   drugField.classList.add("drug-field");
 
-  drugField.innerHTML = `
-    <label for="drug${count}">Search Drug ${count}</label>
-    <input type="text" id="drug${count}" placeholder="Enter drug name">
-    <div>
-      <ul class="list-div"></ul>
-    </div>
-  `;
+//   drugField.innerHTML = `
+//     <label for="drug${count}">Search Drug ${count}</label>
+//     <input type="text" id="drug${count}" placeholder="Enter drug name">
+//     <div>
+//       <ul class="list-div"></ul>
+//     </div>
+//   `;
 
-  conta.appendChild(drugField);
+//   conta.appendChild(drugField);
 
-  const newInput = drugField.querySelector("input");
-  addAutocomplete(newInput);
+//   const newInput = drugField.querySelector("input");
+//   addAutocomplete(newInput);
 
-  count++;
-});
+//   count++;
+// });
 
 // ########## no interaction overlay ##########
 
