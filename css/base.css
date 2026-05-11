@@ -13,12 +13,12 @@
 
 
 
-  --clr-success:        #068e62;
+  --clr-success: #068e62;
   --clr-success-ghost:  #d1fae5;
-  --clr-warning:        #d97706;
-  --clr-warning-ghost:  #fef3c7;
-  --clr-error:          #bd1d1d;
-  --clr-error-ghost:    #fee2e2;
+  --clr-warning:   #d97706;
+  --clr-warning-ghost:#fef3c7;
+  --clr-error:  #bd1d1d;
+  --clr-error-ghost: #fee2e2;
 }
 
 

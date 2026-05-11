@@ -45,21 +45,22 @@ async function loadCounts() {
 
 
 
-function loadAdminInfo() {
-
+async function loadAdminInfo() {
   const user = Auth.getUser();
-
   if (!user) return;
 
-  document.getElementById("admin-name").textContent =
-    user.name || "—";
+  document.getElementById("admin-name").textContent  = user.name  || "—";
+  document.getElementById("admin-email").textContent = user.email || "—";
 
-  document.getElementById("admin-email").textContent =
-    user.email || "—";
-
-  document.getElementById("admin-created").textContent =
-    formatDate(user.created_at);
-
+  try {
+    const res  = await fetch(`${API_BASE}/auth/me`, { headers: Auth.headers() });
+    const full = await res.json();
+    document.getElementById("admin-created").textContent = full.created_at
+      ? formatDate(full.created_at)
+      : "—";
+  } catch {
+    document.getElementById("admin-created").textContent = "—";
+  }
 }
 
 
