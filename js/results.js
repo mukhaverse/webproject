@@ -113,7 +113,6 @@ if (scheduleRecommendation?.show && scheduleSection) {
 
   scheduleMessage.textContent = scheduleRecommendation.message || "";
 
-  // show the schedule card even when canSchedule is false
   if (scheduleCard) {
     scheduleCard.style.display = "block";
   }
@@ -129,9 +128,9 @@ if (scheduleRecommendation?.show && scheduleSection) {
 
 // ########## CHARTS ##########
 
-const firstInteraction =
-  savedResult?.results?.[0]?.result?.interaction ||
-  savedResult?.latestInteractions?.[0];
+const results = savedResult?.results || [];
+const firstInteractionFound = results.find(r => r.result?.interaction_found && r.result?.interaction);
+const firstInteraction = firstInteractionFound?.result?.interaction;
 
 if (firstInteraction) {
   const severity = firstInteraction.severity?.toLowerCase() || "minor";
@@ -219,37 +218,67 @@ if (firstInteraction) {
 // ########## ONE INTERACTION DETAILS AS 4 CARDS ##########
 
 const cardSection = document.querySelector(".card-sect");
-if (cardSection) cardSection.innerHTML = "";
 
-const results = savedResult?.results || [];
+if (cardSection) {
+  cardSection.innerHTML = "";
+}
+
 const interactionsFound = results.filter(r => r.result?.interaction_found && r.result?.interaction);
 
 if (interactionsFound.length === 0 && cardSection) {
-  cardSection.innerHTML = "<p>No interactions found between these drugs.</p>";
+  cardSection.innerHTML = "<p>No interaction details found.</p>";
 } else if (cardSection) {
-  interactionsFound.forEach(r => {
+  interactionsFound.forEach((r) => {
     const interaction = r.result.interaction;
 
-    const card = document.createElement("article");
-    card.className = "result-card";
+    const cards = [
+      {
+        title: interaction.severity || "Unknown",
+        value:
+          interaction.severity === "major"
+            ? "High-risk interaction requiring close monitoring."
+            : interaction.severity === "moderate"
+            ? "Moderate interaction that may require caution."
+            : interaction.severity === "minor"
+            ? "Minor interaction with limited clinical effect."
+            : "Interaction severity information."
+      },
+      {
+        title: "Description",
+        value: interaction.description || "No description available."
+      },
+      {
+        title: "Management",
+        value: interaction.management || "No management available."
+      },
+      {
+        title: "Clinical Significance",
+        value: interaction.clinical_significance || "No clinical significance available."
+      }
+    ];
 
-    card.innerHTML = `
-      <div class="status-div">
-        <span class="badge">${interaction.severity || "Unknown"}</span>
-      </div>
-      <h2>${r.drug1} + ${r.drug2}</h2>
-      <div class="mini-info-card">
-        <p>${interaction.description || "No description available."}</p>
-      </div>
-      <div class="mini-info-card">
-        <p><strong>Management:</strong> ${interaction.management || "N/A"}</p>
-      </div>
-      <div class="drugs-result">
-        <span class="drug-select">${r.drug1}</span>
-        <span class="drug-select">${r.drug2}</span>
-      </div>
-    `;
+    cards.forEach((item) => {
+      const card = document.createElement("article");
+      card.className = "result-card";
 
-    cardSection.appendChild(card);
+      card.innerHTML = `
+        <div class="status-div">
+          <span class="badge">ID: ${interaction.id || "N/A"}</span>
+        </div>
+
+        <h2>${item.title}</h2>
+
+        <div class="mini-info-card">
+          <p>${item.value}</p>
+        </div>
+
+        <div class="drugs-result">
+          <span class="drug-select">${r.drug1}</span>
+          <span class="drug-select">${r.drug2}</span>
+        </div>
+      `;
+
+      cardSection.appendChild(card);
+    });
   });
 }
