@@ -1132,11 +1132,11 @@ function buildScheduleRecommendation(normalizedDrugs, results) {
 
 
 // ####### CHECK ENDPOINT #######
-
-app.post("/check", async (req, res) => {
+app.post("/check", requireAuth, async (req, res) => {
   console.log("CHECK BODY:", JSON.stringify(req.body));
 
   const { drugs } = req.body;
+  const userId = req.user.id;
 
   if (!drugs || !Array.isArray(drugs) || drugs.length < 2) {
     return res.status(400).json({ error: "drugs array with at least 2 items is required" });
@@ -1172,27 +1172,54 @@ app.post("/check", async (req, res) => {
 
     console.log("Interaction results:", JSON.stringify(results));
 
-    // ####### SAVE TO DB #######
     results.forEach(r => {
+
+      // ✅ فيه انتراكشن — يحفظ في interaction_checks
       if (r.result?.interaction_found && r.result?.interaction) {
         const interaction = r.result.interaction;
         db.query(
-          `INSERT INTO interaction_checks (drug1, drug2, severity, description, management, clinical_significance)
-           VALUES (?, ?, ?, ?, ?, ?)`,
+          `INSERT INTO interaction_checks (drug1, drug2, severity, description, management, clinical_significance, user_id)
+           VALUES (?, ?, ?, ?, ?, ?, ?)`,
           [
             r.drug1,
             r.drug2,
             interaction.severity || null,
             interaction.description || null,
             interaction.management || null,
-            interaction.clinical_significance || null
+            interaction.clinical_significance || null,
+            userId
           ],
           (err) => {
             if (err) console.error("[DB] Insert error:", err.message);
-            else console.log("[DB] Saved:", r.drug1, "+", r.drug2);
+            else console.log("[DB] Saved interaction:", r.drug1, "+", r.drug2);
           }
         );
+
+      // ❌ دواء ما لقاه — يحفظ في unresolved_drugs
+      } else if (r.result?.message?.toLowerCase().includes("not found")) {
+        const msg = r.result.message.toLowerCase();
+        const drugsToLog = [];
+
+        if (msg.includes(r.drug1.toLowerCase())) drugsToLog.push(r.drug1);
+        if (msg.includes(r.drug2.toLowerCase())) drugsToLog.push(r.drug2);
+        if (drugsToLog.length === 0) drugsToLog.push(r.drug1, r.drug2);
+
+        drugsToLog.forEach(drugName => {
+          db.query(
+            `INSERT INTO unresolved_drugs (drug_name, status)
+             VALUES (?, 'pending')
+             ON DUPLICATE KEY UPDATE attempted_at = NOW()`,
+            [drugName],
+            (err) => {
+              if (err) console.error("[DB] unresolved error:", err.message);
+              else console.log("[DB] Unresolved drug logged:", drugName);
+            }
+          );
+        });
       }
+
+      // ✅ ما فيه انتراكشن ومش unresolved — ما يحفظ شي
+
     });
 
     res.json({ results });
@@ -1202,8 +1229,6 @@ app.post("/check", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
-
 app.get("/user/history", requireAuth, async (req, res) => {
   try {
     const [rows] = await db.promise().query(
