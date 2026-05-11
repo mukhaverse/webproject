@@ -324,7 +324,7 @@ if (
     const card =
       document.createElement("article");
 
-    card.className = "resul-card";
+    card.className = "result-card";
     card.setAttribute("aria-labelledby", `card${index + 1}`);
 
     const createdDate =
