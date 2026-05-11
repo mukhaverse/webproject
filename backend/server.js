@@ -530,29 +530,30 @@ app.post("/check", requireAuth, async (req, res) => {
     }
 
     // latest 4 interactions for this user
-    const [latestInteractions] = await db.promise().query(
-      `SELECT
-        id,
-        drug1,
-        drug2,
-        severity,
-        description,
-        management,
-        clinical_significance,
-        created_at
-      FROM interaction_checks
-      WHERE user_id = ?
-      ORDER BY created_at DESC
-      LIMIT 4`,
-      [userId]
-    );
-
-    // schedule recommendation
-    const scheduleRecommendation =
-      buildScheduleRecommendation(
-        normalizedDrugs,
-        results
-      );
+   const [insertResult] = await db.promise().query(
+  `INSERT INTO interaction_checks
+  (
+    user_id,
+    drug1,
+    drug2,
+    has_interaction,
+    severity,
+    description,
+    management,
+    clinical_significance
+  )
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+  [
+    userId,
+    drugA.normalized,
+    drugB.normalized,
+    1,
+    interaction.severity || null,
+    interaction.description || null,
+    interaction.management || null,
+    interaction.clinical_significance || null
+  ]
+);
 
     return res.json({
       count: results.length,
