@@ -497,7 +497,7 @@ app.post("/check", async (req, res) => {
           "X-RapidAPI-Key": process.env.RAPIDAPI_KEY,
           "X-RapidAPI-Host": process.env.RAPIDAPI_HOST
         },
-        body: JSON.stringify({ drug1: id1, drug2: id2 })
+        body: JSON.stringify({ drugs: [id1, id2] })
       }
     );
 
