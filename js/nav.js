@@ -73,16 +73,6 @@ document.addEventListener("DOMContentLoaded", () => {
           text: "Chat Management",
           page: "chat-management",
           href: `${prefix}chatManagement.html`
-        },
-        {
-          text: "Inventory",
-          page: "inventory",
-          href: `${prefix}inventory.html`
-        },
-        {
-          text: "Profile",
-          page: "profile",
-          href: `${prefix}profile.html`
         }
       ];
 
@@ -124,6 +114,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+
+
+
+  
   // ─────────────────────────────────────────────
   // Replace Sign In with User Name
   // ─────────────────────────────────────────────
@@ -163,6 +157,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+
+
+
+
   // ─────────────────────────────────────────────
   // Desktop Sliding Tab Background
   // ─────────────────────────────────────────────
@@ -195,13 +193,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 
-  
-
-
-
-
-
-
 
 
 
@@ -218,9 +209,6 @@ document.addEventListener("DOMContentLoaded", () => {
     ? `<a href="${prefix}profile.html" class="mm-link">Profile</a>`
     : "";
 
-
-
-
   // ADMIN LINKS
   const adminLinks = user && user.role === "admin"
     ? `
@@ -228,10 +216,6 @@ document.addEventListener("DOMContentLoaded", () => {
       <a href="${prefix}drug-mappings.html" class="mm-link">Admin Panel</a>
     `
     : "";
-
-
-
-
 
   // Sign-in / user name
   let signinLabel;
@@ -250,6 +234,10 @@ document.addEventListener("DOMContentLoaded", () => {
     signinHref = `${prefix}login.html`;
     isLoggedIn = false;
   }
+
+
+
+
 
   // Create menu
   const menu = document.createElement("div");
@@ -286,15 +274,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.body.appendChild(menu);
 
-  
-
-
-
-
-
-
-
-
 
 
 
@@ -326,12 +305,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 
-  
 
 
 
-
-  
   const panel = menu.querySelector(".mm-panel");
   const closeBtn = menu.querySelector("#mmClose");
   const links = menu.querySelectorAll(".mm-link, .mm-signin");
