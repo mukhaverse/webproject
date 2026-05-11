@@ -179,13 +179,11 @@ function bindCards() {
 async function renderSelectedChat() {
   const data = await apiGetMessages(state.chatId);
 
-  const existing = state.conversations.find(c => String(c.id) === String(state.chatId));
-
   const chat = {
     id: state.chatId,
     created_at: data.chat?.created_at || new Date().toISOString(),
     messages: data.messages || [],
-    user_name: data.chat?.user_name || existing?.user_name || "User"
+     user_name: data.chat?.user_name || "User"
   };
 
   const mode =
