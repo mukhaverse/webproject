@@ -189,7 +189,7 @@ checkBtn.addEventListener("click", async (e) => {
     }
 
     localStorage.setItem("interactionResult", JSON.stringify(data));
-    window.location.href = "results.html";
+   window.location.href = "../html/results.html";
 
   } catch (error) {
     console.error(error);
