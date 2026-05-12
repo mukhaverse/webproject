@@ -1,62 +1,41 @@
 const panels = document.querySelectorAll(".panel");
 
 
-window.addEventListener("load", () => {
-  gsap.to(panels, {
-    y: "0%",
-    stagger: 0.1,
-    duration: 0.5,
-  });
+// ── Page entry animation ──────────────────────────────────────────
+// Waits for splashDone instead of "load" so it never fights the splash.
+// If there's no splash (e.g. other pages), falls back to load.
 
-  gsap.to(panels, {
-    y: "-100%",
-    stagger: 0.1,
-    delay: 0.5,
-    duration: 0.5,
-  });
-});
+function runEntryAnimation() {
+  gsap.fromTo(panels,
+    { y: "0%" },
+    {
+      y: "-100%",
+      stagger: 0.1,
+      duration: 0.5,
+      ease: "power2.inOut"
+    }
+  );
+}
 
-
-
-
-// document.querySelectorAll("a").forEach(link => {
-//   if (link.hostname === window.location.hostname) {
-//     link.addEventListener("click", function (e) {
-//       e.preventDefault();
-
-//       const href = this.href;
-
-//       gsap.to(panels, {
-//         y: "0%",
-//         stagger: 0.1,
-//         duration: 0.3,
-//         onComplete: () => {
-//           window.location.href = href;
-//         }
-//       });
-//     });
-//   }
-// });
+if (window.__splashDone) {
+  // Splash already finished before this script ran (unlikely but safe)
+  runEntryAnimation();
+} else {
+  window.addEventListener('splashDone', runEntryAnimation, { once: true });
+}
 
 
+// ── Page-to-page transition ───────────────────────────────────────
 
 document.addEventListener("click", (e) => {
 
   const link = e.target.closest("a");
 
   if (!link) return;
-
   if (link.hostname !== window.location.hostname) return;
 
   const href = link.href;
-
-  if (
-    !href ||
-    href.includes("#") ||
-    link.target === "_blank"
-  ) {
-    return;
-  }
+  if (!href || href.includes("#") || link.target === "_blank") return;
 
   e.preventDefault();
 
