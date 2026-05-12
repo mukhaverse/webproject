@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
         {
           text: "Ask Pharmacist",
           page: "ask-pharmacist",
-          href: `${prefix}askPharmacist.html`
+          href: `${prefix}ask-pharmacist.html`
         },
         {
           text: "Profile",
