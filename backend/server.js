@@ -1241,7 +1241,7 @@ const scheduleRows =
           </td>
         </tr>
       `;
-      
+
   await sendEmail({
     to: userEmail,
     subject: "Your Medixa Medication Schedule",
@@ -1506,14 +1506,19 @@ app.get("/testimonials", (req, res) => {
 
 
 const PORT = process.env.PORT || 3000;
-const server = app.listen(PORT, () => {
+const server = app.listen(PORT, "0.0.0.0", () => {
   console.log(`listening at port ${PORT}`);
 });
 
 
 // ####### SOCKET #######
 
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
+});
 
 io.on("connection", (socket) => {
   console.log("Socket connected:", socket.id);
