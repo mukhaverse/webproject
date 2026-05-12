@@ -110,9 +110,10 @@ async function apiCreateChat(body) {
     method: "POST",
     body: JSON.stringify({ body })
   });
-}
-message = await apiSendMessage(realChatId, text);
+  message = await apiSendMessage(realChatId, text);
 showSentOverlay();
+}
+
 
 
 
@@ -128,9 +129,10 @@ async function apiSendMessage(chatId, body) {
     method: "POST",
     body: JSON.stringify({ body })
   });
+  message = await apiSendMessage(realChatId, text);
+  showSentOverlay();
 }
-message = await apiSendMessage(realChatId, text);
-showSentOverlay();
+
 
 function setActiveLink() {
   document.querySelectorAll(".sidebar-links a").forEach((link) => {
