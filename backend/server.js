@@ -1198,7 +1198,6 @@ function buildScheduleRecommendation(normalizedDrugs, results) {
   return { show: true, canSchedule: true, severity: highest.severity, message: rule.message, gapHours: rule.gapHours, scheduleData };
 }
 
-
 // ####### CHECK ENDPOINT #######
 app.post("/check", requireAuth, async (req, res) => {
   console.log("CHECK BODY:", JSON.stringify(req.body));
@@ -1211,6 +1210,11 @@ app.post("/check", requireAuth, async (req, res) => {
   }
 
   try {
+    const normalizedDrugs = drugs.map((drug) => ({
+      original: drug,
+      normalized: drug
+    }));
+
     const pairs = [];
     for (let i = 0; i < drugs.length; i++) {
       for (let j = i + 1; j < drugs.length; j++) {
@@ -1241,10 +1245,9 @@ app.post("/check", requireAuth, async (req, res) => {
     console.log("Interaction results:", JSON.stringify(results));
 
     results.forEach(r => {
-
-     
       if (r.result?.interaction_found && r.result?.interaction) {
         const interaction = r.result.interaction;
+
         db.query(
           `INSERT INTO interaction_checks (drug1, drug2, severity, description, management, clinical_significance, user_id)
            VALUES (?, ?, ?, ?, ?, ?, ?)`,
@@ -1263,7 +1266,6 @@ app.post("/check", requireAuth, async (req, res) => {
           }
         );
 
-      
       } else if (r.result?.message?.toLowerCase().includes("not found")) {
         const msg = r.result.message.toLowerCase();
         const drugsToLog = [];
@@ -1285,18 +1287,30 @@ app.post("/check", requireAuth, async (req, res) => {
           );
         });
       }
-
-      
-
     });
 
-    res.json({ results });
+    const scheduleRecommendation =
+      buildScheduleRecommendation(
+        normalizedDrugs,
+        results
+      );
+
+    // OLD:
+    // res.json({ results });
+
+    // NEW:
+    res.json({
+      count: results.length,
+      results,
+      scheduleRecommendation
+    });
 
   } catch (error) {
     console.error("ERROR:", error.message);
     res.status(500).json({ error: error.message });
   }
 });
+
 app.get("/user/history", requireAuth, async (req, res) => {
   try {
     const [rows] = await db.promise().query(
