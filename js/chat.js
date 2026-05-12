@@ -69,53 +69,20 @@ async function apiGetConversations() {
   return fetchJSON("/chat/conversations");
 }
 
-
-
-
-
-
-
-
-// async function apiGetMessages(chatId) {
-//   if (state.pageType === "admin") {
-//     const messages = await fetchJSON(`/admin/chat/conversations/${chatId}/messages`);
-//     return { messages };
-//   }
-
-//   return fetchJSON(`/chat/conversations/${chatId}/messages`);
-// }
-
-
-
-
 async function apiGetMessages(chatId) {
   if (state.pageType === "admin") {
     return fetchJSON(`/admin/chat/conversations/${chatId}/messages`);
-    // ✅ just return it directly — server already sends { chat, messages }
   }
 
   return fetchJSON(`/chat/conversations/${chatId}/messages`);
 }
-
-
-
-
-
-
-
-
 
 async function apiCreateChat(body) {
   return fetchJSON("/chat/start", {
     method: "POST",
     body: JSON.stringify({ body })
   });
-  message = await apiSendMessage(realChatId, text);
-showSentOverlay();
 }
-
-
-
 
 async function apiSendMessage(chatId, body) {
   if (state.pageType === "admin") {
@@ -129,10 +96,7 @@ async function apiSendMessage(chatId, body) {
     method: "POST",
     body: JSON.stringify({ body })
   });
-  message = await apiSendMessage(realChatId, text);
-  showSentOverlay();
 }
-
 
 function setActiveLink() {
   document.querySelectorAll(".sidebar-links a").forEach((link) => {
@@ -140,17 +104,37 @@ function setActiveLink() {
   });
 }
 
+// FIX 1: "New Chat" view now renders a prompt inside the panel instead of
+//         immediately opening the chat room. The user clicks the button to
+//         open the actual chat input, which keeps the sidebar intact and
+//         gives the Back button something real to return to.
 function renderList() {
   if (state.pageType === "user" && state.view === "new") {
-    renderChatRoom({
-      chat: {
-        id: "new-chat",
-        created_at: new Date().toISOString(),
-        messages: []
-      },
-      mode: "user-new",
-      backHref: "ask-pharmacist.html?view=new"
+    state.panel.innerHTML = `
+      <div class="new-chat-prompt">
+        <p>Have a question for the pharmacist?</p>
+        <button class="btn-start-chat" id="startChatBtn">Start New Chat</button>
+      </div>
+    `;
+
+    document.getElementById("startChatBtn").addEventListener("click", () => {
+      window.location.href = "ask-pharmacist.html?view=new&open=1";
     });
+
+    // If the URL already has open=1 (user clicked the button), go straight
+    // to the chat room inside the panel.
+    if (state.params.get("open") === "1") {
+      renderChatRoom({
+        chat: {
+          id: "new-chat",
+          created_at: new Date().toISOString(),
+          messages: []
+        },
+        mode: "user-new",
+        backHref: "ask-pharmacist.html?view=new"
+      });
+    }
+
     return;
   }
 
@@ -208,9 +192,6 @@ function bindCards() {
   });
 }
 
-
-
-
 async function renderSelectedChat() {
   const data = await apiGetMessages(state.chatId);
 
@@ -218,7 +199,7 @@ async function renderSelectedChat() {
     id: state.chatId,
     created_at: data.chat?.created_at || new Date().toISOString(),
     messages: data.messages || [],
-     user_name: data.chat?.user_name || "User"
+    user_name: data.chat?.user_name || "User"
   };
 
   const mode =
@@ -236,20 +217,22 @@ async function renderSelectedChat() {
   });
 }
 
-
-
-
-
+// FIX 2: renderChatRoom no longer wipes document.body. It renders the chat
+//         room inside #appPanel so the existing header, sidebar, and nav
+//         stay in place. The Back link therefore works correctly.
 function renderChatRoom({ chat, mode, backHref }) {
   const isAdmin = mode.startsWith("admin");
   const canSend = mode === "admin-unread" || mode === "user-new" || mode === "user-history";
 
-  document.body.innerHTML = `
-    <main class="chat-room">
+  // Re-grab panel in case it was lost after a previous full-body replace
+  const panel = document.getElementById("appPanel") || state.panel;
+
+  panel.innerHTML = `
+    <div class="chat-room">
       <aside class="room-side">
         <a class="back-link" href="${backHref}">&lt; Back</a>
         <section class="profile-block">
-          <h2>${isAdmin ? chat.user_name : "Pharmacist"}</h2>
+          <h2>${isAdmin ? escapeHtml(chat.user_name) : "Pharmacist"}</h2>
           <p>Chat Start At: ${formatTime(chat.created_at)}</p>
         </section>
       </aside>
@@ -261,9 +244,9 @@ function renderChatRoom({ chat, mode, backHref }) {
             : `<p class="chat-note">Start your chat by sending a message.</p>`}
         </div>
 
-        ${canSend ? messageFormTemplate(mode) : `<p class="chat-note">You can’t send messages.</p>`}
+        ${canSend ? messageFormTemplate(mode) : `<p class="chat-note">You can't send messages.</p>`}
       </section>
-    </main>
+    </div>
   `;
 
   bindMessageForm(mode, chat.id);
@@ -299,7 +282,7 @@ function messageFormTemplate(mode) {
   return `
     <form class="message-form" id="messageForm">
       <input id="messageInput" type="text" placeholder="${isAdminReply ? "Send Reply..." : "Start Chat..."}" autocomplete="off" required>
-      <button type="submit">${isAdminReply ? "Send" : "Send"}</button>
+      <button type="submit">Send</button>
     </form>
   `;
 }
@@ -340,7 +323,11 @@ function bindMessageForm(mode, chatId) {
           });
         }
 
-        window.location.href = `ask-pharmacist.html?view=history&chat=${realChatId}`;
+        // FIX 3: show the overlay BEFORE redirecting so the user sees it
+        showSentOverlay();
+        setTimeout(() => {
+          window.location.href = `ask-pharmacist.html?view=history&chat=${realChatId}`;
+        }, 3000);
         return;
       }
 
@@ -409,33 +396,6 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
-// async function init() {
-//   try {
-//     if (!requireLogin()) return;
-//     if (!guardRole()) return;
-
-//     setActiveLink();
-
-//     if (window.socket && state.pageType === "admin") {
-//       socket.emit("join-admin");
-//     }
-
-//     state.conversations = await apiGetConversations();
-
-//     if (state.chatId) {
-//       await renderSelectedChat();
-//       return;
-//     }
-
-//     renderList();
-
-//   } catch (error) {
-//     console.error(error);
-//     if (state.panel) {
-//       state.panel.innerHTML = `<p class="empty-state">Could not load chat data.</p>`;
-//     }
-//   }
-// }
 async function init() {
   try {
     if (!requireLogin()) return;
@@ -447,6 +407,7 @@ async function init() {
       socket.emit("join-admin");
     }
 
+    // "New Chat" view: show the landing prompt (no API call needed)
     if (state.pageType === "user" && state.view === "new") {
       renderList();
       return;
@@ -470,6 +431,7 @@ async function init() {
 }
 
 document.addEventListener("DOMContentLoaded", init);
+
 function showSentOverlay() {
   const overlay = document.createElement("div");
   overlay.style.cssText = `
