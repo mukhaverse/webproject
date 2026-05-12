@@ -841,6 +841,7 @@ const cors = require("cors");
 const { Server } = require("socket.io");
 require("dotenv").config();
 const db = require("./db");
+const { sendEmail } = require("./email");
 
 // import service
 const { checkInteraction } = require("./services/interactionApi");
@@ -1198,6 +1199,46 @@ function buildScheduleRecommendation(normalizedDrugs, results) {
   return { show: true, canSchedule: true, severity: highest.severity, message: rule.message, gapHours: rule.gapHours, scheduleData };
 }
 
+async function sendScheduleEmail(userEmail, scheduleRecommendation) {
+  if (
+    !userEmail ||
+    !scheduleRecommendation?.canSchedule ||
+    !scheduleRecommendation?.scheduleData?.length
+  ) {
+    return;
+  }
+
+  const scheduleRows = scheduleRecommendation.scheduleData
+    .map((item) => `
+      <tr>
+        <td style="padding:14px;border-bottom:1px solid #edf0f5;">
+          ${item.drug}
+        </td>
+        <td style="padding:14px;border-bottom:1px solid #edf0f5;text-align:right;font-weight:600;">
+          ${item.time}
+        </td>
+      </tr>
+    `)
+    .join("");
+
+  await sendEmail({
+    to: userEmail,
+    subject: "Your Medixa Medication Schedule",
+    template: "scheduleView",
+    context: {
+      message: scheduleRecommendation.message,
+      rows: scheduleRows
+    },
+    attachments: [
+      {
+        filename: "medixa.svg",
+        path: __dirname + "/assets/medixa.svg",
+        cid: "mail@medixa"
+      }
+    ]
+  });
+}
+
 // ####### CHECK ENDPOINT #######
 app.post("/check", requireAuth, async (req, res) => {
   console.log("CHECK BODY:", JSON.stringify(req.body));
@@ -1294,6 +1335,20 @@ app.post("/check", requireAuth, async (req, res) => {
         normalizedDrugs,
         results
       );
+
+    const [[userRow]] = await db.promise().query(
+      "SELECT email FROM users WHERE id = ?",
+      [userId]
+    );
+
+    try {
+      await sendScheduleEmail(
+        userRow?.email,
+        scheduleRecommendation
+      );
+    } catch (emailError) {
+      console.error("[EMAIL] Schedule email failed:", emailError.message);
+    }
 
     // OLD:
     // res.json({ results });

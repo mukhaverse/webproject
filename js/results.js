@@ -110,16 +110,22 @@ if (scheduleRecommendation?.show && scheduleSection) {
 
   scheduleMessage.textContent = scheduleRecommendation.message || "";
 
-  if (scheduleCard) {
-    scheduleCard.style.display = "block";
-  }
+  if (
+    !scheduleRecommendation.canSchedule ||
+    !scheduleData ||
+    scheduleData.length === 0
+  ) {
+    if (scheduleCard) {
+      scheduleCard.style.display = "none";
+    }
+  } else {
+    if (scheduleCard) {
+      scheduleCard.style.display = "block";
+    }
 
-  if (scheduleData.length > 0) {
     renderSchedule(scheduleData);
     colorTimes(scheduleData);
     renderLegend(scheduleData);
-  } else {
-    renderSchedule([]);
   }
 }
 

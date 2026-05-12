@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "nodemailer": "^8.0.7",
+    "nodemailer-express-handlebars": "^7.0.0"
+  }
+}
