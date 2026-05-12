@@ -484,40 +484,67 @@ function showSentOverlay() {
   `;
 
   overlay.innerHTML = `
-    <style>
-      @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-      @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-      .sent-box {
-        background: white;
-        border-radius: 24px;
-        padding: 40px 36px;
-        text-align: center;
-        max-width: 360px;
-        width: 90%;
-        animation: slideUp 0.4s ease forwards;
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
       }
-      .sent-icon {
-        font-size: 42px;
-        margin-bottom: 16px;
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
       }
-      .sent-title {
-        font-size: 1.3rem;
-        font-weight: 700;
-        color: #1a1f3a;
-        margin-bottom: 10px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
       }
-      .sent-sub {
-        font-size: 0.9rem;
-        color: #6b7280;
-        line-height: 1.6;
-      }
-    </style>
-    <div class="sent-box">
-      <div class="sent-icon">💬</div>
-      <p class="sent-title">Message Sent!</p>
-      <p class="sent-sub">Just give us a few seconds — our pharmacist will get back to you shortly.</p>
-    </div>
-  `;
+    }
+
+    .sent-box {
+      background: white;
+      border-radius: 24px;
+      padding: 34px 30px;
+      text-align: center;
+      max-width: 360px;
+      width: 90%;
+      animation: slideUp 0.35s ease forwards;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+    }
+
+    .loader {
+      width: 42px;
+      height: 42px;
+      border: 4px solid #d9def0;
+      border-top-color: #24356f;
+      border-radius: 50%;
+      margin: 0 auto 18px;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .sent-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #1a1f3a;
+      line-height: 1.7;
+    }
+  </style>
+
+  <div class="sent-box">
+    <div class="loader"></div>
+
+    <p class="sent-title">
+      Waiting for a pharmacist reply to the chat
+    </p>
+  </div>
+`;
 
   document.body.appendChild(overlay);
 
