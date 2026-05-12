@@ -111,7 +111,8 @@ async function apiCreateChat(body) {
     body: JSON.stringify({ body })
   });
 }
-
+message = await apiSendMessage(realChatId, text);
+showSentOverlay();
 
 
 
@@ -128,6 +129,8 @@ async function apiSendMessage(chatId, body) {
     body: JSON.stringify({ body })
   });
 }
+message = await apiSendMessage(realChatId, text);
+showSentOverlay();
 
 function setActiveLink() {
   document.querySelectorAll(".sidebar-links a").forEach((link) => {
@@ -465,3 +468,60 @@ async function init() {
 }
 
 document.addEventListener("DOMContentLoaded", init);
+function showSentOverlay() {
+  const overlay = document.createElement("div");
+  overlay.style.cssText = `
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    animation: fadeIn 0.3s ease forwards;
+  `;
+
+  overlay.innerHTML = `
+    <style>
+      @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+      @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+      .sent-box {
+        background: white;
+        border-radius: 24px;
+        padding: 40px 36px;
+        text-align: center;
+        max-width: 360px;
+        width: 90%;
+        animation: slideUp 0.4s ease forwards;
+      }
+      .sent-icon {
+        font-size: 42px;
+        margin-bottom: 16px;
+      }
+      .sent-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #1a1f3a;
+        margin-bottom: 10px;
+      }
+      .sent-sub {
+        font-size: 0.9rem;
+        color: #6b7280;
+        line-height: 1.6;
+      }
+    </style>
+    <div class="sent-box">
+      <div class="sent-icon">💬</div>
+      <p class="sent-title">Message Sent!</p>
+      <p class="sent-sub">Just give us a few seconds — our pharmacist will get back to you shortly.</p>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+
+  setTimeout(() => {
+    overlay.style.transition = "opacity 0.4s ease";
+    overlay.style.opacity = "0";
+    setTimeout(() => overlay.remove(), 400);
+  }, 3000);
+}

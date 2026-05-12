@@ -107,8 +107,8 @@ function showNoInteractionOverlay() {
       <div class="no-int-icon">✅</div>
       <p class="no-int-title">No Interaction Found</p>
       <p class="no-int-sub">
-        These medications appear to be safe to take together.
-        No known interactions were detected between them.
+         We've checked your medications and found no known interactions.
+        We'll continue monitoring and notify you if anything changes.
       </p>
       <button class="no-int-close" id="closeNoInt">Ok</button>
     </div>
