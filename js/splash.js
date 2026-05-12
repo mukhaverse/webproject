@@ -1,16 +1,26 @@
-/**
- * splash.js
- *
- * Drop this BEFORE transition.js and 3d.js in your <script> tags.
- * Exposes:
- *   window.splashProgress(0–1)  → called from 3d.js loader progress
- *   window.splashDismiss()      → called from 3d.js loader onLoad
- *
- * Fires a custom event "splashDone" on window when fully gone,
- * which transition.js listens for instead of "load".
- */
+
 
 (function () {
+
+  const SPLASH_KEY = 'medixa_splash_seen';
+
+  // ── Skip splash on return visits ─────────────────────────────────
+
+  if (localStorage.getItem(SPLASH_KEY)) {
+    // No-op stubs so 3d.js calls don't throw
+    window.__splashDone = true;
+    window.splashProgress = function () {};
+    window.splashDismiss  = function () {};
+
+    // Fire splashDone immediately so transition.js can run
+    window.dispatchEvent(new Event('splashDone'));
+    return;
+  }
+
+  // Mark as seen for all future visits
+  localStorage.setItem(SPLASH_KEY, '1');
+
+  // ── First visit: run the full splash ─────────────────────────────
 
   // Flag so transition.js knows not to run its entry animation yet
   window.__splashDone = false;
