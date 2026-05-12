@@ -1202,25 +1202,46 @@ function buildScheduleRecommendation(normalizedDrugs, results) {
 async function sendScheduleEmail(userEmail, scheduleRecommendation) {
   if (
     !userEmail ||
-    !scheduleRecommendation?.canSchedule ||
-    !scheduleRecommendation?.scheduleData?.length
+    !scheduleRecommendation?.show
   ) {
     return;
   }
+const scheduleRows =
+  scheduleRecommendation?.scheduleData?.length
+    ? scheduleRecommendation.scheduleData
+        .map((item) => `
+          <tr>
+            <td style="
+              padding:14px;
+              border-bottom:1px solid #edf0f5;
+            ">
+              ${item.drug}
+            </td>
 
-  const scheduleRows = scheduleRecommendation.scheduleData
-    .map((item) => `
-      <tr>
-        <td style="padding:14px;border-bottom:1px solid #edf0f5;">
-          ${item.drug}
-        </td>
-        <td style="padding:14px;border-bottom:1px solid #edf0f5;text-align:right;font-weight:600;">
-          ${item.time}
-        </td>
-      </tr>
-    `)
-    .join("");
+            <td style="
+              padding:14px;
+              border-bottom:1px solid #edf0f5;
+              text-align:right;
+              font-weight:600;
+            ">
+              ${item.time}
+            </td>
+          </tr>
+        `)
+        .join("")
 
+    : `
+        <tr>
+          <td style="
+            padding:18px;
+            color:#566078;
+            line-height:1.6;
+          ">
+            ${scheduleRecommendation.message}
+          </td>
+        </tr>
+      `;
+      
   await sendEmail({
     to: userEmail,
     subject: "Your Medixa Medication Schedule",
