@@ -946,6 +946,68 @@ app.post("/chat/start", requireAuth, async (req, res) => {
   }
 });
 
+
+
+
+
+// app.get("/chat/conversations/:id/messages", requireAuth, async (req, res) => {
+//   const convId = parseInt(req.params.id, 10);
+
+//   if (isNaN(convId)) {
+//     return res.status(400).json({ error: "Invalid conversation ID" });
+//   }
+
+//   try {
+//     await db.promise().query(
+//       `UPDATE chat_messages
+//        SET is_read = 1
+//        WHERE conversation_id = ? AND sender_role = 'user'`,
+//       [convId]
+//     );
+
+//     const [[chat]] = await db.promise().query(
+//       `SELECT
+//          cc.id,
+//          cc.user_id,
+//          cc.created_at,
+//          cc.updated_at,
+//          u.name AS user_name
+//        FROM chat_conversations cc
+//        JOIN users u ON u.id = cc.user_id
+//        WHERE cc.id = ?`,
+//       [convId]
+//     );
+
+//     if (!chat) {
+//       return res.status(404).json({ error: "Conversation not found" });
+//     }
+
+//     const [messages] = await db.promise().query(
+//       `SELECT
+//          cm.id,
+//          cm.body,
+//          cm.sender_role,
+//          cm.is_read,
+//          cm.sent_at,
+//          u.name AS sender_name
+//        FROM chat_messages cm
+//        JOIN users u ON u.id = cm.sender_id
+//        WHERE cm.conversation_id = ?
+//        ORDER BY cm.sent_at ASC`,
+//       [convId]
+//     );
+
+//     return res.json({ chat, messages });
+
+//   } catch (err) {
+//     console.error("[Admin] /chat/messages GET error:", err.message);
+//     return res.status(500).json({ error: "Failed to load messages" });
+//   }
+// });
+
+
+
+// get messages for user conversation
 app.get("/chat/conversations/:id/messages", requireAuth, async (req, res) => {
   const convId = parseInt(req.params.id, 10);
 
@@ -954,13 +1016,8 @@ app.get("/chat/conversations/:id/messages", requireAuth, async (req, res) => {
   }
 
   try {
-    await db.promise().query(
-      `UPDATE chat_messages
-       SET is_read = 1
-       WHERE conversation_id = ? AND sender_role = 'user'`,
-      [convId]
-    );
 
+    // get chat info + verify ownership
     const [[chat]] = await db.promise().query(
       `SELECT
          cc.id,
@@ -970,14 +1027,15 @@ app.get("/chat/conversations/:id/messages", requireAuth, async (req, res) => {
          u.name AS user_name
        FROM chat_conversations cc
        JOIN users u ON u.id = cc.user_id
-       WHERE cc.id = ?`,
-      [convId]
+       WHERE cc.id = ? AND cc.user_id = ?`,
+      [convId, req.user.id]
     );
 
     if (!chat) {
       return res.status(404).json({ error: "Conversation not found" });
     }
 
+    // get messages
     const [messages] = await db.promise().query(
       `SELECT
          cm.id,
@@ -993,13 +1051,23 @@ app.get("/chat/conversations/:id/messages", requireAuth, async (req, res) => {
       [convId]
     );
 
-    return res.json({ chat, messages });
+    return res.json({
+      chat,
+      messages
+    });
 
   } catch (err) {
-    console.error("[Admin] /chat/messages GET error:", err.message);
+    console.error("[User] /chat/messages GET error:", err.message);
     return res.status(500).json({ error: "Failed to load messages" });
   }
 });
+
+
+
+
+
+
+
 
 app.post("/chat/conversations/:id/messages", requireAuth, async (req, res) => {
   const conversationId = parseInt(req.params.id, 10);
