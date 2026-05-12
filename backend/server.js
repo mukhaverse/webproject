@@ -1174,7 +1174,7 @@ app.post("/check", requireAuth, async (req, res) => {
 
     results.forEach(r => {
 
-      // ✅ فيه انتراكشن — يحفظ في interaction_checks
+     
       if (r.result?.interaction_found && r.result?.interaction) {
         const interaction = r.result.interaction;
         db.query(
@@ -1195,7 +1195,7 @@ app.post("/check", requireAuth, async (req, res) => {
           }
         );
 
-      // ❌ دواء ما لقاه — يحفظ في unresolved_drugs
+      
       } else if (r.result?.message?.toLowerCase().includes("not found")) {
         const msg = r.result.message.toLowerCase();
         const drugsToLog = [];
@@ -1218,7 +1218,7 @@ app.post("/check", requireAuth, async (req, res) => {
         });
       }
 
-      // ✅ ما فيه انتراكشن ومش unresolved — ما يحفظ شي
+      
 
     });
 
