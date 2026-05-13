@@ -1,107 +1,467 @@
-//Doughnut chart
-//TEST DATA..
-const charData ={
-labels: ["Contraindicated","Major","Moderate","Minor"],
-data: [60,25,30,95],
-};
+const savedResult = JSON.parse(localStorage.getItem("interactionResult"));
 
-const myChart = document.querySelector(".risk");
+const scheduleRecommendation = savedResult?.scheduleRecommendation;
+const scheduleData = scheduleRecommendation?.scheduleData || [];
 
-new Chart(myChart, {
-    type: "doughnut",
-    data: {
-        labels: charData.labels ,
+const scheduleSection = document.querySelector(".schedule-section");
+const scheduleCard = document.querySelector(".schedule-card");
+
+if (scheduleSection) {
+  scheduleSection.style.display = "none";
+}
+
+function getHourIndex(time) {
+  const hour = parseInt(time.split(" ")[0], 10);
+  return hour === 12 ? 1 : hour + 1;
+}
+
+function renderSchedule(data) {
+  const amSchedule = document.getElementById("amSchedule");
+  const pmSchedule = document.getElementById("pmSchedule");
+
+  if (!amSchedule || !pmSchedule) return;
+
+  amSchedule.innerHTML = "";
+  pmSchedule.innerHTML = "";
+
+  for (let i = 1; i <= 12; i++) {
+    const amSlot = document.createElement("div");
+    amSlot.className = "hour-slot";
+    amSlot.dataset.index = i;
+    amSchedule.appendChild(amSlot);
+
+    const pmSlot = document.createElement("div");
+    pmSlot.className = "hour-slot";
+    pmSlot.dataset.index = i;
+    pmSchedule.appendChild(pmSlot);
+  }
+
+  data.forEach((item) => {
+    const index = getHourIndex(item.time);
+    const container = item.time.includes("am") ? amSchedule : pmSchedule;
+    const slot = container.querySelector(`.hour-slot[data-index="${index}"]`);
+
+    if (!slot) return;
+
+    slot.classList.add(`${item.color}-slot`);
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "dose-wrapper";
+
+    const dose = document.createElement("span");
+    dose.className = `dose ${item.color}-dose`;
+
+    wrapper.appendChild(dose);
+    slot.appendChild(wrapper);
+  });
+}
+
+function colorTimes(data) {
+  const colors = {
+    pink: "#ff5b83",
+    yellow: "#ffc64d",
+    blue: "#36a5e8",
+    orange: "#ff9f40",
+    green: "#2ecc71",
+    purple: "#9b5de5",
+    cyan: "#00bcd4"
+  };
+
+  data.forEach((item) => {
+    document.querySelectorAll(".time").forEach((t) => {
+      if (t.dataset.time === item.time) {
+        t.style.color = colors[item.color];
+      }
+    });
+  });
+}
+
+function renderLegend(data) {
+  const legendContainer = document.querySelector(".schedule-legend");
+  if (!legendContainer) return;
+
+  legendContainer.innerHTML = "";
+  const added = new Set();
+
+  data.forEach((item) => {
+    if (added.has(item.drug)) return;
+    added.add(item.drug);
+
+    const legendItem = document.createElement("span");
+    legendItem.innerHTML = `
+      <i class="legend-line ${item.color}-dose"></i>
+      ${item.drug}
+    `;
+    legendContainer.appendChild(legendItem);
+  });
+}
+
+if (scheduleRecommendation?.show && scheduleSection) {
+  scheduleSection.style.display = "block";
+
+  let scheduleMessage = document.getElementById("scheduleMessage");
+
+  if (!scheduleMessage) {
+    scheduleMessage = document.createElement("p");
+    scheduleMessage.id = "scheduleMessage";
+    scheduleMessage.style.marginBottom = "20px";
+    scheduleSection.insertBefore(scheduleMessage, scheduleCard);
+  }
+
+  scheduleMessage.textContent = scheduleRecommendation.message || "";
+
+  if (
+    !scheduleRecommendation.canSchedule ||
+    !scheduleData ||
+    scheduleData.length === 0
+  ) {
+    if (scheduleCard) {
+      scheduleCard.style.display = "none";
+    }
+  } else {
+    if (scheduleCard) {
+      scheduleCard.style.display = "block";
+    }
+
+    renderSchedule(scheduleData);
+    colorTimes(scheduleData);
+    renderLegend(scheduleData);
+  }
+}
+
+// ########## CHARTS ##########
+
+const results = savedResult?.results || [];
+
+const firstInteractionFound = results.find(
+  (r) => r.result?.interaction_found && r.result?.interaction
+);
+
+const firstInteraction = firstInteractionFound?.result?.interaction;
+
+if (firstInteraction) {
+  const severity = firstInteraction.severity?.toLowerCase() || "minor";
+
+  let severityData = [0, 0, 0, 0];
+
+  switch (severity) {
+    case "contraindicated":
+      severityData = [100, 0, 0, 0];
+      break;
+
+    case "major":
+      severityData = [0, 100, 0, 0];
+      break;
+
+    case "moderate":
+      severityData = [0, 0, 100, 0];
+      break;
+
+    default:
+      severityData = [0, 0, 0, 100];
+  }
+
+  // ===== LEFT CHART =====
+
+  const riskCanvas = document.querySelector(".risk");
+
+  if (riskCanvas && typeof Chart !== "undefined") {
+    new Chart(riskCanvas, {
+      type: "doughnut",
+
+      data: {
+        labels: ["Contraindicated", "Major", "Moderate", "Minor"],
+
+        datasets: [
+          {
+            data: severityData,
+
+            backgroundColor: [
+              "#36A2EB",
+              "#FF5B83",
+              "#FF9F40",
+              "#FFCD56"
+            ],
+
+            borderWidth: 0
+          }
+        ]
+      },
+
+      options: {
+        responsive: true,
+        cutout: "55%"
+      }
+    });
+  }
+
+   // ===== RIGHT CHART =====
+
+  const descriptionText =
+    firstInteraction.description?.toLowerCase() || "";
+
+  const sideEffectsCanvas =
+    document.querySelector(".effect-chart");
+
+  if (sideEffectsCanvas && typeof Chart !== "undefined") {
+
+    new Chart(sideEffectsCanvas, {
+
+      type: "line",
+
+      data: {
+
+        labels: ["Jan", "Feb", "Mar", "Apr", "May"],
+
         datasets: [
 
-        {
-            label: "Risk ratio",
-            data: charData.data,
-        
+          {
+            label: "EDC",
+
+            data: [8, 10, 15, 11, 9],
+
+            borderColor: "#D9D9DE",
+
+            backgroundColor: "rgba(217,217,222,0.85)",
+
+            fill: true,
+
+            tension: 0.5,
+
+            pointRadius: 0,
+
+            borderWidth: 0
+          },
+
+          {
+            label: "IRT",
+
+            data: [4, 7, 9, 13, 8],
+
+            borderColor: "#5667D8",
+
+            backgroundColor: "rgba(86,103,216,0.85)",
+
+            fill: true,
+
+            tension: 0.5,
+
+            pointRadius: 0,
+
+            borderWidth: 0
+          },
+
+          {
+            label: "F",
+
+            data: [2, 3, 4, 8, 3],
+
+            borderColor: "#67D2DF",
+
+            backgroundColor: "rgba(103,210,223,0.9)",
+
+            fill: true,
+
+            tension: 0.5,
+
+            pointRadius: 0,
+
+            borderWidth: 0
+          }
+        ]
+      },
+
+      options: {
+
+        responsive: true,
+
+        maintainAspectRatio: false,
+
+        interaction: {
+          intersect: false,
+          mode: "index"
         },
-    ],
-    },
-});
 
+        plugins: {
 
+          legend: {
 
+            display: true,
 
-// line chart
-const effectChart = document.querySelector(".effect-chart").getContext("2d");
+            position: "top",
 
-// gradients 
-const grayGradient = effectChart.createLinearGradient(0, 0, 0, 300);
-grayGradient.addColorStop(0, "rgba(200,200,200,0.9)");
-grayGradient.addColorStop(1, "rgba(200,200,200,0.2)");
+            labels: {
 
-const blueGradient = effectChart.createLinearGradient(0, 0, 0, 300);
-blueGradient.addColorStop(0, "rgba(80,100,230,0.9)");
-blueGradient.addColorStop(1, "rgba(80,100,230,0.2)");
+              usePointStyle: true,
 
-const cyanGradient = effectChart.createLinearGradient(0, 0, 0, 300);
-cyanGradient.addColorStop(0, "rgba(100,200,220,0.9)");
-cyanGradient.addColorStop(1, "rgba(100,200,220,0.2)");
+              pointStyle: "circle",
 
-// create the chart
-new Chart(effectChart, {
-  type: "line",
-  data: {
-    labels: ["Bleeding", "Toxicity", "Drowsiness", "Heart Risk", "Other"],
-    datasets: [
-      {
-        label: "Severe Effects",
-        data: [1, 2, 6, 4, 7],
-        backgroundColor: grayGradient,
-        borderWidth: 0,
-        fill: true,
-        tension: 0.4,
-        pointRadius: 0,
-        stack: "stack1"
-      },
-      {
-        label: "Moderate Effects",
-        data: [2, 2, 3, 1, 0],
-        backgroundColor: blueGradient,
-        borderWidth: 0,
-        fill: true,
-        tension: 0.4,
-        pointRadius: 0,
-        stack: "stack1"
-      },
-      {
-        label: "Minor Effects",
-        data: [1, 1, 2, 1, 1],
-        backgroundColor: cyanGradient,
-        borderWidth: 0,
-        fill: true,
-        tension: 0.4,
-        pointRadius: 0,
-        stack: "stack1"
+              boxWidth: 8,
+
+              boxHeight: 8,
+
+              color: "#7d8190",
+
+              font: {
+                size: 11
+              }
+            }
+          },
+
+          tooltip: {
+
+            backgroundColor: "#ffffff",
+
+            titleColor: "#1E1E2F",
+
+            bodyColor: "#1E1E2F",
+
+            displayColors: false,
+
+            padding: 12,
+
+            cornerRadius: 10
+          }
+        },
+
+        scales: {
+
+          x: {
+
+            grid: {
+              display: false
+            },
+
+            border: {
+              display: false
+            },
+
+            ticks: {
+
+              color: "#9aa0b5",
+
+              font: {
+                size: 11
+              }
+            }
+          },
+
+          y: {
+
+            beginAtZero: true,
+
+            display: false,
+
+            grid: {
+              display: false
+            },
+
+            border: {
+              display: false
+            }
+          }
+        },
+
+        elements: {
+
+          line: {
+
+            capBezierPoints: true
+          }
+        }
       }
-    ]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { display: false }
-    },
-    interaction: {
-      mode: "index",
-      intersect: false
-    },
-    scales: {
-      x: {
-        stacked: true,
-        grid: { display: false },
-        border: { display: false }
-      },
-      y: {
-        stacked: true,
-        display: false,
-        grid: { display: false },
-        border: { display: false }
-      }
-    }
+    });
   }
-});
 
+// ########## CARDS ##########
+
+const cardSection = document.querySelector(".card-sect");
+
+if (cardSection) {
+  cardSection.innerHTML = "";
+}
+
+const interactionsFound = results.filter(
+  (r) =>
+    r.result?.interaction_found &&
+    r.result?.interaction
+);
+
+if (interactionsFound.length === 0 && cardSection) {
+  cardSection.innerHTML =
+    "<p>No interaction details found.</p>";
+
+} else if (cardSection) {
+
+  interactionsFound.forEach((r) => {
+
+    const interaction = r.result.interaction;
+
+    const cards = [
+      {
+        title: interaction.severity || "Unknown",
+
+        value:
+          interaction.severity === "major"
+            ? "High-risk interaction requiring close monitoring."
+
+            : interaction.severity === "moderate"
+            ? "Moderate interaction that may require caution."
+
+            : interaction.severity === "minor"
+            ? "Minor interaction with limited clinical effect."
+
+            : "Interaction severity information."
+      },
+
+      {
+        title: "Description",
+        value:
+          interaction.description ||
+          "No description available."
+      },
+
+      {
+        title: "Management",
+        value:
+          interaction.management ||
+          "No management available."
+      },
+
+      {
+        title: "Clinical Significance",
+        value:
+          interaction.clinical_significance ||
+          "No clinical significance available."
+      }
+    ];
+
+    cards.forEach((item) => {
+
+      const card = document.createElement("article");
+
+      card.className = "result-card";
+
+      card.innerHTML = `
+        <div class="status-div">
+          <span class="badge">
+            ID: ${interaction.id || "N/A"}
+          </span>
+        </div>
+
+        <h2>${item.title}</h2>
+
+        <div class="mini-info-card">
+          <p>${item.value}</p>
+        </div>
+
+        <div class="drugs-result">
+          <span class="drug-select">${r.drug1}</span>
+          <span class="drug-select">${r.drug2}</span>
+        </div>
+      `;
+
+      cardSection.appendChild(card);
+    });
+  });
+}

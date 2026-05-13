@@ -132,33 +132,49 @@ if (scheduleRecommendation?.show && scheduleSection) {
 // ########## CHARTS ##########
 
 const results = savedResult?.results || [];
-const firstInteractionFound = results.find(r => r.result?.interaction_found && r.result?.interaction);
+const firstInteractionFound = results.find(
+  r => r.result?.interaction_found && r.result?.interaction
+);
 const firstInteraction = firstInteractionFound?.result?.interaction;
 
 if (firstInteraction) {
   const severity = firstInteraction.severity?.toLowerCase() || "minor";
 
   let severityData = [0, 0, 0, 0];
+
   switch (severity) {
-    case "contraindicated": severityData = [100, 0, 0, 0]; break;
-    case "major":           severityData = [0, 100, 0, 0]; break;
-    case "moderate":        severityData = [0, 0, 100, 0]; break;
-    default:                severityData = [0, 0, 0, 100];
+    case "contraindicated":
+      severityData = [100, 0, 0, 0];
+      break;
+    case "major":
+      severityData = [0, 100, 0, 0];
+      break;
+    case "moderate":
+      severityData = [0, 0, 100, 0];
+      break;
+    default:
+      severityData = [0, 0, 0, 100];
   }
 
   const riskCanvas = document.querySelector(".risk");
+
   if (riskCanvas && typeof Chart !== "undefined") {
     new Chart(riskCanvas, {
       type: "doughnut",
       data: {
         labels: ["Contraindicated", "Major", "Moderate", "Minor"],
-        datasets: [{
-          data: severityData,
-          backgroundColor: ["#36A2EB", "#FF5B83", "#FF9F40", "#FFCD56"],
-          borderWidth: 0
-        }]
+        datasets: [
+          {
+            data: severityData,
+            backgroundColor: ["#36A2EB", "#FF5B83", "#FF9F40", "#FFCD56"],
+            borderWidth: 0
+          }
+        ]
       },
-      options: { responsive: true, cutout: "55%" }
+      options: {
+        responsive: true,
+        cutout: "55%"
+      }
     });
   }
 
@@ -167,29 +183,82 @@ if (firstInteraction) {
 
   if (sideEffectsCanvas && typeof Chart !== "undefined") {
     new Chart(sideEffectsCanvas, {
-      type: "line",
+      type: "bar",
       data: {
         labels: ["Bleeding", "Toxicity", "Drowsiness", "Heart Risk", "Other"],
-        datasets: [{
-          label: "Risk Level",
-          data: [
-            descriptionText.includes("bleeding") ? 9 : 1,
-            descriptionText.includes("toxic") ? 8 : 1,
-            descriptionText.includes("drowsiness") ? 7 : 1,
-            descriptionText.includes("heart") ? 8 : 1,
-            descriptionText.includes("interaction") ? 5 : 1
-          ],
-          borderColor: "#6C8EF5",
-          backgroundColor: "rgba(108,142,245,0.25)",
-          fill: true,
-          tension: 0.4
-        }]
+        datasets: [
+          {
+            label: "Risk Level",
+            data: [
+              descriptionText.includes("bleeding") ? 9 : 1,
+              descriptionText.includes("toxic") ? 8 : 1,
+              descriptionText.includes("drowsiness") ? 7 : 1,
+              descriptionText.includes("heart") ? 8 : 1,
+              descriptionText.includes("interaction") ? 5 : 1
+            ],
+            backgroundColor: [
+              "#FF5B83",
+              "#6C8EF5",
+              "#FFCD56",
+              "#36A2EB",
+              "#9B5DE5"
+            ],
+            borderRadius: 14,
+            borderSkipped: false,
+            barThickness: 28,
+            hoverBackgroundColor: [
+              "#ff7b9d",
+              "#88a5ff",
+              "#ffd76f",
+              "#57b7ff",
+              "#b57dff"
+            ]
+          }
+        ]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: { y: { beginAtZero: true, max: 10 } }
+        indexAxis: "y",
+
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            backgroundColor: "#1E1E2F",
+            titleColor: "#fff",
+            bodyColor: "#fff",
+            padding: 12,
+            cornerRadius: 10
+          }
+        },
+
+        scales: {
+          x: {
+            beginAtZero: true,
+            max: 10,
+            grid: {
+              color: "rgba(255,255,255,0.05)"
+            },
+            ticks: {
+              color: "#7B8199"
+            }
+          },
+          y: {
+            grid: {
+              display: false
+            },
+            ticks: {
+              color: "#7B8199"
+            }
+          }
+        },
+
+        animation: {
+          duration: 1800,
+          easing: "easeOutQuart"
+        }
       }
     });
   }
@@ -198,9 +267,12 @@ if (firstInteraction) {
 // ########## CARDS ##########
 
 const cardSection = document.querySelector(".card-sect");
+
 if (cardSection) cardSection.innerHTML = "";
 
-const interactionsFound = results.filter(r => r.result?.interaction_found && r.result?.interaction);
+const interactionsFound = results.filter(
+  r => r.result?.interaction_found && r.result?.interaction
+);
 
 if (interactionsFound.length === 0 && cardSection) {
   cardSection.innerHTML = "<p>No interaction details found.</p>";
@@ -212,14 +284,26 @@ if (interactionsFound.length === 0 && cardSection) {
       {
         title: interaction.severity || "Unknown",
         value:
-          interaction.severity === "major" ? "High-risk interaction requiring close monitoring." :
-          interaction.severity === "moderate" ? "Moderate interaction that may require caution." :
-          interaction.severity === "minor" ? "Minor interaction with limited clinical effect." :
-          "Interaction severity information."
+          interaction.severity === "major"
+            ? "High-risk interaction requiring close monitoring."
+            : interaction.severity === "moderate"
+            ? "Moderate interaction that may require caution."
+            : interaction.severity === "minor"
+            ? "Minor interaction with limited clinical effect."
+            : "Interaction severity information."
       },
-      { title: "Description", value: interaction.description || "No description available." },
-      { title: "Management", value: interaction.management || "No management available." },
-      { title: "Clinical Significance", value: interaction.clinical_significance || "No clinical significance available." }
+      {
+        title: "Description",
+        value: interaction.description || "No description available."
+      },
+      {
+        title: "Management",
+        value: interaction.management || "No management available."
+      },
+      {
+        title: "Clinical Significance",
+        value: interaction.clinical_significance || "No clinical significance available."
+      }
     ];
 
     cards.forEach((item) => {
@@ -230,10 +314,13 @@ if (interactionsFound.length === 0 && cardSection) {
         <div class="status-div">
           <span class="badge">ID: ${interaction.id || "N/A"}</span>
         </div>
+
         <h2>${item.title}</h2>
+
         <div class="mini-info-card">
           <p>${item.value}</p>
         </div>
+
         <div class="drugs-result">
           <span class="drug-select">${r.drug1}</span>
           <span class="drug-select">${r.drug2}</span>
