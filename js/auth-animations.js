@@ -18,8 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     ScrollTrigger.create({
       trigger: targets[0] || targets,
-      // Changed from "top 75%" → "top 88%" so the element is
-      // well into the viewport before the animation fires.
+  
       start: "top 88%",
       once: true,
       onEnter: () => {

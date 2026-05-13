@@ -1362,14 +1362,16 @@ app.post("/check", requireAuth, async (req, res) => {
       [userId]
     );
 
-    try {
-      await sendScheduleEmail(
-        userRow?.email,
-        scheduleRecommendation
-      );
-    } catch (emailError) {
-      console.error("[EMAIL] Schedule email failed:", emailError.message);
-    }
+    // try {
+    //   await sendScheduleEmail(
+    //     userRow?.email,
+    //     scheduleRecommendation
+    //   );
+    // } catch (emailError) {
+    //   console.error("[EMAIL] Schedule email failed:", emailError.message);
+    // }
+    sendScheduleEmail(userRow?.email, scheduleRecommendation)
+  .catch(err => console.error("[EMAIL] failed:", err.message));
 
     // OLD:
     // res.json({ results });

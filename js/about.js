@@ -25,7 +25,7 @@ function runCounters() {
 }
 
 
-/* Wait for intro animation; fall back immediately if intro.js isn't loaded */
+
 document.addEventListener('intro-done', runCounters, { once: true });
 setTimeout(() => {
   if (document.querySelector('.counter').textContent === '0') runCounters();
