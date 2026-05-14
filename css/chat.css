@@ -62,15 +62,11 @@ input {
   justify-content: center;
 }
 
-.sidebar-content h1,
-.profile-block h2 {
+.sidebar-content h1 {
   font-family: 'Barlow', sans-serif;
   font-weight: 800;
   letter-spacing: -0.04em;
   color: var(--ink);
-}
-
-.sidebar-content h1 {
   font-size: clamp(43px, 5.1vw, 76px);
   line-height: 0.96;
   margin-bottom: 20px;
@@ -182,19 +178,12 @@ input {
   font-weight: 500;
   text-decoration: none;
 }
-.back-link a{
-  position: absolute;
-  top: 76px;
-  left: clamp(36px, 8vw, 88px);
-  font-size: 30px;
-  font-weight: 500;
-  text-decoration: none;
-}
-
 .profile-block h2 {
-  font-size: clamp(48px, 5vw, 72px);
-  line-height: 0.9;
-  margin-bottom: 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px;
 }
 
 .profile-block p {
